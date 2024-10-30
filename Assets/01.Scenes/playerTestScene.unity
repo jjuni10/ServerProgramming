@@ -451,7 +451,6 @@ GameObject:
   - component: {fileID: 539305792}
   - component: {fileID: 539305786}
   - component: {fileID: 539305785}
-  - component: {fileID: 539305793}
   - component: {fileID: 539305790}
   m_Layer: 3
   m_Name: Player_Runner
@@ -643,52 +642,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &539305793
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 539305784}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf0381652e51d1a4cb16de8c109281bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _playerComponents:
-    animator: {fileID: 0}
-    rigidbody: {fileID: 0}
-    capsuleCollider: {fileID: 0}
-    cameraObj: {fileID: 1805974358}
-  _input:
-    verticalMovement: 0
-    horizontalMovement: 0
-    mouseY: 0
-    mouseX: 0
-  _checkOption:
-    groundLayerMask:
-      serializedVersion: 2
-      m_Bits: 4294967295
-    rotSpeed: 20
-    runningSpeed: 8
-    dashingSpeed: 11
-    dodgingSpeed: 11
-  _currentState:
-    _curState: 0
-    isNotMoving: 0
-    isRunning: 0
-    isDashing: 0
-    isDodgeing: 0
-    doNotRotate: 0
-    isStop: 0
-    previousDodgeKeyPress: 0
-    currentDodgeKeyPress: 0
-  _currentValue:
-    point: 0
-    moveAmount: 0
-    moveDirection: {x: 0, y: 0, z: 0}
-    playerVelocity: {x: 0, y: 0, z: 0}
-    finalSpeed: 0
 --- !u!1 &820812803
 GameObject:
   m_ObjectHideFlags: 0
