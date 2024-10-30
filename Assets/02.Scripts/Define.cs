@@ -1,7 +1,8 @@
 public enum ETeam
 {
     Red,
-    Blue
+    Blue,
+    None
 }
 
 public class Define

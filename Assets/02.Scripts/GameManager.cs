@@ -30,6 +30,14 @@ public class GameManager : MonoBehaviour
     private Player _localPlayer;                   // 로컬 플레이어 캐릭터
     private Dictionary<int, Bullet> _bulletDic = new Dictionary<int, Bullet>(); // UID, 총알
     private bool _startGame;                                // 게임이 시작되었는지 여부
+    private float _playTime = 0f;
+
+    //! 나중에 입력 받아서 플레이타임 결정하기
+    public float InputPlayTime = 270f;
+
+    
+    public int redPoint;
+    public int bluePoint;
 
     public int UserUID { get; set; }    // 클라이언트 자신의 UID
     public string UserID { get; set; }  // 클라이언트 자신의 ID
@@ -92,6 +100,40 @@ public class GameManager : MonoBehaviour
         if (_playerDic.Count <= 1)
             return;
 
+        if (_playTime >= InputPlayTime)
+        {
+            // 게임 종료 처리
+            Host host = FindObjectOfType<Host>();
+            if (host != null)
+            {
+                PacketGameEnd packet = new PacketGameEnd();
+
+                foreach (var player in _playerDic)
+                {
+                    if (player.Value.Team == ETeam.Red)
+                        redPoint += player.Value._currentValue.point;
+                    else if (player.Value.Team == ETeam.Blue)
+                        bluePoint += player.Value._currentValue.point;
+                }
+                if (redPoint < bluePoint)
+                {
+                    packet.winTeam = ETeam.Blue;
+                }
+                else if (redPoint > bluePoint)
+                {
+                    packet.winTeam = ETeam.Red;
+                }
+                else
+                {
+                    packet.winTeam = ETeam.None;
+                }
+                host.SendAll(packet);
+
+            }
+            _startGame = false;
+        }
+        else
+            _playTime += Time.deltaTime;
         // int blueAlive = 0;
         // int redAlive = 0;
         // foreach (var playerKeyValue in _playerDic)
