@@ -101,8 +101,8 @@ public class Host : MonoBehaviour
         }
         GameManager.Instance.IsGameStarted = true;
 
-        Vector3 redPosition = new Vector3(-Define.GAME_GUNNER_POSITION_OFFSET, 3f, 0F);
-        Vector3 bluePosition = new Vector3(Define.GAME_GUNNER_POSITION_OFFSET, 3f, 0F);
+        Vector3 redPosition = new Vector3(5, 3f, 0F);
+        Vector3 bluePosition = new Vector3(55, 3f, 0F);
         int redCount = 0;
         int blueCount = 0;
 
@@ -120,7 +120,7 @@ public class Host : MonoBehaviour
                 packet.startInfos[i].position = redPosition;
                 if (redCount % 2 == 0)
                 {
-                    redPosition = new Vector3(Mathf.Abs(redPosition.x) + Define.START_DISTANCE_OFFSET, redPosition.y, redPosition.z);
+                    redPosition = new Vector3(redPosition.x + Define.START_DISTANCE_OFFSET, redPosition.y, redPosition.z);
                 }
                 else
                 {
@@ -133,7 +133,7 @@ public class Host : MonoBehaviour
                 packet.startInfos[i].position = bluePosition;
                 if (blueCount % 2 == 0)
                 {
-                    bluePosition = new Vector3(Mathf.Abs(bluePosition.x) + Define.START_DISTANCE_OFFSET, bluePosition.y, bluePosition.z);
+                    bluePosition = new Vector3(bluePosition.x + Define.START_DISTANCE_OFFSET, bluePosition.y, bluePosition.z);
                 }
                 else
                 {

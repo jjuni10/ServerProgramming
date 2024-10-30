@@ -17,11 +17,11 @@ public class PlayerRunner : Player
     void Start()
     {
         if (P_Info.TEAM == ETeam.Red){
-            transform.position = new Vector3(-10, 3, 0);
+            //transform.position = new Vector3(-10, 3, 0);
             transform.Rotate(P_Com.cameraObj.transform.right);
         }
         else if (P_Info.TEAM == ETeam.Blue){
-            transform.position = new Vector3(10, 3, 0);
+            //transform.position = new Vector3(10, 3, 0);
             transform.Rotate(P_Com.cameraObj.transform.right * -1);
         }
     }
