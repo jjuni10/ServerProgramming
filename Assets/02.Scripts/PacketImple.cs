@@ -13,7 +13,7 @@ public enum EProtocolID
     SC_GAME_START,
     REL_PLAYER_POSITION,
     REL_PLAYER_FIRE,
-    REL_PLAYER_DAMAG,
+    REL_PLAYER_POINT,
     REL_BULLET_DISTROY,
     SC_GAME_END,
 }
@@ -151,7 +151,7 @@ public class PacketPlayerDamage : Packet
     public int attackUID; // 공격한 플레이어
     public int targetUID; // 공격받은 플레이어
     public PacketPlayerDamage()
-        : base((short)EProtocolID.REL_PLAYER_DAMAG)
+        : base((short)EProtocolID.REL_PLAYER_POINT)
     {
 
     }

@@ -94,7 +94,7 @@ public class UserPeer : IPeer
                     _bulletUID++;
                 }
                 break;
-            case EProtocolID.REL_PLAYER_DAMAG:
+            case EProtocolID.REL_PLAYER_POINT:
                 {
                     PacketPlayerDamage packet = new PacketPlayerDamage();
                     packet.ToPacket(buffer);

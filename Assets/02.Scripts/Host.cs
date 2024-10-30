@@ -101,8 +101,8 @@ public class Host : MonoBehaviour
         }
         GameManager.Instance.IsGameStarted = true;
 
-        Vector3 redPosition = new Vector3(0f, 0f, -Define.START_POSITION_OFFSET);
-        Vector3 bluePosition = new Vector3(0f, 0f, Define.START_POSITION_OFFSET);
+        Vector3 redPosition = new Vector3(-Define.GAME_GUNNER_POSITION_OFFSET, 3f, 0F);
+        Vector3 bluePosition = new Vector3(Define.GAME_GUNNER_POSITION_OFFSET, 3f, 0F);
         int redCount = 0;
         int blueCount = 0;
 

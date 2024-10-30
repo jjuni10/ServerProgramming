@@ -17,7 +17,7 @@ public class PlayerInfo
 {
     public int UID;
     public string ID;
-    public ETeam _team;
+    public ETeam TEAM;
     public bool _localPlayer;
 }
 
@@ -50,13 +50,10 @@ public class CheckOption
     public float rotSpeed = 20f;
 
     [Range(1f, 30f), Tooltip("달리는 속도")]
-    public float runningSpeed = 8f;
+    public float runningSpeed = 15f;
 
     [Range(1f, 30f), Tooltip("대쉬 속도")]
-    public float dashingSpeed = 11f;
-
-    [Range(1f, 30f), Tooltip("닷지 속도")]
-    public float dodgingSpeed = 15f;
+    public float dashingSpeed = 25f;
 }
 
 [Serializable]
@@ -81,7 +78,7 @@ public class CurrentState
 [Serializable]
 public class CurrentValue
 {
-    public int point;
+    public int point = 0;
     public float moveAmount;        // 움직임. (0 움직이지않음, 1 움직임)
     public Vector3 moveDirection;   //이동 방향
     public Vector3 playerVelocity;  //이동을 위한 플레이어 속도

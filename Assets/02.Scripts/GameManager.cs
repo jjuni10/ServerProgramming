@@ -25,9 +25,9 @@ public class GameManager : MonoBehaviour
 
     private UIMain _ui;
     private Client _client;
-    private Dictionary<int, PlayerCharacter> _playerDic =
-        new Dictionary<int, PlayerCharacter>();             // UID, 플레이어 캐릭터
-    private PlayerCharacter _localPlayer;                   // 로컬 플레이어 캐릭터
+    private Dictionary<int, Player> _playerDic =
+        new Dictionary<int, Player>();             // UID, 플레이어 캐릭터
+    private Player _localPlayer;                   // 로컬 플레이어 캐릭터
     private Dictionary<int, Bullet> _bulletDic = new Dictionary<int, Bullet>(); // UID, 총알
     private bool _startGame;                                // 게임이 시작되었는지 여부
 
@@ -45,45 +45,45 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        UpdateInput();
+        //UpdateInput();
         UpdateCheckGameEnd();
     }
 
-    private void UpdateInput()
-    {
-        if (_localPlayer == null || !_localPlayer.IsAlive)
-            return;
+    // private void UpdateInput()
+    // {
+    //     if (_localPlayer == null || !_localPlayer.IsAlive)
+    //         return;
 
-        if (Input.GetKey(KeyCode.W))
-        {
-            _localPlayer.Move(Vector3.forward);
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            _localPlayer.Move(Vector3.back);
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            _localPlayer.Move(Vector3.left);
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            _localPlayer.Move(Vector3.right);
-        }
+    //     if (Input.GetKey(KeyCode.W))
+    //     {
+    //         _localPlayer.Move(Vector3.forward);
+    //     }
+    //     if (Input.GetKey(KeyCode.S))
+    //     {
+    //         _localPlayer.Move(Vector3.back);
+    //     }
+    //     if (Input.GetKey(KeyCode.A))
+    //     {
+    //         _localPlayer.Move(Vector3.left);
+    //     }
+    //     if (Input.GetKey(KeyCode.D))
+    //     {
+    //         _localPlayer.Move(Vector3.right);
+    //     }
 
-        // 마우스 방향으로 캐릭터를 회전
-        Vector3 screenPos = Camera.main.WorldToScreenPoint(_localPlayer.transform.position);
-        Vector3 dir = Input.mousePosition - screenPos;
-        dir = new Vector3(dir.x, 0f, dir.y);
-        _localPlayer.transform.forward = dir.normalized;
+    //     // 마우스 방향으로 캐릭터를 회전
+    //     Vector3 screenPos = Camera.main.WorldToScreenPoint(_localPlayer.transform.position);
+    //     Vector3 dir = Input.mousePosition - screenPos;
+    //     dir = new Vector3(dir.x, 0f, dir.y);
+    //     _localPlayer.transform.forward = dir.normalized;
 
-        // 총알 발사
-        if (Input.GetMouseButtonDown(0))
-        {
-            _localPlayer.FireBullet();
-        }
+    //     // 총알 발사
+    //     if (Input.GetMouseButtonDown(0))
+    //     {
+    //         _localPlayer.FireBullet();
+    //     }
 
-    }
+    // }
 
     private void UpdateCheckGameEnd()
     {
@@ -92,45 +92,45 @@ public class GameManager : MonoBehaviour
         if (_playerDic.Count <= 1)
             return;
 
-        int blueAlive = 0;
-        int redAlive = 0;
-        foreach (var playerKeyValue in _playerDic)
-        {
-            if (playerKeyValue.Value.Team == ETeam.Blue)
-            {
-                if (playerKeyValue.Value.IsAlive)
-                {
-                    blueAlive++;
-                }
-            }
-            else
-            {
-                if (playerKeyValue.Value.IsAlive)
-                {
-                    redAlive++;
-                }
-            }
-        }
-        if (blueAlive == 0 || redAlive == 0)
-        {
-            // 게임 종료 처리
-            Host host = FindObjectOfType<Host>();
-            if (host != null)
-            {
-                PacketGameEnd packet = new PacketGameEnd();
-                if (blueAlive > 0)
-                {
-                    packet.winTeam = ETeam.Blue;
-                }
-                else
-                {
-                    packet.winTeam = ETeam.Red;
-                }
-                host.SendAll(packet);
+        // int blueAlive = 0;
+        // int redAlive = 0;
+        // foreach (var playerKeyValue in _playerDic)
+        // {
+        //     if (playerKeyValue.Value.Team == ETeam.Blue)
+        //     {
+        //         if (playerKeyValue.Value.IsAlive)
+        //         {
+        //             blueAlive++;
+        //         }
+        //     }
+        //     else
+        //     {
+        //         if (playerKeyValue.Value.IsAlive)
+        //         {
+        //             redAlive++;
+        //         }
+        //     }
+        // }
+        // if (blueAlive == 0 || redAlive == 0)
+        // {
+        //     // 게임 종료 처리
+        //     Host host = FindObjectOfType<Host>();
+        //     if (host != null)
+        //     {
+        //         PacketGameEnd packet = new PacketGameEnd();
+        //         if (blueAlive > 0)
+        //         {
+        //             packet.winTeam = ETeam.Blue;
+        //         }
+        //         else
+        //         {
+        //             packet.winTeam = ETeam.Red;
+        //         }
+        //         host.SendAll(packet);
 
-            }
-            _startGame = false;
-        }
+        //     }
+        //     _startGame = false;
+        // }
 
     }
 
@@ -148,13 +148,15 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < packet.userNum; i++)
         {
             // Resources 폴더에서 캐릭터를 불러온다.
-            var resource = Resources.Load("Player_0");
+            var resource = Resources.Load("Player_Runner");
             // 캐릭터를 인스턴스화 한다.
             var inst = Instantiate(resource) as GameObject;
             // GameObject에 있는 PlayerCharacter 컴포넌트를 가져온다.
-            var player = inst.GetComponent<PlayerCharacter>();
+            //var player = inst.GetComponent<PlayerCharacter>();
+            var player = inst.GetComponent<Player>();
             player.name = $"Player {packet.startInfos[i].uid}";
 
+            //player.Init(packet.startInfos[i].uid, packet.startInfos[i].id, packet.startInfos[i].team, packet.startInfos[i].position);
             player.Init(packet.startInfos[i].uid, packet.startInfos[i].id, packet.startInfos[i].team, packet.startInfos[i].position);
             _playerDic.Add(packet.startInfos[i].uid, player);
 
@@ -182,7 +184,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public PlayerCharacter GetPlayer(int uid)
+    public Player GetPlayer(int uid)
     {
         // 키가 존재하는지 확인
         if (!_playerDic.ContainsKey(uid))

@@ -3,25 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerRunner : Player
-{
-    private bool _currentDodgeKeyPress;
-    private bool _previousDodgeKeyPress;
-    private Animator _animator;
-    private Rigidbody _rigidbody;
-    private CapsuleCollider _collider;
-    
+{    
     float curVertVelocity;
 
 
     void Awake() 
-    {
-        _rigidbody = GetComponent<Rigidbody>();
-        _animator = GetComponent<Animator>();
-        _collider = GetComponent<CapsuleCollider>();
-        Init(_animator, _rigidbody, _collider);
+    {        
+        P_Com.rigidbody = GetComponent<Rigidbody>();
+        P_Com.animator = GetComponent<Animator>();
+        P_Com.capsuleCollider = GetComponent<CapsuleCollider>();
+        P_Com.cameraObj = Camera.main;
     }
     void Start()
     {
+        if (P_Info.TEAM == ETeam.Red){
+            transform.position = new Vector3(-10, 3, 0);
+            transform.Rotate(P_Com.cameraObj.transform.right);
+        }
+        else if (P_Info.TEAM == ETeam.Blue){
+            transform.position = new Vector3(10, 3, 0);
+            transform.Rotate(P_Com.cameraObj.transform.right * -1);
+        }
     }
     void Update()
     {   
@@ -111,7 +113,6 @@ public class PlayerRunner : Player
             P_States.isDashing = false;
             P_States.isDodgeing = false;
         }
-
     }
     private void dodgeOut()
     {
@@ -140,15 +141,15 @@ public class PlayerRunner : Player
 
     private void Dodge()
     {
-        _currentDodgeKeyPress = Input.GetKey(KeyCode.LeftShift);
+        P_States.currentDodgeKeyPress = Input.GetKey(KeyCode.LeftShift);
 
         if (ReturnDodgeAnim()
-            && _previousDodgeKeyPress && _currentDodgeKeyPress)
+            && P_States.previousDodgeKeyPress && P_States.currentDodgeKeyPress)
         {
             return;
         }
         else if (!ReturnDodgeAnim()
-            &&!_previousDodgeKeyPress && _currentDodgeKeyPress
+            &&!P_States.previousDodgeKeyPress && P_States.currentDodgeKeyPress
             && P_States._curState != EState.Dash)
         {
             Debug.Log("Dodge");
@@ -158,11 +159,11 @@ public class PlayerRunner : Player
         }
 
         // 프레임마다 키 입력 저장
-        _previousDodgeKeyPress = _currentDodgeKeyPress;
+        P_States.previousDodgeKeyPress = P_States.currentDodgeKeyPress;
     }    
     private bool ReturnDodgeAnim()
     {
-        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Dodge"))
+        if (P_Com.animator.GetCurrentAnimatorStateInfo(0).IsName("Dodge"))
         {
             return true;
         }
