@@ -71,7 +71,7 @@ public class Bullet : MonoBehaviour
             return;
 
         // 총알이 파괴되었음을 서버에 알림
-        PacketBulletDistroy packetBulletDistroy = new PacketBulletDistroy();
+        PacketBulletDestroy packetBulletDistroy = new PacketBulletDestroy();
         packetBulletDistroy.bulletUID = _bulletUID;
         GameManager.Instance.client.Send(packetBulletDistroy);
 

@@ -1,8 +1,8 @@
 // SC : 서버->클라, CS : 클라->서버, REL : 중계형
 using UnityEngine;
-using System.Runtime.InteropServices;
+using MessagePack;
 
-public enum EProtocolID
+/*public enum EProtocolID
 {
     SC_REQ_USERINFO,
     CS_ANS_USERINFO,
@@ -16,167 +16,146 @@ public enum EProtocolID
     REL_PLAYER_DAMAG,
     REL_BULLET_DISTROY,
     SC_GAME_END,
-}
+}*/
 
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketReqUserInfo : Packet
 {
+    [Key(10)]
     public int uid;
-    public ETeam team;
 
-    public PacketReqUserInfo()
-        : base((short)EProtocolID.SC_REQ_USERINFO)
-    {
-    }
+    [Key(11)]
+    public ETeam team;
 }
 
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketAnsUserInfo : Packet
 {
-    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 10)]
+    [Key(10)]
     public string id;
-    public bool host;
 
-    public PacketAnsUserInfo()
-        : base((short)EProtocolID.CS_ANS_USERINFO)
-    {
-    }
+    [Key(11)]
+    public bool host;
 }
 
-// 유저 리스트를 배열로 보내야 하기 때문에 struct로 만들어야 한다.
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public struct UserInfo
 {
+    [Key(0)]
     public int uid;
-    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 10)]
+
+    [Key(1)]
     public string id;
+
+    [Key(2)]
     public ETeam team;
+
+    [Key(3)]
     public bool host;
 }
 
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketAnsUserList : Packet
 {
+    [Key(10)]
     public int userNum;
-    [MarshalAs(UnmanagedType.ByValArray, SizeConst = 20)]
+
+    [Key(11)]
     public UserInfo[] userInfos = new UserInfo[20];
-    public PacketAnsUserList()
-        : base ((short)EProtocolID.SC_ANS_USERLIST)
-    {
-    }
 }
 
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketReqChangeTeam : Packet
 {
+    [Key(10)]
     public ETeam team;
-    public PacketReqChangeTeam()
-        : base ((short)EProtocolID.CS_REQ_CHANGE_TEAM)
-    {
     }
 }
 
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketGameReady : Packet
 {
-    public PacketGameReady()
-        : base ((short)EProtocolID.REL_GAME_READY)
-    {
-    }
 }
 
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketGameReadyOk : Packet
 {
-    public PacketGameReadyOk()
-        : base((short)EProtocolID.CS_GAME_READY_OK)
-    {
-    }
 }
 
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public struct GameStartInfo
 {
+    [Key(0)]
     public int uid;
-    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 10)]
+
+    [Key(1)]
     public string id;
+
+    [Key(2)]
     public ETeam team;
+
+    [Key(3)]
     public Vector3 position;
 }
 
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketGameStart : Packet
 {
+    [Key(10)]
     public int userNum;
-    [MarshalAs(UnmanagedType.ByValArray, SizeConst = 20)]
-    public GameStartInfo[] startInfos = new GameStartInfo[20];
 
-    public PacketGameStart()
-        : base((short)EProtocolID.SC_GAME_START)
-    {
-    }
+    [Key(11)]
+    public GameStartInfo[] startInfos = new GameStartInfo[20];
 }
 
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketPlayerPosition : Packet
 {
+    [Key(10)]
     public int uid;         // 유저의 uid를 확인하고 처리한다.
-    public Vector3 position;
-    public float rotation;
 
-    public PacketPlayerPosition()
-        : base((short)EProtocolID.REL_PLAYER_POSITION)
-    {
-    }
+    [Key(11)]
+    public Vector3 position;
+
+    [Key(12)]
+    public float rotation;
 }
 
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketPlayerFire : Packet
 {
+    [Key(10)]
     public int ownerUID;
+
+    [Key(11)]
     public int bulletUID;
+
+    [Key(12)]
     public Vector3 position;
+
+    [Key(13)]
     public Vector3 direction;
-
-    public PacketPlayerFire()
-        : base((short)EProtocolID.REL_PLAYER_FIRE)
-    {
-
-    }
 }
 
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketPlayerDamage : Packet
 {
+    [Key(10)]
     public int attackUID; // 공격한 플레이어
+
+    [Key(11)]
     public int targetUID; // 공격받은 플레이어
-    public PacketPlayerDamage()
-        : base((short)EProtocolID.REL_PLAYER_DAMAG)
-    {
-
-    }
-
 }
 
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
-public class PacketBulletDistroy : Packet
+[MessagePackObject]
+public class PacketBulletDestroy : Packet
 {
+    [Key(10)]
     public int bulletUID;
-    public PacketBulletDistroy()
-        : base((short)EProtocolID.REL_BULLET_DISTROY)
-    {
-
-    }
-
 }
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketGameEnd : Packet
 {
+    [Key(10)]
     public ETeam winTeam;
-    public PacketGameEnd()
-        : base((short)EProtocolID.SC_GAME_END)
-    {
-
-    }
-
 }

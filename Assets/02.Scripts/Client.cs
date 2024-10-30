@@ -1,3 +1,4 @@
+using MessagePack;
 using UnityEngine;
 
 public class Client : MonoBehaviour, IPeer
@@ -28,12 +29,11 @@ public class Client : MonoBehaviour, IPeer
 
     public void ProcessMessage(short protocolID, byte[] buffer)
     {
-        switch ((EProtocolID)protocolID)
+        Packet receivedPacket = MessagePackSerializer.Deserialize<Packet>(buffer);
+        switch (receivedPacket)
         {
-            case EProtocolID.SC_REQ_USERINFO:
+            case PacketReqUserInfo packet:
                 {
-                    PacketReqUserInfo packet = new PacketReqUserInfo();
-                    packet.ToPacket(buffer);
                     GameManager.Instance.UserUID = packet.uid;
 
                     PacketAnsUserInfo sendPacket = new PacketAnsUserInfo();
@@ -42,12 +42,8 @@ public class Client : MonoBehaviour, IPeer
                     Send(sendPacket);
                 }
                 break;
-            case EProtocolID.SC_ANS_USERLIST:
+            case PacketAnsUserList packet:
                 {
-                    // 서버로부터 유저 리스트 정보를 받았을 때 처리
-                    PacketAnsUserList packet = new PacketAnsUserList();
-                    packet.ToPacket(buffer);
-
                     string strRed = string.Empty;
                     string strBlue = string.Empty;
 
@@ -71,26 +67,19 @@ public class Client : MonoBehaviour, IPeer
                     _ui.SetLobbyText(strRed, strBlue);
                 }
                 break;
-            case EProtocolID.REL_GAME_READY:
+            case PacketGameReady _:
                 {
                     GameManager.Instance.GameReady();
                 }
                 break;
-            case EProtocolID.SC_GAME_START:
+            case PacketGameStart packet:
                 {
                     GameManager.Instance.IsGameStarted = true;
-
-                    PacketGameStart packet = new PacketGameStart();
-                    packet.ToPacket(buffer);
-
                     GameManager.Instance.GameStart(packet);
                 }
                 break;
-            case EProtocolID.REL_PLAYER_POSITION:
+            case PacketPlayerPosition packet:
                 {
-                    PacketPlayerPosition packet = new PacketPlayerPosition();
-                    packet.ToPacket(buffer);
-
                     PlayerCharacter player = GameManager.Instance.GetPlayer(packet.uid);
                     if (player == null)
                         return;
@@ -98,22 +87,17 @@ public class Client : MonoBehaviour, IPeer
                     player.SetPositionRotation(packet.position, packet.rotation);
                 }
                 break;
-            case EProtocolID.REL_PLAYER_FIRE:
+            case PacketPlayerFire packet:
                 {
-                    PacketPlayerFire packet = new PacketPlayerFire();
-                    packet.ToPacket(buffer);
-
                     PlayerCharacter player = GameManager.Instance.GetPlayer(packet.ownerUID);
                     if (player == null)
                         return;
 
-                    player.CreateBullet(packet.position, packet.direction, packet.ownerUID,  packet.bulletUID);
+                    player.CreateBullet(packet.position, packet.direction, packet.ownerUID, packet.bulletUID);
                 }
                 break;
-            case EProtocolID.REL_PLAYER_DAMAG:
+            case PacketPlayerDamage packet:
                 {
-                    PacketPlayerDamage packet = new PacketPlayerDamage();
-                    packet.ToPacket(buffer);
                     PlayerCharacter attackPlayer = GameManager.Instance.GetPlayer(packet.attackUID);
                     PlayerCharacter targetPlayer = GameManager.Instance.GetPlayer(packet.targetUID);
                     if (attackPlayer == null || targetPlayer == null)
@@ -122,28 +106,21 @@ public class Client : MonoBehaviour, IPeer
                     targetPlayer.ReciveDamage(attackPlayer.Damage);
                 }
                 break;
-            case EProtocolID.REL_BULLET_DISTROY:
+            case PacketBulletDestroy packet:
                 {
-                    PacketBulletDistroy packet = new PacketBulletDistroy();
-                    packet.ToPacket(buffer);
                     GameManager.Instance.RemoveBullet(packet.bulletUID);
-
                 }
                 break;
-            case EProtocolID.SC_GAME_END:
+            case PacketGameEnd packet:
                 {
-                    PacketGameEnd packet = new PacketGameEnd();
-                    packet.ToPacket(buffer);
                     Debug.Log($"승리팀은 {packet.winTeam}");
-
                 }
                 break;
-
         }
     }
 
     public void Remove()
-    { 
+    {
     }
 
     public void Send(Packet packet)

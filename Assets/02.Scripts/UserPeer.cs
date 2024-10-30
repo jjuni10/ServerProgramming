@@ -1,3 +1,4 @@
+using MessagePack;
 using UnityEngine;
 
 /// <summary>
@@ -41,12 +42,11 @@ public class UserPeer : IPeer
 
     public void ProcessMessage(short protocolID, byte[] buffer)
     {
-        switch ((EProtocolID)protocolID)
+        Packet receivedPacket = MessagePackSerializer.Deserialize<Packet>(buffer);
+        switch (receivedPacket)
         {
-            case EProtocolID.CS_ANS_USERINFO:
+            case PacketAnsUserInfo packet:
                 {
-                    PacketAnsUserInfo packet = new PacketAnsUserInfo();
-                    packet.ToPacket(buffer);
                     _id = packet.id;
                     _isHost = packet.host;
                     Debug.Log("CS_ANS_USERINFO " + packet.id + " " + _isHost);
@@ -54,57 +54,44 @@ public class UserPeer : IPeer
                     _host.SendUserList();
                 }
                 break;
-            case EProtocolID.CS_REQ_CHANGE_TEAM:
+            case PacketReqChangeTeam packet:
                 {
-                    PacketReqChangeTeam packet = new PacketReqChangeTeam();
-                    packet.ToPacket(buffer);
                     _team = packet.team;
-
                     _host.SendUserList();
                 }
                 break;
-            case EProtocolID.REL_GAME_READY:
+            case PacketGameReady packet:
                 {
-                    PacketGameReady packet = new PacketGameReady();
-                    packet.ToPacket(buffer);
                     _host.SendAll(packet);
                 }
                 break;
-            case EProtocolID.CS_GAME_READY_OK:
+            case PacketGameReadyOk packet:
                 {
                     _gameReady = true;
                     _host.CheckGameReady();
                 }
                 break;
-            case EProtocolID.REL_PLAYER_POSITION:
+            case PacketPlayerPosition packet:
                 {
-                    PacketPlayerPosition packet = new PacketPlayerPosition();
-                    packet.ToPacket(buffer);
                     packet.uid = _uid;
-                    _host.SendAll(packet , this);
+                    _host.SendAll(packet, this);
                 }
                 break;
-            case EProtocolID.REL_PLAYER_FIRE:
+            case PacketPlayerFire packet:
                 {
-                    PacketPlayerFire packet = new PacketPlayerFire();
-                    packet.ToPacket(buffer);
                     packet.ownerUID = _uid;
                     packet.bulletUID = _bulletUID;
                     _host.SendAll(packet);
                     _bulletUID++;
                 }
                 break;
-            case EProtocolID.REL_PLAYER_DAMAG:
+            case PacketPlayerDamage packet:
                 {
-                    PacketPlayerDamage packet = new PacketPlayerDamage();
-                    packet.ToPacket(buffer);
                     _host.SendAll(packet);
                 }
                 break;
-            case EProtocolID.REL_BULLET_DISTROY:
+            case PacketBulletDestroy packet:
                 {
-                    PacketBulletDistroy packet = new PacketBulletDistroy();
-                    packet.ToPacket(buffer);
                     _host.SendAll(packet, this);
                 }
                 break;

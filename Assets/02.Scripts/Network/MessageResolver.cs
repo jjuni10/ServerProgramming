@@ -9,22 +9,14 @@ public class MessageResolver
     {
         _messageBuffer = new byte[bufferSize];
     }
-    public void OnReceive(byte[] bufffer, int offset, int transferred, Action<byte[]> onComplete)
+    public void OnReceive(byte[] buffer, int offset, int transferred, Action<byte[]> onComplete)
     {
-        Array.Copy(bufffer, offset, _messageBuffer, _curPosition, transferred);
+        /*Array.Copy(buffer, offset, _messageBuffer, _curPosition, transferred);
         _curPosition += transferred;
 
         while (_curPosition > 0)
         {
             if (_curPosition < NetDefine.HEADER_SIZE)
-            {
-                return;
-            }
-
-            short size = BitConverter.ToInt16(_messageBuffer, 0);
-            short protocolID = BitConverter.ToInt16(_messageBuffer, 2);
-
-            if (_curPosition < size)
             {
                 return;
             }
@@ -36,6 +28,10 @@ public class MessageResolver
 
             _curPosition -= size;
             Array.Copy(_messageBuffer, size, _messageBuffer, 0, _curPosition);
-        }
+        }*/
+
+        byte[] clone = new byte[transferred];
+        Array.Copy(buffer, offset, clone, 0, transferred);
+        onComplete?.Invoke(clone);
     }
 }

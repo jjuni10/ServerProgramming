@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System;
+using MessagePack;
 
 public class UserToken
 {
@@ -98,7 +99,14 @@ public class UserToken
             return;
 
         short protocolID = BitConverter.ToInt16(buffer, 2);
-        _peer.ProcessMessage(protocolID, buffer);
+        try
+        {
+            _peer.ProcessMessage(protocolID, buffer);
+        }
+        catch (Exception ex)
+        {
+            MainThread.Instance.Add(() => Debug.LogError(ex.ToString()));
+        }
     }
 
     public void Close()
@@ -142,7 +150,7 @@ public class UserToken
 
     public void Send(Packet packet)
     {
-        Send(packet.ToByte());
+        Send(MessagePackSerializer.Serialize(packet));
     }
 
     void StartSend()
