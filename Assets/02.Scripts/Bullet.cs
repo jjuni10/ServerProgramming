@@ -44,7 +44,7 @@ public class Bullet : MonoBehaviour
         if (!player.IsAlive)
             return;
 
-        PlayerCharacter owner = GameManager.Instance.GetPlayer(_ownerUID);
+        Player owner = GameManager.Instance.GetPlayer(_ownerUID);
         // 총알을 발사한 플레이어 자신에게 충돌하면 처리하지 않음
         if (_ownerUID == player.UID)
         {

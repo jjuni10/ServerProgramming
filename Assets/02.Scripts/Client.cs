@@ -80,7 +80,7 @@ public class Client : MonoBehaviour, IPeer
                 break;
             case PacketPlayerPosition packet:
                 {
-                    PlayerCharacter player = GameManager.Instance.GetPlayer(packet.uid);
+                    Player player = GameManager.Instance.GetPlayer(packet.uid);
                     if (player == null)
                         return;
 
@@ -89,7 +89,7 @@ public class Client : MonoBehaviour, IPeer
                 break;
             case PacketPlayerFire packet:
                 {
-                    PlayerCharacter player = GameManager.Instance.GetPlayer(packet.ownerUID);
+                    Player player = GameManager.Instance.GetPlayer(packet.ownerUID);
                     if (player == null)
                         return;
 
@@ -98,12 +98,12 @@ public class Client : MonoBehaviour, IPeer
                 break;
             case PacketPlayerDamage packet:
                 {
-                    PlayerCharacter attackPlayer = GameManager.Instance.GetPlayer(packet.attackUID);
-                    PlayerCharacter targetPlayer = GameManager.Instance.GetPlayer(packet.targetUID);
+                    Player attackPlayer = GameManager.Instance.GetPlayer(packet.attackUID);
+                    Player targetPlayer = GameManager.Instance.GetPlayer(packet.targetUID);
                     if (attackPlayer == null || targetPlayer == null)
                         return;
 
-                    targetPlayer.ReciveDamage(attackPlayer.Damage);
+                    targetPlayer.RecivePoint(attackPlayer.LosePoint);
                 }
                 break;
             case PacketBulletDestroy packet:
