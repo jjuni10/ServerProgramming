@@ -33,8 +33,8 @@ public class Player : MonoBehaviour
         P_Info.TEAM = team;
         P_Com.cameraObj = Camera.main;
         
-        _destPosition = position;
-        transform.position = position;
+        //_destPosition = position;
+        //transform.position = position;
     }
 
     // private void Update()

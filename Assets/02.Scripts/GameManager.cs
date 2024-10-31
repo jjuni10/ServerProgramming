@@ -195,10 +195,10 @@ public class GameManager : MonoBehaviour
             var inst = Instantiate(resource) as GameObject;
             // GameObject에 있는 PlayerCharacter 컴포넌트를 가져온다.
             //var player = inst.GetComponent<PlayerCharacter>();
-            var player = inst.GetComponent<Player>();
+            var player = inst.GetComponent<PlayerGunner>(); 
+            if (!player) inst.GetComponent<PlayerRunner>();
             player.name = $"Player {packet.startInfos[i].uid}";
 
-            //player.Init(packet.startInfos[i].uid, packet.startInfos[i].id, packet.startInfos[i].team, packet.startInfos[i].position);
             player.Init(packet.startInfos[i].uid, packet.startInfos[i].id, packet.startInfos[i].team, packet.startInfos[i].position);
             _playerDic.Add(packet.startInfos[i].uid, player);
 

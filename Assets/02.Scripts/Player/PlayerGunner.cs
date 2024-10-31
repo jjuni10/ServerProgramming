@@ -47,6 +47,20 @@ public class PlayerGunner : Player
             LeftSite = false;
         }
     }
+
+    public void Init(int uid, string id, ETeam team, Vector3 position)
+    {
+        P_Info.UID = uid; 
+        P_Info.ID = id; 
+        P_Info.TEAM = team;
+        P_Com.cameraObj = Camera.main;
+        
+        base.Init(uid, id, team, position);
+        
+        _destPosition = position;
+        transform.position = position;
+    }
+
     public void MoveInput()
     {
         if (Input.GetKey(KeyCode.A))// && !RightSite)
