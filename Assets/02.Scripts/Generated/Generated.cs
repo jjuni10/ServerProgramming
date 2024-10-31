@@ -425,7 +425,7 @@ namespace MessagePack.Formatters
 
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
             writer.WriteArrayHeader(12);
-            writer.Write(value.ProtocolID);
+            writer.WriteNil();
             writer.WriteNil();
             writer.WriteNil();
             writer.WriteNil();
@@ -455,9 +455,6 @@ namespace MessagePack.Formatters
             {
                 switch (i)
                 {
-                    case 0:
-                        reader.ReadInt16();
-                        break;
                     case 10:
                         ____result.id = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Deserialize(ref reader, options);
                         break;
@@ -488,7 +485,7 @@ namespace MessagePack.Formatters
 
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
             writer.WriteArrayHeader(12);
-            writer.Write(value.ProtocolID);
+            writer.WriteNil();
             writer.WriteNil();
             writer.WriteNil();
             writer.WriteNil();
@@ -518,9 +515,6 @@ namespace MessagePack.Formatters
             {
                 switch (i)
                 {
-                    case 0:
-                        reader.ReadInt16();
-                        break;
                     case 10:
                         ____result.userNum = reader.ReadInt32();
                         break;
@@ -550,7 +544,7 @@ namespace MessagePack.Formatters
             }
 
             writer.WriteArrayHeader(11);
-            writer.Write(value.ProtocolID);
+            writer.WriteNil();
             writer.WriteNil();
             writer.WriteNil();
             writer.WriteNil();
@@ -578,9 +572,6 @@ namespace MessagePack.Formatters
             {
                 switch (i)
                 {
-                    case 0:
-                        reader.ReadInt16();
-                        break;
                     case 10:
                         ____result.bulletUID = reader.ReadInt32();
                         break;
@@ -608,7 +599,7 @@ namespace MessagePack.Formatters
 
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
             writer.WriteArrayHeader(11);
-            writer.Write(value.ProtocolID);
+            writer.WriteNil();
             writer.WriteNil();
             writer.WriteNil();
             writer.WriteNil();
@@ -637,9 +628,6 @@ namespace MessagePack.Formatters
             {
                 switch (i)
                 {
-                    case 0:
-                        reader.ReadInt16();
-                        break;
                     case 10:
                         ____result.winTeam = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::ETeam>(formatterResolver).Deserialize(ref reader, options);
                         break;
@@ -665,8 +653,7 @@ namespace MessagePack.Formatters
                 return;
             }
 
-            writer.WriteArrayHeader(1);
-            writer.Write(value.ProtocolID);
+            writer.WriteArrayHeader(0);
         }
 
         public global::PacketGameReady Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -676,25 +663,8 @@ namespace MessagePack.Formatters
                 return null;
             }
 
-            options.Security.DepthStep(ref reader);
-            var length = reader.ReadArrayHeader();
-            var ____result = new global::PacketGameReady();
-
-            for (int i = 0; i < length; i++)
-            {
-                switch (i)
-                {
-                    case 0:
-                        reader.ReadInt16();
-                        break;
-                    default:
-                        reader.Skip();
-                        break;
-                }
-            }
-
-            reader.Depth--;
-            return ____result;
+            reader.Skip();
+            return new global::PacketGameReady();
         }
     }
 
@@ -709,8 +679,7 @@ namespace MessagePack.Formatters
                 return;
             }
 
-            writer.WriteArrayHeader(1);
-            writer.Write(value.ProtocolID);
+            writer.WriteArrayHeader(0);
         }
 
         public global::PacketGameReadyOk Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -720,25 +689,8 @@ namespace MessagePack.Formatters
                 return null;
             }
 
-            options.Security.DepthStep(ref reader);
-            var length = reader.ReadArrayHeader();
-            var ____result = new global::PacketGameReadyOk();
-
-            for (int i = 0; i < length; i++)
-            {
-                switch (i)
-                {
-                    case 0:
-                        reader.ReadInt16();
-                        break;
-                    default:
-                        reader.Skip();
-                        break;
-                }
-            }
-
-            reader.Depth--;
-            return ____result;
+            reader.Skip();
+            return new global::PacketGameReadyOk();
         }
     }
 
@@ -755,7 +707,7 @@ namespace MessagePack.Formatters
 
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
             writer.WriteArrayHeader(12);
-            writer.Write(value.ProtocolID);
+            writer.WriteNil();
             writer.WriteNil();
             writer.WriteNil();
             writer.WriteNil();
@@ -785,9 +737,6 @@ namespace MessagePack.Formatters
             {
                 switch (i)
                 {
-                    case 0:
-                        reader.ReadInt16();
-                        break;
                     case 10:
                         ____result.userNum = reader.ReadInt32();
                         break;
@@ -817,7 +766,7 @@ namespace MessagePack.Formatters
             }
 
             writer.WriteArrayHeader(12);
-            writer.Write(value.ProtocolID);
+            writer.WriteNil();
             writer.WriteNil();
             writer.WriteNil();
             writer.WriteNil();
@@ -846,9 +795,6 @@ namespace MessagePack.Formatters
             {
                 switch (i)
                 {
-                    case 0:
-                        reader.ReadInt16();
-                        break;
                     case 10:
                         ____result.attackUID = reader.ReadInt32();
                         break;
@@ -879,7 +825,7 @@ namespace MessagePack.Formatters
 
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
             writer.WriteArrayHeader(14);
-            writer.Write(value.ProtocolID);
+            writer.WriteNil();
             writer.WriteNil();
             writer.WriteNil();
             writer.WriteNil();
@@ -911,9 +857,6 @@ namespace MessagePack.Formatters
             {
                 switch (i)
                 {
-                    case 0:
-                        reader.ReadInt16();
-                        break;
                     case 10:
                         ____result.ownerUID = reader.ReadInt32();
                         break;
@@ -950,7 +893,7 @@ namespace MessagePack.Formatters
 
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
             writer.WriteArrayHeader(13);
-            writer.Write(value.ProtocolID);
+            writer.WriteNil();
             writer.WriteNil();
             writer.WriteNil();
             writer.WriteNil();
@@ -981,9 +924,6 @@ namespace MessagePack.Formatters
             {
                 switch (i)
                 {
-                    case 0:
-                        reader.ReadInt16();
-                        break;
                     case 10:
                         ____result.uid = reader.ReadInt32();
                         break;
@@ -1017,7 +957,7 @@ namespace MessagePack.Formatters
 
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
             writer.WriteArrayHeader(11);
-            writer.Write(value.ProtocolID);
+            writer.WriteNil();
             writer.WriteNil();
             writer.WriteNil();
             writer.WriteNil();
@@ -1046,9 +986,6 @@ namespace MessagePack.Formatters
             {
                 switch (i)
                 {
-                    case 0:
-                        reader.ReadInt16();
-                        break;
                     case 10:
                         ____result.team = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::ETeam>(formatterResolver).Deserialize(ref reader, options);
                         break;
@@ -1076,7 +1013,7 @@ namespace MessagePack.Formatters
 
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
             writer.WriteArrayHeader(12);
-            writer.Write(value.ProtocolID);
+            writer.WriteNil();
             writer.WriteNil();
             writer.WriteNil();
             writer.WriteNil();
@@ -1106,9 +1043,6 @@ namespace MessagePack.Formatters
             {
                 switch (i)
                 {
-                    case 0:
-                        reader.ReadInt16();
-                        break;
                     case 10:
                         ____result.uid = reader.ReadInt32();
                         break;

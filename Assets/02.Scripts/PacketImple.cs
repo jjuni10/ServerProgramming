@@ -69,7 +69,6 @@ public class PacketReqChangeTeam : Packet
 {
     [Key(10)]
     public ETeam team;
-    }
 }
 
 [MessagePackObject]
