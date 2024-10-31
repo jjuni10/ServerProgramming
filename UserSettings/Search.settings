@@ -9,6 +9,9 @@ onBoardingDoNotAskAgain = true
 showPackageIndexes = false
 showStatusBar = false
 scopes = {
+	"last_search.66F56946" = "enviromennt"
+	"OpenInspectorPreview.66F56946" = "0"
+	"currentGroup.66F56946" = "asset"
 }
 providers = {
 	asset = {
@@ -64,11 +67,11 @@ recentSearches = [
 searchItemFavorites = [
 ]
 savedSearchesSortOrder = 0
-showSavedSearchPanel = false
+showSavedSearchPanel = true
 hideTabs = false
 expandedQueries = [
 ]
-queryBuilder = true
+queryBuilder = false
 ignoredProperties = "id;name;classname;imagecontentshash"
 helperWidgetCurrentArea = "all"
 disabledIndexers = ""
