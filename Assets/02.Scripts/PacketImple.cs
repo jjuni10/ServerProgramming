@@ -72,6 +72,13 @@ public class PacketReqChangeTeam : Packet
 }
 
 [MessagePackObject]
+public class PacketReqChangeRole : Packet
+{
+    [Key(10)]
+    public ERole role;
+}
+
+[MessagePackObject]
 public class PacketGameReady : Packet
 {
 }

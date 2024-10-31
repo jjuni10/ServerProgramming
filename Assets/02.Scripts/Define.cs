@@ -4,6 +4,12 @@ public enum ETeam
     Blue
 }
 
+public enum ERole
+{
+    Gunner,
+    Runner
+}
+
 public class Define
 {
     public const float START_POSITION_OFFSET = 14f;

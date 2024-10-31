@@ -29,6 +29,7 @@ using MessagePack;
 [Union(9, typeof(PacketPlayerDamage))]
 [Union(10, typeof(PacketBulletDestroy))]
 [Union(11, typeof(PacketGameEnd))]
+[Union(12, typeof(PacketReqChangeRole))]
 [MessagePackObject]
 public abstract class Packet
 {
