@@ -16,6 +16,8 @@ public class UIMain : MonoBehaviour
     public Text textBlue;
     public Button buttonRed;
     public Button buttonBlue;
+    public Button buttonGunner;
+    public Button buttonRunner;
     public Button buttonStart;
     //
 
@@ -69,6 +71,16 @@ public class UIMain : MonoBehaviour
             SendTeam(ETeam.Blue);
         });
 
+        buttonGunner.onClick.AddListener(() =>
+        {
+            SendRole(ERole.Gunner);
+        });
+
+        buttonRunner.onClick.AddListener(() =>
+        {
+            SendRole(ERole.Runner);
+        });
+
         buttonStart.onClick.AddListener(() =>
         {
             if (!GameManager.Instance.IsHost)
@@ -113,6 +125,15 @@ public class UIMain : MonoBehaviour
     {
         PacketReqChangeTeam packet = new PacketReqChangeTeam();
         packet.team = team;
+
+        _client.Send(packet);
+    }
+
+    // 선택한 역할을 서버에 전송한다
+    public void SendRole(ERole role)
+    {
+        PacketReqChangeRole packet = new PacketReqChangeRole();
+        packet.role = role;
 
         _client.Send(packet);
     }

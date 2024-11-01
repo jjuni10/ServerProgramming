@@ -26,6 +26,9 @@ public class PacketReqUserInfo : Packet
 
     [Key(11)]
     public ETeam team;
+    
+    [Key(12)]
+    public ERole role;
 }
 
 [MessagePackObject]
@@ -52,6 +55,9 @@ public struct UserInfo
 
     [Key(3)]
     public bool host;
+    
+    [Key(4)]
+    public ERole role;
 }
 
 [MessagePackObject]
