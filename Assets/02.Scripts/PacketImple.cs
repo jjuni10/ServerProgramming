@@ -18,6 +18,40 @@ using MessagePack;
     SC_GAME_END,
 }*/
 
+#region 게임 시작 전
+[MessagePackObject]
+public struct UserInfo
+{
+    [Key(0)]
+    public int uid;
+
+    [Key(1)]
+    public string id;
+
+    [Key(2)]
+    public ETeam team;
+
+    [Key(3)]
+    public bool host;
+
+    [Key(4)]
+    public ERole role;
+}
+
+[MessagePackObject]
+public class PacketUserJoin : Packet
+{
+    [Key(10)]
+    public int uid;
+}
+
+[MessagePackObject]
+public class PacketUserLeave : Packet
+{
+    [Key(10)]
+    public int uid;
+}
+
 [MessagePackObject]
 public class PacketReqUserInfo : Packet
 {
@@ -41,24 +75,6 @@ public class PacketAnsUserInfo : Packet
     public bool host;
 }
 
-[MessagePackObject]
-public struct UserInfo
-{
-    [Key(0)]
-    public int uid;
-
-    [Key(1)]
-    public string id;
-
-    [Key(2)]
-    public ETeam team;
-
-    [Key(3)]
-    public bool host;
-    
-    [Key(4)]
-    public ERole role;
-}
 
 [MessagePackObject]
 public class PacketAnsUserList : Packet
@@ -94,6 +110,9 @@ public class PacketGameReadyOk : Packet
 {
 }
 
+#endregion
+
+#region 게임 시작
 [MessagePackObject]
 public struct GameStartInfo
 {
@@ -119,6 +138,31 @@ public class PacketGameStart : Packet
     [Key(11)]
     public GameStartInfo[] startInfos = new GameStartInfo[20];
 }
+#endregion
+
+#region 게임 플레이 중
+[MessagePackObject]
+public class PacketFeverStart : Packet
+{
+}
+
+[MessagePackObject]
+public class PacketTimerUpdate : Packet
+{
+    [Key(10)]
+    public int timeSeconds;
+}
+
+[MessagePackObject]
+public class PacketTeamScoreUpdate : Packet
+{
+    [Key(10)]
+    public int redTeamScore;
+
+    [Key(11)]
+    public int blueTeamScore;
+}
+
 
 [MessagePackObject]
 public class PacketPlayerPosition : Packet
@@ -165,9 +209,19 @@ public class PacketBulletDestroy : Packet
     [Key(10)]
     public int bulletUID;
 }
+#endregion
+
+#region 게임 끝
 [MessagePackObject]
 public class PacketGameEnd : Packet
 {
     [Key(10)]
     public ETeam winTeam;
+
+    [Key(11)]
+    public int[] redTeamScores = new int[2];
+
+    [Key(12)]
+    public int[] blueTeamScores = new int[2];
 }
+#endregion
