@@ -226,6 +226,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SecondSceneUI
       objectReference: {fileID: 0}
+    - target: {fileID: 4502337443780947746, guid: a027a690a507c4a4ba842cd1e5cb88d5, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7147362306465458767, guid: a027a690a507c4a4ba842cd1e5cb88d5, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
