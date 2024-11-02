@@ -113,6 +113,7 @@ public class Client : MonoBehaviour, IPeer
                 break;
             case PacketGameEnd packet:
                 {
+                    GameManager.Instance.IsGameEnd = true;
                     Debug.Log($"승리팀은 {packet.winTeam}");
                 }
                 break;

@@ -6,9 +6,6 @@ using TMPro;
 
 public class SecondSceneUIController : MonoBehaviour
 {
-    private bool isStartGame = false;
-    private bool isEndGame = false;
-
     public TMP_Text CountNum;
     private Coroutine count_Co = null;
 
@@ -16,8 +13,22 @@ public class SecondSceneUIController : MonoBehaviour
     public float SettingPlayTime = 180f;   // 셋팅된 플레이 시간 (현재 3분)
     public Image GaugePlayTime; // 플레이 시간 소비 게이지
 
+    public TMP_Text Player1ID;
+    public TMP_Text Player1Point;
+
+    public TMP_Text Player2ID;
+    public TMP_Text Player2Point;
+
+    public TMP_Text Player3ID;
+    public TMP_Text Player3Point;
+    
+    public TMP_Text Player4ID;
+    public TMP_Text Player4Point;
+
     void Start()
     {
+        //todo: get each Player's ID, And set ID
+
         StartCoroutine(StartCount());
     }
 
@@ -28,9 +39,12 @@ public class SecondSceneUIController : MonoBehaviour
 
     void FixedUpdate() 
     {
-        if (isEndGame || !isStartGame) return;
+        if (GameManager.Instance.IsGameEnd || !GameManager.Instance.IsGameStarted) return;
         //todo: "PlayTime" set scroll value
         GaugePlayTime.fillAmount = PlayTime / SettingPlayTime;
+
+        //todo: get each Player's Point And set Point
+
     }
 
     IEnumerator StartCount()
@@ -66,12 +80,10 @@ public class SecondSceneUIController : MonoBehaviour
     }
     IEnumerator PlayTimeCalculate()
     {
-        isStartGame = true;
-        while (!isEndGame)
+        while (!GameManager.Instance.IsGameEnd)
         {
             if (PlayTime <= 0) 
             {
-                isEndGame = true;
                 CountNum.gameObject.SetActive(true);
                 CountNum.text = "끝~~";
             }

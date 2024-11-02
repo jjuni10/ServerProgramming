@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour
     public string UserID { get; set; }  // 클라이언트 자신의 ID
     public bool IsHost { get; set; }
     public bool IsGameStarted { get; set; }
+    public bool IsGameEnd { get; set; }
     public Client client => _client;
 
     private void Start()

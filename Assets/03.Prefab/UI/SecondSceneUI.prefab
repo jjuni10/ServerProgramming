@@ -639,7 +639,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 0.512
+  m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -1333,6 +1333,14 @@ MonoBehaviour:
   PlayTime: 180
   SettingPlayTime: 180
   GaugePlayTime: {fileID: 2729874152544927878}
+  Player1ID: {fileID: 1116738501897378666}
+  Player1Point: {fileID: 7415723241576842876}
+  Player2ID: {fileID: 2687597001623220582}
+  Player2Point: {fileID: 5398966823623000390}
+  Player3ID: {fileID: 157962758509317313}
+  Player3Point: {fileID: 1747167037794919884}
+  Player4ID: {fileID: 2992493624256289488}
+  Player4Point: {fileID: 1747167037794919884}
 --- !u!1 &6906923257192996669
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerRunner : Player
 {    
     float curVertVelocity;
+    private float _dodgeCool = 0;
 
 
     void Awake() 
@@ -24,6 +25,7 @@ public class PlayerRunner : Player
             //transform.position = new Vector3(10, 3, 0);
             transform.Rotate(P_Com.cameraObj.transform.right * -1);
         }
+        _dodgeCool = 0;
     }
     void Update()
     {   
@@ -101,10 +103,10 @@ public class PlayerRunner : Player
 
             P_Value.moveDirection.y = 0f;
 
-            P_Com.rigidbody.AddForce(P_Value.moveDirection, ForceMode.VelocityChange);
+            P_Com.rigidbody.AddForce(P_Value.moveDirection * P_COption.dodgingForce, ForceMode.VelocityChange);
 
             // 기존 수직 속도를 유지하도록 수직 속도 다시 설정
-            P_Com.rigidbody.velocity = new Vector3(P_Com.rigidbody.velocity.x, curVertVelocity, P_Com.rigidbody.velocity.z);
+            //P_Com.rigidbody.velocity = new Vector3(P_Com.rigidbody.velocity.x, curVertVelocity, P_Com.rigidbody.velocity.z);
 
             Invoke("dodgeOut", 0.14f);    //닷지 유지 시간 = 0.14초
         }
@@ -156,21 +158,23 @@ public class PlayerRunner : Player
     {
         P_States.currentDodgeKeyPress = Input.GetKey(KeyCode.LeftShift);
 
-        if (ReturnDodgeAnim()
+        if (_dodgeCool < 3f && ReturnDodgeAnim()
             && P_States.previousDodgeKeyPress && P_States.currentDodgeKeyPress)
         {
             return;
         }
-        else if (!ReturnDodgeAnim()
+        else if (_dodgeCool >= 3f && !ReturnDodgeAnim()
             &&!P_States.previousDodgeKeyPress && P_States.currentDodgeKeyPress
             && P_States._curState != EState.Dash)
         {
             Debug.Log("Dodge");
             P_States.isDodgeing = true;
+            _dodgeCool = 0;
             P_States._curState = EState.Dash;
             curVertVelocity = P_Com.rigidbody.velocity.y;
         }
 
+        _dodgeCool += Time.deltaTime;
         // 프레임마다 키 입력 저장
         P_States.previousDodgeKeyPress = P_States.currentDodgeKeyPress;
     }    
