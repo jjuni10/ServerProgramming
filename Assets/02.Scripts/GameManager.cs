@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour
     
     public int redPoint;
     public int bluePoint;
+    public ETeam WinTeam { get; set; }
 
     public int UserUID { get; set; }    // 클라이언트 자신의 UID
     public string UserID { get; set; }  // 클라이언트 자신의 ID

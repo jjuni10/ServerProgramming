@@ -4,13 +4,12 @@ using UnityEngine;
 
 public class ThirdSceneUIController : MonoBehaviour
 {
-    // Start is called before the first frame update
+    private ETeam winTeam;
     void Start()
     {
-        
+        winTeam = GameManager.Instance.WinTeam;
     }
 
-    // Update is called once per frame
     void Update()
     {
         
