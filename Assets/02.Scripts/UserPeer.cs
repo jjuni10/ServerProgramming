@@ -15,7 +15,7 @@ public class UserPeer : IPeer
     private ETeam _team;
     private ERole _role;
     private bool _isHost;
-    private bool _gameReady;        // 게임 준비 완료 여부
+    private bool _gameReady = false;        // 게임 준비 완료 여부
 
     public int UID => _uid;
     public string ID => _id;
@@ -75,12 +75,12 @@ public class UserPeer : IPeer
                 break;
             case PacketGameReady packet:
                 {
+                    _gameReady = true;
                     _host.SendAll(packet);
                 }
                 break;
             case PacketGameReadyOk packet:
                 {
-                    _gameReady = true;
                     _host.CheckGameReady();
                 }
                 break;

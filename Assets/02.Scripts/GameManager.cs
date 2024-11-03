@@ -176,17 +176,18 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void GameReady()
-    {
-        // 게임 시작 준비.
-        _ui.SetUIState(UIMain.EUIState.Game);
+    // public void GameReady()
+    // {
+    //     //게임 시작 준비.
+    //     _ui.SetUIState(UIMain.EUIState.Game);
 
-        PacketGameReadyOk packet = new PacketGameReadyOk();
-        _client.Send(packet);
-    }
+    //     PacketGameReadyOk packet = new PacketGameReadyOk();
+    //     _client.Send(packet);
+    // }
 
     public void GameStart(PacketGameStart packet)
     {
+        _ui.SetUIState(UIMain.EUIState.Game);
         for (int i = 0; i < packet.userNum; i++)
         {
             // Resources 폴더에서 캐릭터를 불러온다.
