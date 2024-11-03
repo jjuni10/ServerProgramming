@@ -173,7 +173,7 @@ namespace MessagePack.Unity.Editor
         }
     }
 
-    internal class MpcArgument
+    public class MpcArgument
     {
         public string Input;
         public string Output;
@@ -234,7 +234,7 @@ namespace MessagePack.Unity.Editor
         }
     }
 
-    internal static class ProcessHelper
+    public static class ProcessHelper
     {
         const string InstallName = "messagepack.generator";
 
