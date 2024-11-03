@@ -60,7 +60,7 @@ public class PacketReqUserInfo : Packet
 
     [Key(11)]
     public ETeam team;
-    
+
     [Key(12)]
     public ERole role;
 }
@@ -191,6 +191,45 @@ public class PacketPlayerFire : Packet
 
     [Key(13)]
     public Vector3 direction;
+}
+
+[MessagePackObject]
+public class PacketEntitySpawn : Packet
+{
+    [Key(10)]
+    public EEntity type;
+
+    [Key(11)]
+    public int ownerUID;
+
+    [Key(12)]
+    public int entityUID;
+
+    [Key(13)]
+    public Vector3 position;
+
+    [Key(14)]
+    public Vector3 velocity;
+
+    [Key(15)]
+    public float rotation;
+}
+
+[MessagePackObject]
+public class PacketEntityDestroy : Packet
+{
+    [Key(10)]
+    public int entityUID;
+}
+
+[MessagePackObject]
+public class PacketEntityPlayerCollision : Packet
+{
+    [Key(10)]
+    public int playerUID;
+
+    [Key(11)]
+    public int entityUID;
 }
 
 [MessagePackObject]
