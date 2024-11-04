@@ -47,26 +47,37 @@ namespace MessagePack.Resolvers
 
         static GeneratedResolverGetFormatterHelper()
         {
-            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(18)
+            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(29)
             {
                 { typeof(global::GameStartInfo[]), 0 },
                 { typeof(global::UserInfo[]), 1 },
-                { typeof(global::ETeam), 2 },
-                { typeof(global::Packet), 3 },
-                { typeof(global::GameStartInfo), 4 },
-                { typeof(global::PacketAnsUserInfo), 5 },
-                { typeof(global::PacketAnsUserList), 6 },
-                { typeof(global::PacketBulletDestroy), 7 },
-                { typeof(global::PacketGameEnd), 8 },
-                { typeof(global::PacketGameReady), 9 },
-                { typeof(global::PacketGameReadyOk), 10 },
-                { typeof(global::PacketGameStart), 11 },
-                { typeof(global::PacketPlayerDamage), 12 },
-                { typeof(global::PacketPlayerFire), 13 },
-                { typeof(global::PacketPlayerPosition), 14 },
-                { typeof(global::PacketReqChangeTeam), 15 },
-                { typeof(global::PacketReqUserInfo), 16 },
-                { typeof(global::UserInfo), 17 },
+                { typeof(global::EEntity), 2 },
+                { typeof(global::ERole), 3 },
+                { typeof(global::ETeam), 4 },
+                { typeof(global::Packet), 5 },
+                { typeof(global::GameStartInfo), 6 },
+                { typeof(global::PacketAnsUserInfo), 7 },
+                { typeof(global::PacketAnsUserList), 8 },
+                { typeof(global::PacketBulletDestroy), 9 },
+                { typeof(global::PacketEntityDestroy), 10 },
+                { typeof(global::PacketEntityPlayerCollision), 11 },
+                { typeof(global::PacketEntitySpawn), 12 },
+                { typeof(global::PacketFeverStart), 13 },
+                { typeof(global::PacketGameEnd), 14 },
+                { typeof(global::PacketGameReady), 15 },
+                { typeof(global::PacketGameReadyOk), 16 },
+                { typeof(global::PacketGameStart), 17 },
+                { typeof(global::PacketPlayerDamage), 18 },
+                { typeof(global::PacketPlayerFire), 19 },
+                { typeof(global::PacketPlayerPosition), 20 },
+                { typeof(global::PacketReqChangeRole), 21 },
+                { typeof(global::PacketReqChangeTeam), 22 },
+                { typeof(global::PacketReqUserInfo), 23 },
+                { typeof(global::PacketTeamScoreUpdate), 24 },
+                { typeof(global::PacketTimerUpdate), 25 },
+                { typeof(global::PacketUserJoin), 26 },
+                { typeof(global::PacketUserLeave), 27 },
+                { typeof(global::UserInfo), 28 },
             };
         }
 
@@ -82,22 +93,33 @@ namespace MessagePack.Resolvers
             {
                 case 0: return new global::MessagePack.Formatters.ArrayFormatter<global::GameStartInfo>();
                 case 1: return new global::MessagePack.Formatters.ArrayFormatter<global::UserInfo>();
-                case 2: return new MessagePack.Formatters.ETeamFormatter();
-                case 3: return new MessagePack.Formatters.PacketFormatter();
-                case 4: return new MessagePack.Formatters.GameStartInfoFormatter();
-                case 5: return new MessagePack.Formatters.PacketAnsUserInfoFormatter();
-                case 6: return new MessagePack.Formatters.PacketAnsUserListFormatter();
-                case 7: return new MessagePack.Formatters.PacketBulletDestroyFormatter();
-                case 8: return new MessagePack.Formatters.PacketGameEndFormatter();
-                case 9: return new MessagePack.Formatters.PacketGameReadyFormatter();
-                case 10: return new MessagePack.Formatters.PacketGameReadyOkFormatter();
-                case 11: return new MessagePack.Formatters.PacketGameStartFormatter();
-                case 12: return new MessagePack.Formatters.PacketPlayerDamageFormatter();
-                case 13: return new MessagePack.Formatters.PacketPlayerFireFormatter();
-                case 14: return new MessagePack.Formatters.PacketPlayerPositionFormatter();
-                case 15: return new MessagePack.Formatters.PacketReqChangeTeamFormatter();
-                case 16: return new MessagePack.Formatters.PacketReqUserInfoFormatter();
-                case 17: return new MessagePack.Formatters.UserInfoFormatter();
+                case 2: return new MessagePack.Formatters.EEntityFormatter();
+                case 3: return new MessagePack.Formatters.ERoleFormatter();
+                case 4: return new MessagePack.Formatters.ETeamFormatter();
+                case 5: return new MessagePack.Formatters.PacketFormatter();
+                case 6: return new MessagePack.Formatters.GameStartInfoFormatter();
+                case 7: return new MessagePack.Formatters.PacketAnsUserInfoFormatter();
+                case 8: return new MessagePack.Formatters.PacketAnsUserListFormatter();
+                case 9: return new MessagePack.Formatters.PacketBulletDestroyFormatter();
+                case 10: return new MessagePack.Formatters.PacketEntityDestroyFormatter();
+                case 11: return new MessagePack.Formatters.PacketEntityPlayerCollisionFormatter();
+                case 12: return new MessagePack.Formatters.PacketEntitySpawnFormatter();
+                case 13: return new MessagePack.Formatters.PacketFeverStartFormatter();
+                case 14: return new MessagePack.Formatters.PacketGameEndFormatter();
+                case 15: return new MessagePack.Formatters.PacketGameReadyFormatter();
+                case 16: return new MessagePack.Formatters.PacketGameReadyOkFormatter();
+                case 17: return new MessagePack.Formatters.PacketGameStartFormatter();
+                case 18: return new MessagePack.Formatters.PacketPlayerDamageFormatter();
+                case 19: return new MessagePack.Formatters.PacketPlayerFireFormatter();
+                case 20: return new MessagePack.Formatters.PacketPlayerPositionFormatter();
+                case 21: return new MessagePack.Formatters.PacketReqChangeRoleFormatter();
+                case 22: return new MessagePack.Formatters.PacketReqChangeTeamFormatter();
+                case 23: return new MessagePack.Formatters.PacketReqUserInfoFormatter();
+                case 24: return new MessagePack.Formatters.PacketTeamScoreUpdateFormatter();
+                case 25: return new MessagePack.Formatters.PacketTimerUpdateFormatter();
+                case 26: return new MessagePack.Formatters.PacketUserJoinFormatter();
+                case 27: return new MessagePack.Formatters.PacketUserLeaveFormatter();
+                case 28: return new MessagePack.Formatters.UserInfoFormatter();
                 default: return null;
             }
         }
@@ -128,6 +150,32 @@ namespace MessagePack.Resolvers
 
 namespace MessagePack.Formatters
 {
+
+    public sealed class EEntityFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::EEntity>
+    {
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::EEntity value, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            writer.Write((global::System.Int32)value);
+        }
+
+        public global::EEntity Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            return (global::EEntity)reader.ReadInt32();
+        }
+    }
+
+    public sealed class ERoleFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::ERole>
+    {
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::ERole value, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            writer.Write((global::System.Int32)value);
+        }
+
+        public global::ERole Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            return (global::ERole)reader.ReadInt32();
+        }
+    }
 
     public sealed class ETeamFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::ETeam>
     {
@@ -174,22 +222,31 @@ namespace MessagePack.Formatters
 
         public PacketFormatter()
         {
-            this.typeToKeyAndJumpMap = new global::System.Collections.Generic.Dictionary<global::System.RuntimeTypeHandle, global::System.Collections.Generic.KeyValuePair<int, int>>(12, global::MessagePack.Internal.RuntimeTypeHandleEqualityComparer.Default)
+            this.typeToKeyAndJumpMap = new global::System.Collections.Generic.Dictionary<global::System.RuntimeTypeHandle, global::System.Collections.Generic.KeyValuePair<int, int>>(21, global::MessagePack.Internal.RuntimeTypeHandleEqualityComparer.Default)
             {
-                { typeof(global::PacketReqUserInfo).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(0, 0) },
-                { typeof(global::PacketAnsUserInfo).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(1, 1) },
-                { typeof(global::PacketAnsUserList).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(2, 2) },
-                { typeof(global::PacketReqChangeTeam).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(3, 3) },
-                { typeof(global::PacketGameReady).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(4, 4) },
-                { typeof(global::PacketGameReadyOk).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(5, 5) },
-                { typeof(global::PacketGameStart).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(6, 6) },
-                { typeof(global::PacketPlayerPosition).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(7, 7) },
-                { typeof(global::PacketPlayerFire).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(8, 8) },
-                { typeof(global::PacketPlayerDamage).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(9, 9) },
-                { typeof(global::PacketBulletDestroy).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(10, 10) },
-                { typeof(global::PacketGameEnd).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(11, 11) },
+                { typeof(global::PacketUserJoin).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(0, 0) },
+                { typeof(global::PacketUserLeave).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(1, 1) },
+                { typeof(global::PacketReqUserInfo).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(2, 2) },
+                { typeof(global::PacketAnsUserInfo).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(3, 3) },
+                { typeof(global::PacketAnsUserList).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(4, 4) },
+                { typeof(global::PacketReqChangeTeam).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(5, 5) },
+                { typeof(global::PacketReqChangeRole).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(6, 6) },
+                { typeof(global::PacketGameReady).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(7, 7) },
+                { typeof(global::PacketGameReadyOk).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(8, 8) },
+                { typeof(global::PacketGameStart).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(9, 9) },
+                { typeof(global::PacketFeverStart).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(10, 10) },
+                { typeof(global::PacketTimerUpdate).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(11, 11) },
+                { typeof(global::PacketTeamScoreUpdate).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(12, 12) },
+                { typeof(global::PacketPlayerPosition).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(13, 13) },
+                { typeof(global::PacketPlayerFire).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(14, 14) },
+                { typeof(global::PacketEntitySpawn).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(15, 15) },
+                { typeof(global::PacketEntityDestroy).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(16, 16) },
+                { typeof(global::PacketEntityPlayerCollision).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(17, 17) },
+                { typeof(global::PacketPlayerDamage).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(18, 18) },
+                { typeof(global::PacketBulletDestroy).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(19, 19) },
+                { typeof(global::PacketGameEnd).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(20, 20) },
             };
-            this.keyToJumpMap = new global::System.Collections.Generic.Dictionary<int, int>(12)
+            this.keyToJumpMap = new global::System.Collections.Generic.Dictionary<int, int>(21)
             {
                 { 0, 0 },
                 { 1, 1 },
@@ -203,6 +260,15 @@ namespace MessagePack.Formatters
                 { 9, 9 },
                 { 10, 10 },
                 { 11, 11 },
+                { 12, 12 },
+                { 13, 13 },
+                { 14, 14 },
+                { 15, 15 },
+                { 16, 16 },
+                { 17, 17 },
+                { 18, 18 },
+                { 19, 19 },
+                { 20, 20 },
             };
         }
 
@@ -216,39 +282,66 @@ namespace MessagePack.Formatters
                 switch (keyValuePair.Value)
                 {
                     case 0:
-                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketReqUserInfo>(options.Resolver).Serialize(ref writer, (global::PacketReqUserInfo)value, options);
+                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketUserJoin>(options.Resolver).Serialize(ref writer, (global::PacketUserJoin)value, options);
                         break;
                     case 1:
-                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketAnsUserInfo>(options.Resolver).Serialize(ref writer, (global::PacketAnsUserInfo)value, options);
+                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketUserLeave>(options.Resolver).Serialize(ref writer, (global::PacketUserLeave)value, options);
                         break;
                     case 2:
-                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketAnsUserList>(options.Resolver).Serialize(ref writer, (global::PacketAnsUserList)value, options);
+                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketReqUserInfo>(options.Resolver).Serialize(ref writer, (global::PacketReqUserInfo)value, options);
                         break;
                     case 3:
-                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketReqChangeTeam>(options.Resolver).Serialize(ref writer, (global::PacketReqChangeTeam)value, options);
+                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketAnsUserInfo>(options.Resolver).Serialize(ref writer, (global::PacketAnsUserInfo)value, options);
                         break;
                     case 4:
-                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketGameReady>(options.Resolver).Serialize(ref writer, (global::PacketGameReady)value, options);
+                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketAnsUserList>(options.Resolver).Serialize(ref writer, (global::PacketAnsUserList)value, options);
                         break;
                     case 5:
-                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketGameReadyOk>(options.Resolver).Serialize(ref writer, (global::PacketGameReadyOk)value, options);
+                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketReqChangeTeam>(options.Resolver).Serialize(ref writer, (global::PacketReqChangeTeam)value, options);
                         break;
                     case 6:
-                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketGameStart>(options.Resolver).Serialize(ref writer, (global::PacketGameStart)value, options);
+                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketReqChangeRole>(options.Resolver).Serialize(ref writer, (global::PacketReqChangeRole)value, options);
                         break;
                     case 7:
-                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketPlayerPosition>(options.Resolver).Serialize(ref writer, (global::PacketPlayerPosition)value, options);
+                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketGameReady>(options.Resolver).Serialize(ref writer, (global::PacketGameReady)value, options);
                         break;
                     case 8:
-                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketPlayerFire>(options.Resolver).Serialize(ref writer, (global::PacketPlayerFire)value, options);
+                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketGameReadyOk>(options.Resolver).Serialize(ref writer, (global::PacketGameReadyOk)value, options);
                         break;
                     case 9:
-                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketPlayerDamage>(options.Resolver).Serialize(ref writer, (global::PacketPlayerDamage)value, options);
+                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketGameStart>(options.Resolver).Serialize(ref writer, (global::PacketGameStart)value, options);
                         break;
                     case 10:
-                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketBulletDestroy>(options.Resolver).Serialize(ref writer, (global::PacketBulletDestroy)value, options);
+                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketFeverStart>(options.Resolver).Serialize(ref writer, (global::PacketFeverStart)value, options);
                         break;
                     case 11:
+                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketTimerUpdate>(options.Resolver).Serialize(ref writer, (global::PacketTimerUpdate)value, options);
+                        break;
+                    case 12:
+                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketTeamScoreUpdate>(options.Resolver).Serialize(ref writer, (global::PacketTeamScoreUpdate)value, options);
+                        break;
+                    case 13:
+                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketPlayerPosition>(options.Resolver).Serialize(ref writer, (global::PacketPlayerPosition)value, options);
+                        break;
+                    case 14:
+                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketPlayerFire>(options.Resolver).Serialize(ref writer, (global::PacketPlayerFire)value, options);
+                        break;
+                    case 15:
+                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketEntitySpawn>(options.Resolver).Serialize(ref writer, (global::PacketEntitySpawn)value, options);
+                        break;
+                    case 16:
+                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketEntityDestroy>(options.Resolver).Serialize(ref writer, (global::PacketEntityDestroy)value, options);
+                        break;
+                    case 17:
+                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketEntityPlayerCollision>(options.Resolver).Serialize(ref writer, (global::PacketEntityPlayerCollision)value, options);
+                        break;
+                    case 18:
+                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketPlayerDamage>(options.Resolver).Serialize(ref writer, (global::PacketPlayerDamage)value, options);
+                        break;
+                    case 19:
+                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketBulletDestroy>(options.Resolver).Serialize(ref writer, (global::PacketBulletDestroy)value, options);
+                        break;
+                    case 20:
                         global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketGameEnd>(options.Resolver).Serialize(ref writer, (global::PacketGameEnd)value, options);
                         break;
                     default:
@@ -285,39 +378,66 @@ namespace MessagePack.Formatters
             switch (key)
             {
                 case 0:
-                    result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketReqUserInfo>(options.Resolver).Deserialize(ref reader, options);
+                    result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketUserJoin>(options.Resolver).Deserialize(ref reader, options);
                     break;
                 case 1:
-                    result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketAnsUserInfo>(options.Resolver).Deserialize(ref reader, options);
+                    result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketUserLeave>(options.Resolver).Deserialize(ref reader, options);
                     break;
                 case 2:
-                    result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketAnsUserList>(options.Resolver).Deserialize(ref reader, options);
+                    result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketReqUserInfo>(options.Resolver).Deserialize(ref reader, options);
                     break;
                 case 3:
-                    result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketReqChangeTeam>(options.Resolver).Deserialize(ref reader, options);
+                    result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketAnsUserInfo>(options.Resolver).Deserialize(ref reader, options);
                     break;
                 case 4:
-                    result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketGameReady>(options.Resolver).Deserialize(ref reader, options);
+                    result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketAnsUserList>(options.Resolver).Deserialize(ref reader, options);
                     break;
                 case 5:
-                    result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketGameReadyOk>(options.Resolver).Deserialize(ref reader, options);
+                    result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketReqChangeTeam>(options.Resolver).Deserialize(ref reader, options);
                     break;
                 case 6:
-                    result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketGameStart>(options.Resolver).Deserialize(ref reader, options);
+                    result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketReqChangeRole>(options.Resolver).Deserialize(ref reader, options);
                     break;
                 case 7:
-                    result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketPlayerPosition>(options.Resolver).Deserialize(ref reader, options);
+                    result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketGameReady>(options.Resolver).Deserialize(ref reader, options);
                     break;
                 case 8:
-                    result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketPlayerFire>(options.Resolver).Deserialize(ref reader, options);
+                    result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketGameReadyOk>(options.Resolver).Deserialize(ref reader, options);
                     break;
                 case 9:
-                    result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketPlayerDamage>(options.Resolver).Deserialize(ref reader, options);
+                    result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketGameStart>(options.Resolver).Deserialize(ref reader, options);
                     break;
                 case 10:
-                    result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketBulletDestroy>(options.Resolver).Deserialize(ref reader, options);
+                    result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketFeverStart>(options.Resolver).Deserialize(ref reader, options);
                     break;
                 case 11:
+                    result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketTimerUpdate>(options.Resolver).Deserialize(ref reader, options);
+                    break;
+                case 12:
+                    result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketTeamScoreUpdate>(options.Resolver).Deserialize(ref reader, options);
+                    break;
+                case 13:
+                    result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketPlayerPosition>(options.Resolver).Deserialize(ref reader, options);
+                    break;
+                case 14:
+                    result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketPlayerFire>(options.Resolver).Deserialize(ref reader, options);
+                    break;
+                case 15:
+                    result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketEntitySpawn>(options.Resolver).Deserialize(ref reader, options);
+                    break;
+                case 16:
+                    result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketEntityDestroy>(options.Resolver).Deserialize(ref reader, options);
+                    break;
+                case 17:
+                    result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketEntityPlayerCollision>(options.Resolver).Deserialize(ref reader, options);
+                    break;
+                case 18:
+                    result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketPlayerDamage>(options.Resolver).Deserialize(ref reader, options);
+                    break;
+                case 19:
+                    result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketBulletDestroy>(options.Resolver).Deserialize(ref reader, options);
+                    break;
+                case 20:
                     result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketGameEnd>(options.Resolver).Deserialize(ref reader, options);
                     break;
                 default:
@@ -586,6 +706,220 @@ namespace MessagePack.Formatters
         }
     }
 
+    public sealed class PacketEntityDestroyFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::PacketEntityDestroy>
+    {
+
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::PacketEntityDestroy value, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (value == null)
+            {
+                writer.WriteNil();
+                return;
+            }
+
+            writer.WriteArrayHeader(11);
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.Write(value.entityUID);
+        }
+
+        public global::PacketEntityDestroy Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (reader.TryReadNil())
+            {
+                return null;
+            }
+
+            options.Security.DepthStep(ref reader);
+            var length = reader.ReadArrayHeader();
+            var ____result = new global::PacketEntityDestroy();
+
+            for (int i = 0; i < length; i++)
+            {
+                switch (i)
+                {
+                    case 10:
+                        ____result.entityUID = reader.ReadInt32();
+                        break;
+                    default:
+                        reader.Skip();
+                        break;
+                }
+            }
+
+            reader.Depth--;
+            return ____result;
+        }
+    }
+
+    public sealed class PacketEntityPlayerCollisionFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::PacketEntityPlayerCollision>
+    {
+
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::PacketEntityPlayerCollision value, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (value == null)
+            {
+                writer.WriteNil();
+                return;
+            }
+
+            writer.WriteArrayHeader(12);
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.Write(value.playerUID);
+            writer.Write(value.entityUID);
+        }
+
+        public global::PacketEntityPlayerCollision Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (reader.TryReadNil())
+            {
+                return null;
+            }
+
+            options.Security.DepthStep(ref reader);
+            var length = reader.ReadArrayHeader();
+            var ____result = new global::PacketEntityPlayerCollision();
+
+            for (int i = 0; i < length; i++)
+            {
+                switch (i)
+                {
+                    case 10:
+                        ____result.playerUID = reader.ReadInt32();
+                        break;
+                    case 11:
+                        ____result.entityUID = reader.ReadInt32();
+                        break;
+                    default:
+                        reader.Skip();
+                        break;
+                }
+            }
+
+            reader.Depth--;
+            return ____result;
+        }
+    }
+
+    public sealed class PacketEntitySpawnFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::PacketEntitySpawn>
+    {
+
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::PacketEntitySpawn value, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (value == null)
+            {
+                writer.WriteNil();
+                return;
+            }
+
+            global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
+            writer.WriteArrayHeader(16);
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::EEntity>(formatterResolver).Serialize(ref writer, value.type, options);
+            writer.Write(value.ownerUID);
+            writer.Write(value.entityUID);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::UnityEngine.Vector3>(formatterResolver).Serialize(ref writer, value.position, options);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::UnityEngine.Vector3>(formatterResolver).Serialize(ref writer, value.velocity, options);
+            writer.Write(value.rotation);
+        }
+
+        public global::PacketEntitySpawn Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (reader.TryReadNil())
+            {
+                return null;
+            }
+
+            options.Security.DepthStep(ref reader);
+            global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
+            var length = reader.ReadArrayHeader();
+            var ____result = new global::PacketEntitySpawn();
+
+            for (int i = 0; i < length; i++)
+            {
+                switch (i)
+                {
+                    case 10:
+                        ____result.type = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::EEntity>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 11:
+                        ____result.ownerUID = reader.ReadInt32();
+                        break;
+                    case 12:
+                        ____result.entityUID = reader.ReadInt32();
+                        break;
+                    case 13:
+                        ____result.position = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::UnityEngine.Vector3>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 14:
+                        ____result.velocity = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::UnityEngine.Vector3>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 15:
+                        ____result.rotation = reader.ReadSingle();
+                        break;
+                    default:
+                        reader.Skip();
+                        break;
+                }
+            }
+
+            reader.Depth--;
+            return ____result;
+        }
+    }
+
+    public sealed class PacketFeverStartFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::PacketFeverStart>
+    {
+
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::PacketFeverStart value, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (value == null)
+            {
+                writer.WriteNil();
+                return;
+            }
+
+            writer.WriteArrayHeader(0);
+        }
+
+        public global::PacketFeverStart Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (reader.TryReadNil())
+            {
+                return null;
+            }
+
+            reader.Skip();
+            return new global::PacketFeverStart();
+        }
+    }
+
     public sealed class PacketGameEndFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::PacketGameEnd>
     {
 
@@ -598,7 +932,7 @@ namespace MessagePack.Formatters
             }
 
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
-            writer.WriteArrayHeader(11);
+            writer.WriteArrayHeader(13);
             writer.WriteNil();
             writer.WriteNil();
             writer.WriteNil();
@@ -610,6 +944,8 @@ namespace MessagePack.Formatters
             writer.WriteNil();
             writer.WriteNil();
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::ETeam>(formatterResolver).Serialize(ref writer, value.winTeam, options);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<int[]>(formatterResolver).Serialize(ref writer, value.redTeamScores, options);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<int[]>(formatterResolver).Serialize(ref writer, value.blueTeamScores, options);
         }
 
         public global::PacketGameEnd Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -630,6 +966,12 @@ namespace MessagePack.Formatters
                 {
                     case 10:
                         ____result.winTeam = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::ETeam>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 11:
+                        ____result.redTeamScores = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<int[]>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 12:
+                        ____result.blueTeamScores = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<int[]>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     default:
                         reader.Skip();
@@ -653,7 +995,18 @@ namespace MessagePack.Formatters
                 return;
             }
 
-            writer.WriteArrayHeader(0);
+            writer.WriteArrayHeader(11);
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.Write(value.IsReady);
         }
 
         public global::PacketGameReady Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -663,8 +1016,25 @@ namespace MessagePack.Formatters
                 return null;
             }
 
-            reader.Skip();
-            return new global::PacketGameReady();
+            options.Security.DepthStep(ref reader);
+            var length = reader.ReadArrayHeader();
+            var ____result = new global::PacketGameReady();
+
+            for (int i = 0; i < length; i++)
+            {
+                switch (i)
+                {
+                    case 10:
+                        ____result.IsReady = reader.ReadBoolean();
+                        break;
+                    default:
+                        reader.Skip();
+                        break;
+                }
+            }
+
+            reader.Depth--;
+            return ____result;
         }
     }
 
@@ -944,6 +1314,62 @@ namespace MessagePack.Formatters
         }
     }
 
+    public sealed class PacketReqChangeRoleFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::PacketReqChangeRole>
+    {
+
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::PacketReqChangeRole value, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (value == null)
+            {
+                writer.WriteNil();
+                return;
+            }
+
+            global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
+            writer.WriteArrayHeader(11);
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::ERole>(formatterResolver).Serialize(ref writer, value.role, options);
+        }
+
+        public global::PacketReqChangeRole Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (reader.TryReadNil())
+            {
+                return null;
+            }
+
+            options.Security.DepthStep(ref reader);
+            global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
+            var length = reader.ReadArrayHeader();
+            var ____result = new global::PacketReqChangeRole();
+
+            for (int i = 0; i < length; i++)
+            {
+                switch (i)
+                {
+                    case 10:
+                        ____result.role = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::ERole>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    default:
+                        reader.Skip();
+                        break;
+                }
+            }
+
+            reader.Depth--;
+            return ____result;
+        }
+    }
+
     public sealed class PacketReqChangeTeamFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::PacketReqChangeTeam>
     {
 
@@ -1012,7 +1438,7 @@ namespace MessagePack.Formatters
             }
 
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
-            writer.WriteArrayHeader(12);
+            writer.WriteArrayHeader(13);
             writer.WriteNil();
             writer.WriteNil();
             writer.WriteNil();
@@ -1025,6 +1451,7 @@ namespace MessagePack.Formatters
             writer.WriteNil();
             writer.Write(value.uid);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::ETeam>(formatterResolver).Serialize(ref writer, value.team, options);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::ERole>(formatterResolver).Serialize(ref writer, value.role, options);
         }
 
         public global::PacketReqUserInfo Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -1049,6 +1476,229 @@ namespace MessagePack.Formatters
                     case 11:
                         ____result.team = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::ETeam>(formatterResolver).Deserialize(ref reader, options);
                         break;
+                    case 12:
+                        ____result.role = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::ERole>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    default:
+                        reader.Skip();
+                        break;
+                }
+            }
+
+            reader.Depth--;
+            return ____result;
+        }
+    }
+
+    public sealed class PacketTeamScoreUpdateFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::PacketTeamScoreUpdate>
+    {
+
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::PacketTeamScoreUpdate value, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (value == null)
+            {
+                writer.WriteNil();
+                return;
+            }
+
+            writer.WriteArrayHeader(12);
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.Write(value.redTeamScore);
+            writer.Write(value.blueTeamScore);
+        }
+
+        public global::PacketTeamScoreUpdate Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (reader.TryReadNil())
+            {
+                return null;
+            }
+
+            options.Security.DepthStep(ref reader);
+            var length = reader.ReadArrayHeader();
+            var ____result = new global::PacketTeamScoreUpdate();
+
+            for (int i = 0; i < length; i++)
+            {
+                switch (i)
+                {
+                    case 10:
+                        ____result.redTeamScore = reader.ReadInt32();
+                        break;
+                    case 11:
+                        ____result.blueTeamScore = reader.ReadInt32();
+                        break;
+                    default:
+                        reader.Skip();
+                        break;
+                }
+            }
+
+            reader.Depth--;
+            return ____result;
+        }
+    }
+
+    public sealed class PacketTimerUpdateFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::PacketTimerUpdate>
+    {
+
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::PacketTimerUpdate value, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (value == null)
+            {
+                writer.WriteNil();
+                return;
+            }
+
+            writer.WriteArrayHeader(11);
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.Write(value.timeSeconds);
+        }
+
+        public global::PacketTimerUpdate Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (reader.TryReadNil())
+            {
+                return null;
+            }
+
+            options.Security.DepthStep(ref reader);
+            var length = reader.ReadArrayHeader();
+            var ____result = new global::PacketTimerUpdate();
+
+            for (int i = 0; i < length; i++)
+            {
+                switch (i)
+                {
+                    case 10:
+                        ____result.timeSeconds = reader.ReadInt32();
+                        break;
+                    default:
+                        reader.Skip();
+                        break;
+                }
+            }
+
+            reader.Depth--;
+            return ____result;
+        }
+    }
+
+    public sealed class PacketUserJoinFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::PacketUserJoin>
+    {
+
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::PacketUserJoin value, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (value == null)
+            {
+                writer.WriteNil();
+                return;
+            }
+
+            writer.WriteArrayHeader(11);
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.Write(value.uid);
+        }
+
+        public global::PacketUserJoin Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (reader.TryReadNil())
+            {
+                return null;
+            }
+
+            options.Security.DepthStep(ref reader);
+            var length = reader.ReadArrayHeader();
+            var ____result = new global::PacketUserJoin();
+
+            for (int i = 0; i < length; i++)
+            {
+                switch (i)
+                {
+                    case 10:
+                        ____result.uid = reader.ReadInt32();
+                        break;
+                    default:
+                        reader.Skip();
+                        break;
+                }
+            }
+
+            reader.Depth--;
+            return ____result;
+        }
+    }
+
+    public sealed class PacketUserLeaveFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::PacketUserLeave>
+    {
+
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::PacketUserLeave value, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (value == null)
+            {
+                writer.WriteNil();
+                return;
+            }
+
+            writer.WriteArrayHeader(11);
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.Write(value.uid);
+        }
+
+        public global::PacketUserLeave Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (reader.TryReadNil())
+            {
+                return null;
+            }
+
+            options.Security.DepthStep(ref reader);
+            var length = reader.ReadArrayHeader();
+            var ____result = new global::PacketUserLeave();
+
+            for (int i = 0; i < length; i++)
+            {
+                switch (i)
+                {
+                    case 10:
+                        ____result.uid = reader.ReadInt32();
+                        break;
                     default:
                         reader.Skip();
                         break;
@@ -1066,11 +1716,12 @@ namespace MessagePack.Formatters
         public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::UserInfo value, global::MessagePack.MessagePackSerializerOptions options)
         {
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
-            writer.WriteArrayHeader(4);
+            writer.WriteArrayHeader(5);
             writer.Write(value.uid);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.id, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::ETeam>(formatterResolver).Serialize(ref writer, value.team, options);
             writer.Write(value.host);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::ERole>(formatterResolver).Serialize(ref writer, value.role, options);
         }
 
         public global::UserInfo Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -1100,6 +1751,9 @@ namespace MessagePack.Formatters
                         break;
                     case 3:
                         ____result.host = reader.ReadBoolean();
+                        break;
+                    case 4:
+                        ____result.role = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::ERole>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     default:
                         reader.Skip();

@@ -55,11 +55,11 @@ public class Client : MonoBehaviour, IPeer
 
                         if (packet.userInfos[i].team == ETeam.Red)
                         {
-                            strRed += $"ID:{packet.userInfos[i].id} UID:{packet.userInfos[i].uid} {strHost} 팀:{packet.userInfos[i].team}\n";
+                            strRed += $"ID:{packet.userInfos[i].id} UID:{packet.userInfos[i].uid} {strHost} 팀:{packet.userInfos[i].team} 역할:{packet.userInfos[i].role}\n";
                         }
                         else
                         {
-                            strBlue += $"ID:{packet.userInfos[i].id} UID:{packet.userInfos[i].uid} {strHost} 팀:{packet.userInfos[i].team}\n";
+                            strBlue += $"ID:{packet.userInfos[i].id} UID:{packet.userInfos[i].uid} {strHost} 팀:{packet.userInfos[i].team} 역할:{packet.userInfos[i].role}\n";
                         }
                     }
 
@@ -69,7 +69,7 @@ public class Client : MonoBehaviour, IPeer
                 break;
             case PacketGameReady _:
                 {
-                    GameManager.Instance.GameReady();
+                    //GameManager.Instance.GameReady();
                 }
                 break;
             case PacketGameStart packet:

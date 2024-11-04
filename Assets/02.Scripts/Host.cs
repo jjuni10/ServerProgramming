@@ -36,10 +36,12 @@ public class Host : MonoBehaviour
         if (redList.Count > blueList.Count)
         {
             user.Team = ETeam.Blue;
+            user.Role = ERole.Gunner;
         }
         else
         {
             user.Team = ETeam.Red;
+            user.Role = ERole.Runner;
         }
 
         _userList.Add(user);
@@ -87,6 +89,7 @@ public class Host : MonoBehaviour
             sendPacket.userInfos[i].id = _userList[i].ID;
             sendPacket.userInfos[i].uid = _userList[i].UID;
             sendPacket.userInfos[i].team = _userList[i].Team;
+            sendPacket.userInfos[i].role = _userList[i].Role;
             sendPacket.userInfos[i].host = _userList[i].IsHost;
         }
         SendAll(sendPacket);

@@ -13,8 +13,9 @@ public class UserPeer : IPeer
     private int _uid;               // 유저 고유 식별 번호
     private string _id;
     private ETeam _team;
+    private ERole _role;
     private bool _isHost;
-    private bool _gameReady;        // 게임 준비 완료 여부
+    private bool _gameReady = false;        // 게임 준비 완료 여부
 
     public int UID => _uid;
     public string ID => _id;
@@ -29,6 +30,12 @@ public class UserPeer : IPeer
     {
         get => _team;
         set => _team = value;
+    }
+
+    public ERole Role
+    {
+        get => _role;
+        set => _role = value;
     }
 
     public UserPeer(UserToken userToken, int uid, Host host)
@@ -60,14 +67,20 @@ public class UserPeer : IPeer
                     _host.SendUserList();
                 }
                 break;
+            case PacketReqChangeRole packet:
+                {
+                    _role = packet.role;
+                    _host.SendUserList();
+                }
+                break;
             case PacketGameReady packet:
                 {
+                    _gameReady = true;
                     _host.SendAll(packet);
                 }
                 break;
             case PacketGameReadyOk packet:
                 {
-                    _gameReady = true;
                     _host.CheckGameReady();
                 }
                 break;

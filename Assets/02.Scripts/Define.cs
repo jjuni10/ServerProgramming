@@ -11,6 +11,13 @@ public enum ERole
     Runner
 }
 
+public enum EEntity
+{
+    Bullet,
+    Point,
+    Bomb
+}
+
 public class Define
 {
     public const float START_POSITION_OFFSET = 5f;
