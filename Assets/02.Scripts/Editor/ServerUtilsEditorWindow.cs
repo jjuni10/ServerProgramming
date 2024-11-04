@@ -1,4 +1,5 @@
-﻿using Codice.Client.Common;
+﻿#if UNITY_EDITOR
+using Codice.Client.Common;
 using MessagePack.Unity.Editor;
 using System;
 using System.Collections;
@@ -180,3 +181,4 @@ public abstract partial class Packet
         }
     }
 }
+#endif

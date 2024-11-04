@@ -103,6 +103,8 @@ public class PacketReqChangeRole : Packet
 [MessagePackObject]
 public class PacketGameReady : Packet
 {
+    [Key(10)]
+    public bool IsReady;
 }
 
 [MessagePackObject]

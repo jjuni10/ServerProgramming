@@ -995,7 +995,18 @@ namespace MessagePack.Formatters
                 return;
             }
 
-            writer.WriteArrayHeader(0);
+            writer.WriteArrayHeader(11);
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.Write(value.IsReady);
         }
 
         public global::PacketGameReady Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -1005,8 +1016,25 @@ namespace MessagePack.Formatters
                 return null;
             }
 
-            reader.Skip();
-            return new global::PacketGameReady();
+            options.Security.DepthStep(ref reader);
+            var length = reader.ReadArrayHeader();
+            var ____result = new global::PacketGameReady();
+
+            for (int i = 0; i < length; i++)
+            {
+                switch (i)
+                {
+                    case 10:
+                        ____result.IsReady = reader.ReadBoolean();
+                        break;
+                    default:
+                        reader.Skip();
+                        break;
+                }
+            }
+
+            reader.Depth--;
+            return ____result;
         }
     }
 
