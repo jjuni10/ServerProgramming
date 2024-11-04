@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     public int LosePoint = -1;
     public int GetPoint = 1;
     public int UID => _playerInfos.UID;
+    public string ID => _playerInfos.ID;
     public ETeam Team => _playerInfos.TEAM;
     public bool IsLocalPlayer => _playerInfos._localPlayer;
     protected Vector3 _destPosition;          // 비로컬 캐릭터의 목표 위치 (서버에서 받는 위치)
@@ -33,8 +34,8 @@ public class Player : MonoBehaviour
         P_Info.TEAM = team;
         P_Com.cameraObj = Camera.main;
         
-        _destPosition = position;
-        transform.position = position;
+        //_destPosition = position;
+        //transform.position = position;
     }
 
     // private void Update()
