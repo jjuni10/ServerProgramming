@@ -21,11 +21,12 @@ public class PlayerTestGameManager : MonoBehaviour
 
     void Start()
     {
-        
+
     }
 
     void Update()
     {
+        //! 서버에서 시간 체크하고 아이템 뿌려야 할 거 같아서 리턴값으로 위치값 넣음
         if (Input.GetKeyUp(KeyCode.Z))
         {
             SpreadCoin();
@@ -36,7 +37,7 @@ public class PlayerTestGameManager : MonoBehaviour
         }
     }
 
-    public void SpreadCoin()
+    public Vector3 SpreadCoin()
     {
         while (true)
         {
@@ -49,9 +50,10 @@ public class PlayerTestGameManager : MonoBehaviour
 
         var Coin = Resources.Load("Coin");
         Coins.Add(Instantiate(Coin, _randomCoinPos, Quaternion.identity) as GameObject);
+        return _randomCoinPos;
     }
-    
-    public void SpreadBomb()
+
+    public Vector3 SpreadBomb()
     {
         while (true)
         {
@@ -64,5 +66,6 @@ public class PlayerTestGameManager : MonoBehaviour
 
         var Bomb = Resources.Load("Bomb");
         Bombs.Add(Instantiate(Bomb, _randomBombPos, Quaternion.identity) as GameObject);
+        return _randomBombPos;
     }
 }
