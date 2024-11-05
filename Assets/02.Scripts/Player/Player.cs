@@ -18,11 +18,15 @@ public class Player : MonoBehaviour
     protected CurrentState P_States => _currentState;
     protected CurrentValue P_Value => _currentValue;
 
+    private PlayerGunner _gunner;
+    private PlayerRunner _runner;
+
     public int LosePoint = -1;
     public int GetPoint = 1;
     public int UID => _playerInfos.UID;
     public string ID => _playerInfos.ID;
     public ETeam Team => _playerInfos.TEAM;
+    public ERole Role => _playerInfos.ROLE;
     public bool IsLocalPlayer => _playerInfos._localPlayer;
     protected Vector3 _destPosition;          // 비로컬 캐릭터의 목표 위치 (서버에서 받는 위치)
     private float _curFireCoolTime;         // 현재 공격 쿨타임
@@ -32,27 +36,34 @@ public class Player : MonoBehaviour
         P_Info.UID = uid; 
         P_Info.ID = id; 
         P_Info.TEAM = team;
+        //P_Info.ROLE = role;
         P_Com.cameraObj = Camera.main;
+
+        _gunner = GetComponent<PlayerGunner>();
+        _runner = GetComponent<PlayerRunner>();
+
+        ChangeRole(Role);
         
-        //_destPosition = position;
-        //transform.position = position;
+        _destPosition = position;
+        transform.position = position;
+    }
+
+    void Update() {
+        if (!IsLocalPlayer)
+        {
+            // 위치 보정
+            transform.position = Vector3.Lerp(transform.position, _destPosition, Time.deltaTime * P_COption.runningSpeed);
+        }
     }
 
     // private void Update()
     // {
-    //     if (!IsLocalPlayer)
-    //     {
-    //         // 위치 보정
-    //         transform.position = Vector3.Lerp(transform.position, _destPosition, Time.deltaTime * P_COption.runningSpeed);
-    //     }
-
     //     // 입력에 따른 움직임 처리
     //     if (P_Value.moveDirection != Vector3.zero)
     //     {
     //         P_Com.rigidbody.MovePosition(transform.position + P_Value.moveDirection.normalized * Time.deltaTime * P_COption.runningSpeed);
     //         P_Value.moveDirection = Vector3.zero;
     //     }
-
     //     // 발사 쿨타임 처리
     //     if (_curFireCoolTime > 0f)
     //     {
@@ -60,14 +71,25 @@ public class Player : MonoBehaviour
     //     }
     // }
 
-    public virtual void Move()
+    public void Move(KeyCode keyCode)
     {
-
+        if (Role == ERole.Runner || !GameManager.Instance.IsGameStarted)
+        {
+            _runner.Move(keyCode);
+        }
+        else
+        {
+            //Debug.Log($"In {keyCode}");
+            _gunner.Move(keyCode);
+        }
     }
 
-    public virtual void Rotate()
+    public void Rotate()
     {
-        
+        if (Role == ERole.Runner || !GameManager.Instance.IsGameStarted)
+        {
+            _runner.Rotate();
+        }
     }
 
     public void SetPositionRotation(Vector3 position, float rotation)
@@ -109,5 +131,22 @@ public class Player : MonoBehaviour
     public void RecivePoint(int point)
     {
         P_Value.point += point;
+    }
+
+    //todo: 역할 바꾸는 패킷 들어오면 이 함수 실행
+    public void ChangeRole(ERole role)
+    {
+        //Debug.Log($"ChangeRole {role}");
+        P_Info.ROLE = role;
+        if (P_Info.ROLE == ERole.Runner || !GameManager.Instance.IsGameStarted)
+        {
+            _gunner.enabled = false;
+            _runner.enabled = true;
+        }
+        else if (P_Info.ROLE == ERole.Gunner)
+        {
+            _runner.enabled = false;
+            _gunner.enabled = true;
+        }
     }
 }

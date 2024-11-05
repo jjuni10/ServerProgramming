@@ -55,45 +55,46 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        //UpdateInput();
+        UpdateInput();
         UpdateCheckGameEnd();
     }
 
-    // private void UpdateInput()
-    // {
-    //     if (_localPlayer == null || !_localPlayer.IsAlive)
-    //         return;
+    private void UpdateInput()
+    {
+        if (_localPlayer == null)// || !_localPlayer.IsAlive)
+            return;
 
-    //     if (Input.GetKey(KeyCode.W))
-    //     {
-    //         _localPlayer.Move(Vector3.forward);
-    //     }
-    //     if (Input.GetKey(KeyCode.S))
-    //     {
-    //         _localPlayer.Move(Vector3.back);
-    //     }
-    //     if (Input.GetKey(KeyCode.A))
-    //     {
-    //         _localPlayer.Move(Vector3.left);
-    //     }
-    //     if (Input.GetKey(KeyCode.D))
-    //     {
-    //         _localPlayer.Move(Vector3.right);
-    //     }
+        if (Input.GetKey(KeyCode.W))
+        {
+            _localPlayer.Move(KeyCode.W);
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            _localPlayer.Move(KeyCode.S);
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            _localPlayer.Move(KeyCode.A);
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            _localPlayer.Move(KeyCode.D);
+        }
 
-    //     // 마우스 방향으로 캐릭터를 회전
-    //     Vector3 screenPos = Camera.main.WorldToScreenPoint(_localPlayer.transform.position);
-    //     Vector3 dir = Input.mousePosition - screenPos;
-    //     dir = new Vector3(dir.x, 0f, dir.y);
-    //     _localPlayer.transform.forward = dir.normalized;
+        _localPlayer.Rotate();
 
-    //     // 총알 발사
-    //     if (Input.GetMouseButtonDown(0))
-    //     {
-    //         _localPlayer.FireBullet();
-    //     }
+        // 마우스 방향으로 캐릭터를 회전
+        // Vector3 screenPos = Camera.main.WorldToScreenPoint(_localPlayer.transform.position);
+        // Vector3 dir = Input.mousePosition - screenPos;
+        // dir = new Vector3(dir.x, 0f, dir.y);
+        // _localPlayer.transform.forward = dir.normalized;
 
-    // }
+        // 총알 발사
+        // if (Input.GetMouseButtonDown(0))
+        // {
+        //     _localPlayer.FireBullet();
+        // }
+    }
 
     private void UpdateCheckGameEnd()
     {
@@ -193,13 +194,11 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < packet.userNum; i++)
         {
             // Resources 폴더에서 캐릭터를 불러온다.
-            var resource = Resources.Load("Player_Runner");
+            var resource = Resources.Load("Player");
             // 캐릭터를 인스턴스화 한다.
             var inst = Instantiate(resource) as GameObject;
             // GameObject에 있는 PlayerCharacter 컴포넌트를 가져온다.
-            //var player = inst.GetComponent<PlayerCharacter>();
-            var player = inst.GetComponent<PlayerGunner>(); 
-            if (!player) inst.GetComponent<PlayerRunner>();
+            var player = inst.GetComponent<Player>(); 
             player.name = $"Player {packet.startInfos[i].uid}";
 
             player.Init(packet.startInfos[i].uid, packet.startInfos[i].id, packet.startInfos[i].team, packet.startInfos[i].position);
