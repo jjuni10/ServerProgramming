@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
     }
 
     private UIMain _ui;
+    public FirstSceneUIController UIPlayers;
     private Client _client;
     private Dictionary<int, Player> _playerDic =
         new Dictionary<int, Player>();             // UID, 플레이어 캐릭터
@@ -50,6 +51,8 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         _ui = FindObjectOfType<UIMain>();
+        UIPlayers = FindObjectOfType<FirstSceneUIController>();
+        UIPlayers.gameObject.SetActive(false);
         _client = FindObjectOfType<Client>();
     }
 
@@ -82,12 +85,6 @@ public class GameManager : MonoBehaviour
         }
 
         _localPlayer.Rotate();
-
-        // 마우스 방향으로 캐릭터를 회전
-        // Vector3 screenPos = Camera.main.WorldToScreenPoint(_localPlayer.transform.position);
-        // Vector3 dir = Input.mousePosition - screenPos;
-        // dir = new Vector3(dir.x, 0f, dir.y);
-        // _localPlayer.transform.forward = dir.normalized;
 
         // 총알 발사
         // if (Input.GetMouseButtonDown(0))
@@ -179,14 +176,17 @@ public class GameManager : MonoBehaviour
 
     }
 
-    // public void GameReady()
-    // {
-    //     //게임 시작 준비.
-    //     _ui.SetUIState(UIMain.EUIState.Game);
+    public void GameReady(PacketGameReady packet)
+    {
+        //게임 시작 준비.
+        // _ui.SetUIState(UIMain.EUIState.Game);
 
-    //     PacketGameReadyOk packet = new PacketGameReadyOk();
-    //     _client.Send(packet);
-    // }
+        // PacketGameReadyOk packet = new PacketGameReadyOk();
+        // _client.Send(packet);
+
+        //Debug.Log("GameReady()");
+        UIPlayers.SetReadyUI(UserUID, packet.IsReady);
+    }
 
     public void GameStart(PacketGameStart packet)
     {
@@ -203,6 +203,7 @@ public class GameManager : MonoBehaviour
 
             player.Init(packet.startInfos[i].uid, packet.startInfos[i].id, packet.startInfos[i].team, packet.startInfos[i].position);
             _playerDic.Add(packet.startInfos[i].uid, player);
+            //Debug.Log("GameStart() _playerDic.Add()");
 
             if (UserUID == packet.startInfos[i].uid)
             {
@@ -230,6 +231,7 @@ public class GameManager : MonoBehaviour
 
     public Player GetPlayer(int uid)
     {
+        //Debug.Log($"{_playerDic.Count}");
         // 키가 존재하는지 확인
         if (!_playerDic.ContainsKey(uid))
             return null;

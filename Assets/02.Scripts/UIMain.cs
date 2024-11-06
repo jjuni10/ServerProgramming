@@ -121,6 +121,7 @@ public class UIMain : MonoBehaviour
             case EUIState.Game:
                 startUI.SetActive(false);
                 lobbyUI.SetActive(false);
+                GameManager.Instance.UIPlayers.gameObject.SetActive(true);
                 break;
         }
     }

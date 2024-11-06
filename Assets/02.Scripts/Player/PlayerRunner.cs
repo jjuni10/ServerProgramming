@@ -157,7 +157,7 @@ public class PlayerRunner : MonoBehaviour
 
     private void Dodge()
     {
-        _player._currentState.currentDodgeKeyPress = Input.GetKey(KeyCode.LeftShift);
+        _player._currentState.currentDodgeKeyPress = (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
 
         if (_dodgeCool < 3f && ReturnDodgeAnim()
             && _player._currentState.previousDodgeKeyPress && _player._currentState.currentDodgeKeyPress)
