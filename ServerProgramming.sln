@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessagePack.Annotations", "MessagePack.Annotations.csproj", "{CA8A8E81-90F6-2651-F739-3F7D9C5C43A3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fever.Editor", "Fever.Editor.csproj", "{F3A55E84-7F14-C767-0AE9-55A8095ECAF7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{CA8A8E81-90F6-2651-F739-3F7D9C5C43A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA8A8E81-90F6-2651-F739-3F7D9C5C43A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA8A8E81-90F6-2651-F739-3F7D9C5C43A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3A55E84-7F14-C767-0AE9-55A8095ECAF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3A55E84-7F14-C767-0AE9-55A8095ECAF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3A55E84-7F14-C767-0AE9-55A8095ECAF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3A55E84-7F14-C767-0AE9-55A8095ECAF7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
