@@ -18,7 +18,6 @@ public class PlayerInfo
     public int UID;
     public string ID;
     public ETeam TEAM;
-    public ERole ROLE;
     public bool _localPlayer;
 }
 
