@@ -41,6 +41,7 @@ public class FirstSceneUIController : MonoBehaviour
                 // 준비 완료
                 if (client == null) client = GameManager.Instance.client;
                 client.Send(new PacketGameReady{
+                    uid = GameManager.Instance.UserUID,
                     IsReady = true
                 });
                 readyTime = 0;
