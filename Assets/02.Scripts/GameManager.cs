@@ -203,20 +203,21 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void GameReady(PacketGameReady packet)
-    {
-        //게임 시작 준비.
-        // _ui.SetUIState(UIMain.EUIState.Game);
+    // public void GameReady(PacketGameReady packet)
+    // {
+    //     //게임 시작 준비.
+    //     // _ui.SetUIState(UIMain.EUIState.Game);
 
-        // PacketGameReadyOk packet = new PacketGameReadyOk();
-        // _client.Send(packet);
+    //     // PacketGameReadyOk packet = new PacketGameReadyOk();
+    //     // _client.Send(packet);
 
-        //Debug.Log("GameReady()");
-        if (_localPlayer.IsLocalPlayer)
-            UIPlayers.SetReadyUI(UserUID, packet.IsReady);
-    }
-    public void GameReady(PacketGameReady packet, int uid)
+    //     //Debug.Log("GameReady()");
+    //     if (_localPlayer.IsLocalPlayer)
+    //         UIPlayers.SetReadyUI(UserUID, packet.IsReady);
+    // }
+    public void GameReady(PacketGameReady packet, int uid = -1)
     {
+        if (uid < 0) uid = UserUID;
         //게임 시작 준비.
         UIPlayers.SetReadyUI(uid, packet.IsReady);
     }
