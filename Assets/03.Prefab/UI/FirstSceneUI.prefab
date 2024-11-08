@@ -262,14 +262,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 272aac58a2719f84c9b7b7464d363a2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Player1: {fileID: 571304692768391470}
-  Player1Ready: {fileID: 1246768609110827544}
-  Player2: {fileID: 1255590713059242952}
-  Player2Ready: {fileID: 7264572081864728896}
-  Player3: {fileID: 2307851247421967088}
-  Player3Ready: {fileID: 6616503736365720955}
-  Player4: {fileID: 5936734192547661492}
-  Player4Ready: {fileID: 6108019300699724323}
+  PlayerRed1: {fileID: 571304692768391470}
+  PlayerRed1Ready: {fileID: 1246768609110827544}
+  PlayerRed2: {fileID: 1255590713059242952}
+  PlayerRed2Ready: {fileID: 7264572081864728896}
+  PlayerBlue1: {fileID: 2307851247421967088}
+  PlayerBlue1Ready: {fileID: 6616503736365720955}
+  PlayerBlue2: {fileID: 5936734192547661492}
+  PlayerBlue2Ready: {fileID: 6108019300699724323}
   client: {fileID: 0}
 --- !u!1 &3091780810148382302
 GameObject:

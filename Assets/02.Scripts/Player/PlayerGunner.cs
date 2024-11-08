@@ -48,20 +48,6 @@ public class PlayerGunner : MonoBehaviour
         }
     }
 
-    public void Init(int uid, string id, ETeam team, Vector3 position, ERole role)
-    {
-        _player._playerInfos.UID = uid; 
-        _player._playerInfos.ID = id; 
-        _player._playerInfos.TEAM = team;
-        _player._playerInfos.ROLE = role;
-        _player._playerComponents.cameraObj = Camera.main;
-        
-        // base.Init(uid, id, team, position);
-        
-        // _destPosition = position;
-        transform.position = position;
-    }
-
     public void MoveInput(KeyCode keyCode)
     {
         if (keyCode == KeyCode.A)//Input.GetKey(KeyCode.A) && !RightSite)

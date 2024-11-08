@@ -62,11 +62,14 @@ public class GameManager : MonoBehaviour
     {
         UpdateInput();
         UpdateCheckGameEnd();
+
+        if (UIPlayers2 != null) UIPlayers2.SetPointUI(UserUID);
     }
 
     private void SceneSetting()
     {
         if (SceneManager.GetActiveScene().name == "GameServer"
+            || SceneManager.GetActiveScene().name == "GameReady"
             || SceneManager.GetActiveScene().name == "Game")
         {
             UIPlayers = FindObjectOfType<FirstSceneUIController>();
@@ -76,6 +79,8 @@ public class GameManager : MonoBehaviour
         {
             UIPlayers2 = FindObjectOfType<SecondSceneUIController>();
             //todo: players Setting(Position, Rotation, UI(ID, Point = 0))
+            UIPlayers2.SetIDUI(UserUID);
+            UIPlayers2.SetPointUI(UserUID, true);
         }
         else if (SceneManager.GetActiveScene().name == "GameResult")
         {
