@@ -212,7 +212,8 @@ public class GameManager : MonoBehaviour
         // _client.Send(packet);
 
         //Debug.Log("GameReady()");
-        UIPlayers.SetReadyUI(UserUID, packet.IsReady);
+        if (_localPlayer.IsLocalPlayer)
+            UIPlayers.SetReadyUI(UserUID, packet.IsReady);
     }
     public void GameReady(PacketGameReady packet, int uid)
     {
