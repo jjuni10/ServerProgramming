@@ -218,10 +218,10 @@ public class GameManager : MonoBehaviour
     public void GameReady(PacketGameReady packet, int uid = -1)
     {
         
-        //if (_localPlayer.IsLocalPlayer)
-        //    if (uid < 0) uid = UserUID;
+        if (_localPlayer.IsLocalPlayer)
+            uid = UserUID;
         //게임 시작 준비.
-        UIPlayers.SetReadyUI(packet.uid, packet.IsReady);
+        UIPlayers.SetReadyUI(uid, packet.IsReady);
     }
 
     public void GameStart(PacketGameStart packet)
