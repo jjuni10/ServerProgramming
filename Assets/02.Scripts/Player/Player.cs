@@ -97,6 +97,14 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void SetReady(bool isReady)
+    {
+        PacketGameReady packet = new PacketGameReady();
+        packet.uid = UID;
+        packet.IsReady = isReady;
+        GameManager.Instance.client.Send(packet);
+    }
+
     public void SetPositionRotation(Vector3 position, float rotation)
     {
         _destPosition = position;

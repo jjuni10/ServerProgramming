@@ -39,7 +39,8 @@ public class GameManager : MonoBehaviour
     //! 나중에 입력 받아서 플레이타임 결정하기
     public float InputPlayTime = 270f;
 
-    
+    private float readyTime;
+
     public int redPoint;
     public int bluePoint;
     public ETeam WinTeam { get; set; }
@@ -118,6 +119,23 @@ public class GameManager : MonoBehaviour
         // {
         //     _localPlayer.FireBullet();
         // }
+
+        if (Input.GetKey(KeyCode.Space))
+        {
+            if (readyTime >= 1.5f){
+                _localPlayer.SetReady(true);
+                readyTime = 0;
+            }
+            readyTime += Time.deltaTime;
+        }
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            if (readyTime >= 1.5f){
+                _localPlayer.SetReady(false);
+                readyTime = 0;
+            }
+            readyTime += Time.deltaTime;
+        }
     }
 
     private void UpdateCheckGameEnd()
@@ -215,13 +233,10 @@ public class GameManager : MonoBehaviour
     //     if (_localPlayer.IsLocalPlayer)
     //         UIPlayers.SetReadyUI(UserUID, packet.IsReady);
     // }
-    public void GameReady(PacketGameReady packet, int uid = -1)
+    public void GameReady(PacketGameReady packet)
     {
-        
-        if (_localPlayer.IsLocalPlayer)
-            uid = UserUID;
         //게임 시작 준비.
-        UIPlayers.SetReadyUI(uid, packet.IsReady);
+        UIPlayers.SetReadyUI(packet.uid, packet.IsReady);
     }
 
     public void GameStart(PacketGameStart packet)

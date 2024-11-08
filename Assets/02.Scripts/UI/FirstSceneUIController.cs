@@ -34,32 +34,32 @@ public class FirstSceneUIController : MonoBehaviour
 
     void FixedUpdate() 
     {
-        if (Input.GetKey(KeyCode.Space))
-        {
-            if (readyTime >= 1.5f){
-                // 준비 완료
-                if (client == null) client = GameManager.Instance.client;
-                client.Send(new PacketGameReady{
-                    uid = GameManager.Instance.UserUID,
-                    IsReady = true
-                });
-                readyTime = 0;
-            }
-            readyTime += Time.deltaTime;
-        }
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            if (readyTime >= 1.5f){
-                // 준비 완료
-                if (client == null) client = GameManager.Instance.client;
-                client.Send(new PacketGameReady{
-                    uid = GameManager.Instance.UserUID,
-                    IsReady = false
-                });
-                readyTime = 0;
-            }
-            readyTime += Time.deltaTime;
-        }
+        // if (Input.GetKey(KeyCode.Space))
+        // {
+        //     if (readyTime >= 1.5f){
+        //         // 준비 완료
+        //         if (client == null) client = GameManager.Instance.client;
+        //         client.Send(new PacketGameReady{
+        //             uid = GameManager.Instance.UserUID,
+        //             IsReady = true
+        //         });
+        //         readyTime = 0;
+        //     }
+        //     readyTime += Time.deltaTime;
+        // }
+        // if (Input.GetKey(KeyCode.LeftShift))
+        // {
+        //     if (readyTime >= 1.5f){
+        //         // 준비 완료
+        //         if (client == null) client = GameManager.Instance.client;
+        //         client.Send(new PacketGameReady{
+        //             uid = GameManager.Instance.UserUID,
+        //             IsReady = false
+        //         });
+        //         readyTime = 0;
+        //     }
+        //     readyTime += Time.deltaTime;
+        // }
     }
 
     public void SetReadyUI(int uid, bool isReady)
