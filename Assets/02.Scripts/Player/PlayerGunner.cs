@@ -48,14 +48,15 @@ public class PlayerGunner : Player
         }
     }
 
-    public void Init(int uid, string id, ETeam team, Vector3 position)
+    public void Init(int uid, string id, ETeam team, Vector3 position, ERole role)
     {
         P_Info.UID = uid; 
         P_Info.ID = id; 
         P_Info.TEAM = team;
+        P_Info.ROLE = role;
         P_Com.cameraObj = Camera.main;
         
-        base.Init(uid, id, team, position);
+        base.Init(uid, id, team, position, role);
         
         _destPosition = position;
         transform.position = position;
