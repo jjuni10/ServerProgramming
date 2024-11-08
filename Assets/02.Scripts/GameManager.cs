@@ -214,6 +214,11 @@ public class GameManager : MonoBehaviour
         //Debug.Log("GameReady()");
         UIPlayers.SetReadyUI(UserUID, packet.IsReady);
     }
+    public void GameReady(PacketGameReady packet, int uid)
+    {
+        //게임 시작 준비.
+        UIPlayers.SetReadyUI(uid, packet.IsReady);
+    }
 
     public void GameStart(PacketGameStart packet)
     {

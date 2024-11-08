@@ -76,6 +76,7 @@ public class UserPeer : IPeer
             case PacketGameReady packet:
                 {
                     _gameReady = true;
+                    GameManager.Instance.GameReady(packet, UID);
                     _host.SendAll(packet);
                 }
                 break;
