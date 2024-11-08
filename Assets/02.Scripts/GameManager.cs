@@ -202,10 +202,6 @@ public class GameManager : MonoBehaviour
             if (!player) inst.GetComponent<PlayerRunner>();
             player.name = $"Player {packet.startInfos[i].uid}";
 
-<<<<<<< HEAD
-            //player.Init(packet.startInfos[i].uid, packet.startInfos[i].id, packet.startInfos[i].team, packet.startInfos[i].position);
-=======
->>>>>>> parent of 300c772 (서버 패킷 수정 커밋)
             player.Init(packet.startInfos[i].uid, packet.startInfos[i].id, packet.startInfos[i].team, packet.startInfos[i].position);
             _playerDic.Add(packet.startInfos[i].uid, player);
 
