@@ -50,7 +50,6 @@ public class Host : MonoBehaviour
         PacketReqUserInfo packet = new PacketReqUserInfo();
         packet.uid = _curUID;
         packet.team = user.Team;
-        packet.role = user.Role;
 
         user.Send(packet);
 
@@ -119,7 +118,6 @@ public class Host : MonoBehaviour
             packet.startInfos[i].uid = _userList[i].UID;
             packet.startInfos[i].id = _userList[i].ID;
             packet.startInfos[i].team = _userList[i].Team;
-            packet.startInfos[i].role = _userList[i].Role;
             if (_userList[i].Team == ETeam.Red)
             {
                 packet.startInfos[i].position = redPosition;

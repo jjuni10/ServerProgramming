@@ -486,12 +486,11 @@ namespace MessagePack.Formatters
         public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::GameStartInfo value, global::MessagePack.MessagePackSerializerOptions options)
         {
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
-            writer.WriteArrayHeader(5);
+            writer.WriteArrayHeader(4);
             writer.Write(value.uid);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.id, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::ETeam>(formatterResolver).Serialize(ref writer, value.team, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::UnityEngine.Vector3>(formatterResolver).Serialize(ref writer, value.position, options);
-            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::ERole>(formatterResolver).Serialize(ref writer, value.role, options);
         }
 
         public global::GameStartInfo Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -521,9 +520,6 @@ namespace MessagePack.Formatters
                         break;
                     case 3:
                         ____result.position = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::UnityEngine.Vector3>(formatterResolver).Deserialize(ref reader, options);
-                        break;
-                    case 4:
-                        ____result.role = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::ERole>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     default:
                         reader.Skip();

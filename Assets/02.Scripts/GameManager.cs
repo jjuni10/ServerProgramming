@@ -38,11 +38,13 @@ public class GameManager : MonoBehaviour
     
     public int redPoint;
     public int bluePoint;
+    public ETeam WinTeam { get; set; }
 
     public int UserUID { get; set; }    // 클라이언트 자신의 UID
     public string UserID { get; set; }  // 클라이언트 자신의 ID
     public bool IsHost { get; set; }
     public bool IsGameStarted { get; set; }
+    public bool IsGameEnd { get; set; }
     public Client client => _client;
 
     private void Start()
@@ -196,10 +198,14 @@ public class GameManager : MonoBehaviour
             var inst = Instantiate(resource) as GameObject;
             // GameObject에 있는 PlayerCharacter 컴포넌트를 가져온다.
             //var player = inst.GetComponent<PlayerCharacter>();
-            var player = inst.GetComponent<Player>();
+            var player = inst.GetComponent<PlayerGunner>(); 
+            if (!player) inst.GetComponent<PlayerRunner>();
             player.name = $"Player {packet.startInfos[i].uid}";
 
+<<<<<<< HEAD
             //player.Init(packet.startInfos[i].uid, packet.startInfos[i].id, packet.startInfos[i].team, packet.startInfos[i].position);
+=======
+>>>>>>> parent of 300c772 (서버 패킷 수정 커밋)
             player.Init(packet.startInfos[i].uid, packet.startInfos[i].id, packet.startInfos[i].team, packet.startInfos[i].position);
             _playerDic.Add(packet.startInfos[i].uid, player);
 

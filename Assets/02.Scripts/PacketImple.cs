@@ -129,9 +129,6 @@ public struct GameStartInfo
 
     [Key(3)]
     public Vector3 position;
-
-    [Key(4)]
-    public ERole role;
 }
 
 [MessagePackObject]
