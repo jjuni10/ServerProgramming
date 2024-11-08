@@ -104,8 +104,8 @@ public class Host : MonoBehaviour
         }
         GameManager.Instance.IsGameStarted = true;
 
-        Vector3 redPosition = new Vector3(5, 3f, 0F);
-        Vector3 bluePosition = new Vector3(55, 3f, 0F);
+        Vector3 redPosition = new Vector3(5, 3, 0F);
+        Vector3 bluePosition = new Vector3(55, 3, 0F);
         int redCount = 0;
         int blueCount = 0;
 

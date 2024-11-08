@@ -71,7 +71,7 @@ public class SecondSceneUIController : MonoBehaviour
                 CountNum.text = "게임 시작!!";
                 if (count_Co == null)
                     count_Co = StartCoroutine(PlayTimeCalculate());
-                //! 게임 시작 패킷 전송? 시작한거 알려야할듯
+                //! 게임 진짜 시작 패킷 전송? 시작한거 알려야할듯
             }
             time += Time.deltaTime;
             yield return null;
@@ -90,5 +90,69 @@ public class SecondSceneUIController : MonoBehaviour
             PlayTime -= Time.deltaTime;
             yield return null;
         }
+    }
+
+    public void SetIDUI(int uid)
+    {
+        //Debug.Log($"SetReadyUI({uid})");
+        Player player = GameManager.Instance.GetPlayer(uid);
+        switch (uid+1)
+        {
+            case 1:
+                {
+                    Player1ID.text = "<" + player.ID + ">";
+                }
+                break;
+            case 2:
+                {
+                    Player2ID.text = "<" + player.ID + ">";
+                }
+                break;
+            case 3:
+                {
+                    Player3ID.text = "<" + player.ID + ">";
+                }
+                break;
+            case 4:
+                {
+                    Player4ID.text = "<" + player.ID + ">";
+                }
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    public void SetPointUI(int uid)
+    {
+        //Debug.Log($"SetReadyUI({uid})");
+        Player player = GameManager.Instance.GetPlayer(uid);
+        switch (uid+1)
+        {
+            case 1:
+                {
+                    Player1Point.text = player._currentValue.point.ToString() + " Point";
+                }
+                break;
+            case 2:
+                {
+                    Player2Point.text = player._currentValue.point.ToString() + " Point";
+                }
+                break;
+            case 3:
+                {
+                    Player3Point.text = player._currentValue.point.ToString() + " Point";
+                }
+                break;
+            case 4:
+                {
+                    Player4Point.text = player._currentValue.point.ToString() + " Point";
+                }
+                break;
+            default:
+                break;
+        }
+
     }
 }

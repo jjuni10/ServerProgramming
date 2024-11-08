@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
     }
 
     private UIMain _ui;
+    public FirstSceneUIController UIPlayers;
     private Client _client;
     private Dictionary<int, Player> _playerDic =
         new Dictionary<int, Player>();             // UID, 플레이어 캐릭터
@@ -50,50 +51,47 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         _ui = FindObjectOfType<UIMain>();
+        UIPlayers = FindObjectOfType<FirstSceneUIController>();
+        UIPlayers.gameObject.SetActive(false);
         _client = FindObjectOfType<Client>();
     }
 
     private void Update()
     {
-        //UpdateInput();
+        UpdateInput();
         UpdateCheckGameEnd();
     }
 
-    // private void UpdateInput()
-    // {
-    //     if (_localPlayer == null || !_localPlayer.IsAlive)
-    //         return;
+    private void UpdateInput()
+    {
+        if (_localPlayer == null)// || !_localPlayer.IsAlive)
+            return;
 
-    //     if (Input.GetKey(KeyCode.W))
-    //     {
-    //         _localPlayer.Move(Vector3.forward);
-    //     }
-    //     if (Input.GetKey(KeyCode.S))
-    //     {
-    //         _localPlayer.Move(Vector3.back);
-    //     }
-    //     if (Input.GetKey(KeyCode.A))
-    //     {
-    //         _localPlayer.Move(Vector3.left);
-    //     }
-    //     if (Input.GetKey(KeyCode.D))
-    //     {
-    //         _localPlayer.Move(Vector3.right);
-    //     }
+        if (Input.GetKey(KeyCode.W))
+        {
+            _localPlayer.Move(KeyCode.W);
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            _localPlayer.Move(KeyCode.S);
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            _localPlayer.Move(KeyCode.A);
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            _localPlayer.Move(KeyCode.D);
+        }
 
-    //     // 마우스 방향으로 캐릭터를 회전
-    //     Vector3 screenPos = Camera.main.WorldToScreenPoint(_localPlayer.transform.position);
-    //     Vector3 dir = Input.mousePosition - screenPos;
-    //     dir = new Vector3(dir.x, 0f, dir.y);
-    //     _localPlayer.transform.forward = dir.normalized;
+        _localPlayer.Rotate();
 
-    //     // 총알 발사
-    //     if (Input.GetMouseButtonDown(0))
-    //     {
-    //         _localPlayer.FireBullet();
-    //     }
-
-    // }
+        // 총알 발사
+        // if (Input.GetMouseButtonDown(0))
+        // {
+        //     _localPlayer.FireBullet();
+        // }
+    }
 
     private void UpdateCheckGameEnd()
     {
@@ -178,14 +176,17 @@ public class GameManager : MonoBehaviour
 
     }
 
-    // public void GameReady()
-    // {
-    //     //게임 시작 준비.
-    //     _ui.SetUIState(UIMain.EUIState.Game);
+    public void GameReady(PacketGameReady packet)
+    {
+        //게임 시작 준비.
+        // _ui.SetUIState(UIMain.EUIState.Game);
 
-    //     PacketGameReadyOk packet = new PacketGameReadyOk();
-    //     _client.Send(packet);
-    // }
+        // PacketGameReadyOk packet = new PacketGameReadyOk();
+        // _client.Send(packet);
+
+        //Debug.Log("GameReady()");
+        UIPlayers.SetReadyUI(UserUID, packet.IsReady);
+    }
 
     public void GameStart(PacketGameStart packet)
     {
@@ -193,17 +194,16 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < packet.userNum; i++)
         {
             // Resources 폴더에서 캐릭터를 불러온다.
-            var resource = Resources.Load("Player_Runner");
+            var resource = Resources.Load("Player");
             // 캐릭터를 인스턴스화 한다.
             var inst = Instantiate(resource) as GameObject;
             // GameObject에 있는 PlayerCharacter 컴포넌트를 가져온다.
-            //var player = inst.GetComponent<PlayerCharacter>();
-            var player = inst.GetComponent<PlayerGunner>(); 
-            if (!player) inst.GetComponent<PlayerRunner>();
+            var player = inst.GetComponent<Player>(); 
             player.name = $"Player {packet.startInfos[i].uid}";
 
             player.Init(packet.startInfos[i].uid, packet.startInfos[i].id, packet.startInfos[i].team, packet.startInfos[i].position, packet.startInfos[i].role);
             _playerDic.Add(packet.startInfos[i].uid, player);
+            //Debug.Log("GameStart() _playerDic.Add()");
 
             if (UserUID == packet.startInfos[i].uid)
             {
@@ -231,6 +231,7 @@ public class GameManager : MonoBehaviour
 
     public Player GetPlayer(int uid)
     {
+        //Debug.Log($"{_playerDic.Count}");
         // 키가 존재하는지 확인
         if (!_playerDic.ContainsKey(uid))
             return null;
