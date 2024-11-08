@@ -27,11 +27,12 @@ public class Player : MonoBehaviour
     protected Vector3 _destPosition;          // 비로컬 캐릭터의 목표 위치 (서버에서 받는 위치)
     private float _curFireCoolTime;         // 현재 공격 쿨타임
 
-    public void Init(int uid, string id, ETeam team, Vector3 position)
+    public void Init(int uid, string id, ETeam team, Vector3 position, ERole role)
     {
         P_Info.UID = uid; 
         P_Info.ID = id; 
         P_Info.TEAM = team;
+        P_Info.ROLE = role;
         P_Com.cameraObj = Camera.main;
         
         //_destPosition = position;
