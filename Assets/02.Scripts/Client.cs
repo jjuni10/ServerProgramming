@@ -69,7 +69,8 @@ public class Client : MonoBehaviour, IPeer
                 break;
             case PacketGameReady packet:
                 {
-                    GameManager.Instance.GameReady(packet);
+                    //GameManager.Instance.GameReady(packet);
+                    GameManager.Instance.UIPlayers.SetReadyUI(packet.uid, packet.IsReady);
                 }
                 break;
             case PacketGameStart packet:

@@ -72,7 +72,6 @@ public class FirstSceneUIController : MonoBehaviour
                 {
                     if (isReady) PlayerRed1Ready.text = "준비 완료";
                     else PlayerRed1Ready.text = "준비중..";
-                    if (player == null) player = GameManager.Instance.GetPlayer(uid);
                     PlayerRed1Ready.text = "<" + player.ID.ToString() + "> " + PlayerRed1Ready.text;
                     //Debug.Log("SetReadyUI()11111111111");
                 }
@@ -81,7 +80,6 @@ public class FirstSceneUIController : MonoBehaviour
                 {
                     if (isReady) PlayerRed2Ready.text = "준비 완료";
                     else PlayerRed2Ready.text = "준비중..";
-                    if (player == null) player = GameManager.Instance.GetPlayer(uid);
                     PlayerRed2Ready.text = "<" + player.ID.ToString() + "> " + PlayerRed2Ready.text;
                     //Debug.Log("SetReadyUI()2222222222222");
                 }
@@ -90,7 +88,6 @@ public class FirstSceneUIController : MonoBehaviour
                 {
                     if (isReady) PlayerBlue1Ready.text = "준비 완료";
                     else PlayerBlue1Ready.text = "준비중..";
-                    if (player == null) player = GameManager.Instance.GetPlayer(uid);
                     PlayerBlue1Ready.text = "<" + player.ID.ToString() + "> " + PlayerBlue1Ready.text;
                     //Debug.Log("SetReadyUI()33333333333333");
                 }
@@ -99,7 +96,6 @@ public class FirstSceneUIController : MonoBehaviour
                 {
                     if (isReady) PlayerBlue2Ready.text = "준비 완료";
                     else PlayerBlue2Ready.text = "준비중..";
-                    if (player == null) player = GameManager.Instance.GetPlayer(uid);
                     PlayerBlue2Ready.text = "<" + player.ID.ToString() + "> " + PlayerBlue2Ready.text;
                     //Debug.Log("SetReadyUI()444444444444444");
                 }

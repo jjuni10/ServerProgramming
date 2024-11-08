@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
     private Client _client;
     private Dictionary<int, Player> _playerDic =
         new Dictionary<int, Player>();             // UID, 플레이어 캐릭터
+    [SerializeField]
     private Player _localPlayer;                   // 로컬 플레이어 캐릭터
     private Dictionary<int, Bullet> _bulletDic = new Dictionary<int, Bullet>(); // UID, 총알
     private bool _startGame;                                // 게임이 시작되었는지 여부
@@ -128,7 +129,7 @@ public class GameManager : MonoBehaviour
             }
             readyTime += Time.deltaTime;
         }
-        if (Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetKey(KeyCode.LeftControl))
         {
             if (readyTime >= 1.5f){
                 _localPlayer.SetReady(false);
@@ -179,60 +180,9 @@ public class GameManager : MonoBehaviour
         }
         else
             _playTime += Time.deltaTime;
-        // int blueAlive = 0;
-        // int redAlive = 0;
-        // foreach (var playerKeyValue in _playerDic)
-        // {
-        //     if (playerKeyValue.Value.Team == ETeam.Blue)
-        //     {
-        //         if (playerKeyValue.Value.IsAlive)
-        //         {
-        //             blueAlive++;
-        //         }
-        //     }
-        //     else
-        //     {
-        //         if (playerKeyValue.Value.IsAlive)
-        //         {
-        //             redAlive++;
-        //         }
-        //     }
-        // }
-        // if (blueAlive == 0 || redAlive == 0)
-        // {
-        //     // 게임 종료 처리
-        //     Host host = FindObjectOfType<Host>();
-        //     if (host != null)
-        //     {
-        //         PacketGameEnd packet = new PacketGameEnd();
-        //         if (blueAlive > 0)
-        //         {
-        //             packet.winTeam = ETeam.Blue;
-        //         }
-        //         else
-        //         {
-        //             packet.winTeam = ETeam.Red;
-        //         }
-        //         host.SendAll(packet);
-
-        //     }
-        //     _startGame = false;
-        // }
 
     }
 
-    // public void GameReady(PacketGameReady packet)
-    // {
-    //     //게임 시작 준비.
-    //     // _ui.SetUIState(UIMain.EUIState.Game);
-
-    //     // PacketGameReadyOk packet = new PacketGameReadyOk();
-    //     // _client.Send(packet);
-
-    //     //Debug.Log("GameReady()");
-    //     if (_localPlayer.IsLocalPlayer)
-    //         UIPlayers.SetReadyUI(UserUID, packet.IsReady);
-    // }
     public void GameReady(PacketGameReady packet)
     {
         //게임 시작 준비.
