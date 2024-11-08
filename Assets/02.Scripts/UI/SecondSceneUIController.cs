@@ -91,4 +91,68 @@ public class SecondSceneUIController : MonoBehaviour
             yield return null;
         }
     }
+
+    public void SetIDUI(int uid)
+    {
+        //Debug.Log($"SetReadyUI({uid})");
+        Player player = GameManager.Instance.GetPlayer(uid);
+        switch (uid+1)
+        {
+            case 1:
+                {
+                    Player1ID.text = "<" + player.ID + ">";
+                }
+                break;
+            case 2:
+                {
+                    Player2ID.text = "<" + player.ID + ">";
+                }
+                break;
+            case 3:
+                {
+                    Player3ID.text = "<" + player.ID + ">";
+                }
+                break;
+            case 4:
+                {
+                    Player4ID.text = "<" + player.ID + ">";
+                }
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    public void SetPointUI(int uid)
+    {
+        //Debug.Log($"SetReadyUI({uid})");
+        Player player = GameManager.Instance.GetPlayer(uid);
+        switch (uid+1)
+        {
+            case 1:
+                {
+                    Player1Point.text = player._currentValue.point.ToString() + " Point";
+                }
+                break;
+            case 2:
+                {
+                    Player2Point.text = player._currentValue.point.ToString() + " Point";
+                }
+                break;
+            case 3:
+                {
+                    Player3Point.text = player._currentValue.point.ToString() + " Point";
+                }
+                break;
+            case 4:
+                {
+                    Player4Point.text = player._currentValue.point.ToString() + " Point";
+                }
+                break;
+            default:
+                break;
+        }
+
+    }
 }
