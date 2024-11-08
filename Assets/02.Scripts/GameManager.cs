@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// 게임을 관리하는 매니저 클래스
@@ -25,6 +26,8 @@ public class GameManager : MonoBehaviour
 
     private UIMain _ui;
     public FirstSceneUIController UIPlayers;
+    public SecondSceneUIController UIPlayers2;
+    public ThirdSceneUIController UIPlayers3;
     private Client _client;
     private Dictionary<int, Player> _playerDic =
         new Dictionary<int, Player>();             // UID, 플레이어 캐릭터
@@ -51,15 +54,34 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         _ui = FindObjectOfType<UIMain>();
-        UIPlayers = FindObjectOfType<FirstSceneUIController>();
-        UIPlayers.gameObject.SetActive(false);
         _client = FindObjectOfType<Client>();
+        SceneSetting();
     }
 
     private void Update()
     {
         UpdateInput();
         UpdateCheckGameEnd();
+    }
+
+    private void SceneSetting()
+    {
+        if (SceneManager.GetActiveScene().name == "GameServer"
+            || SceneManager.GetActiveScene().name == "Game")
+        {
+            UIPlayers = FindObjectOfType<FirstSceneUIController>();
+            if (UIPlayers != null) UIPlayers.gameObject.SetActive(false);
+        }
+        else if (SceneManager.GetActiveScene().name == "GamePlay")
+        {
+            UIPlayers2 = FindObjectOfType<SecondSceneUIController>();
+            //todo: players Setting(Position, Rotation, UI(ID, Point = 0))
+        }
+        else if (SceneManager.GetActiveScene().name == "GameResult")
+        {
+            UIPlayers3 = FindObjectOfType<ThirdSceneUIController>();
+            //if (UIPlayers3 != null) UIPlayers3.gameObject.SetActive(false);
+        }
     }
 
     private void UpdateInput()
