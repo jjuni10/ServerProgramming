@@ -69,6 +69,7 @@ public class Client : MonoBehaviour, IPeer
                 break;
             case PacketGameReady packet:
                 {
+                    Debug.Log("Client PacketGameReady packet UID: " + packet.uid);
                     //GameManager.Instance.GameReady(packet);
                     GameManager.Instance.UIPlayers.SetReadyUI(packet.uid, packet.IsReady);
                 }

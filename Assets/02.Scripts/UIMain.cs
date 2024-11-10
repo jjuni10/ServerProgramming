@@ -93,11 +93,6 @@ public class UIMain : MonoBehaviour
             if (!GameManager.Instance.IsHost)
                 return;
 
-            if(GameManager.Instance.IsHost)
-            {
-                PacketGameReady hostredypacket = new PacketGameReady();
-                _client.Send(hostredypacket);
-            }
             PacketGameReadyOk packet = new PacketGameReadyOk();
             _client.Send(packet);
         });
