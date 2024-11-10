@@ -107,6 +107,9 @@ public class Player : MonoBehaviour
         GameManager.Instance.client.Send(packet);
         //GameManager.Instance.UIPlayers.SetReadyUI(packet.uid, packet.IsReady);
     }
+    public void ReadyUISetting(int uid, bool ready){
+        GameManager.Instance.UIPlayers.SetReadyUI(uid, ready);
+    }
 
     public void SetPositionRotation(Vector3 position, float rotation)
     {

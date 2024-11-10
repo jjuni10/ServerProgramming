@@ -124,17 +124,17 @@ public class GameManager : MonoBehaviour
         if (Input.GetKey(KeyCode.Space))
         {
             if (readyTime >= 1.5f){
-                //_localPlayer.SetReady(true);
+                _localPlayer.SetReady(true);
                 
                 // PacketGameReady packet = new PacketGameReady();
                 // packet.uid = _localPlayer.UID;
                 // packet.IsReady = true;
                 // client.Send(packet);
 
-                client.Send(new PacketGameReady{
-                    uid = _localPlayer.UID,
-                    IsReady = true
-                });
+                // client.Send(new PacketGameReady{
+                //     uid = _localPlayer.UID,
+                //     IsReady = true
+                // });
 
                 readyTime = 0;
             }
@@ -143,15 +143,15 @@ public class GameManager : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftControl))
         {
             if (readyTime >= 1.5f){
-                //_localPlayer.SetReady(false);
+                _localPlayer.SetReady(false);
                 // PacketGameReady packet = new PacketGameReady();
                 // packet.uid = _localPlayer.UID;
                 // packet.IsReady = true;
                 // client.Send(packet);
-                client.Send(new PacketGameReady{
-                    uid = _localPlayer.UID,
-                    IsReady = false
-                });
+                // client.Send(new PacketGameReady{
+                //     uid = _localPlayer.UID,
+                //     IsReady = false
+                // });
                 readyTime = 0;
             }
             readyTime += Time.deltaTime;
