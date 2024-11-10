@@ -76,12 +76,12 @@ public class UserPeer : IPeer
             case PacketGameReady packet:
                 {
                     //_gameReady = true;
-                    packet.uid = _uid;
+                    //packet.uid = _uid;
                     //packet.IsReady = true;
                     //GameManager.Instance.GameReady(packet);
                     //GameManager.Instance.UIPlayers.SetReadyUI(packet.uid, packet.IsReady);
                     Debug.Log("UserPeer PacketGameReady packet UID: " + packet.uid);
-                    GameManager.Instance.client.Send(packet);
+                    //GameManager.Instance.client.Send(packet);
                     _host.SendAll(packet);
                 }
                 break;
