@@ -125,17 +125,6 @@ public class GameManager : MonoBehaviour
         {
             if (readyTime >= 1.5f){
                 _localPlayer.SetReady(true);
-                
-                // PacketGameReady packet = new PacketGameReady();
-                // packet.uid = _localPlayer.UID;
-                // packet.IsReady = true;
-                // client.Send(packet);
-
-                // client.Send(new PacketGameReady{
-                //     uid = _localPlayer.UID,
-                //     IsReady = true
-                // });
-
                 readyTime = 0;
             }
             readyTime += Time.deltaTime;
@@ -144,14 +133,6 @@ public class GameManager : MonoBehaviour
         {
             if (readyTime >= 1.5f){
                 _localPlayer.SetReady(false);
-                // PacketGameReady packet = new PacketGameReady();
-                // packet.uid = _localPlayer.UID;
-                // packet.IsReady = true;
-                // client.Send(packet);
-                // client.Send(new PacketGameReady{
-                //     uid = _localPlayer.UID,
-                //     IsReady = false
-                // });
                 readyTime = 0;
             }
             readyTime += Time.deltaTime;
@@ -273,5 +254,10 @@ public class GameManager : MonoBehaviour
         Destroy(_bulletDic[uid].gameObject);
         _bulletDic.Remove(uid);
 
+    }
+
+    public void GameSceneNext()
+    {
+        SceneManager.LoadScene("GamePlay");
     }
 }

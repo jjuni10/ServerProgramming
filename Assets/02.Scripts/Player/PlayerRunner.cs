@@ -8,6 +8,7 @@ public class PlayerRunner : MonoBehaviour
     float curVertVelocity;
     private float _dodgeCool = 0;
 
+    private Vector3 runnerPos;
 
     void Awake() 
     {
@@ -15,14 +16,10 @@ public class PlayerRunner : MonoBehaviour
     }
     void Start()
     {
-        // if (_player._playerInfos.TEAM == ETeam.Red){
-        //     //transform.position = new Vector3(-10, 3, 0);
-        //     transform.Rotate(_player._playerComponents.cameraObj.transform.right);
-        // }
-        // else if (_player._playerInfos.TEAM == ETeam.Blue){
-        //     //transform.position = new Vector3(10, 3, 0);
-        //     transform.Rotate(_player._playerComponents.cameraObj.transform.right * -1);
-        // }
+        runnerPos = new Vector3(Define.GAME_RUNNER_POSITION_OFFSET,3,0);
+        if (_player._playerInfos.TEAM == ETeam.Red)
+            runnerPos.x = runnerPos.x * -1;
+        this.transform.position = runnerPos;
         _dodgeCool = 0;
     }
     void Update()

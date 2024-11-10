@@ -18,13 +18,15 @@ public class FirstSceneUIController : MonoBehaviour
     public Image PlayerBlue2;
     public TMP_Text PlayerBlue2Ready;
 
-    private float readyTime;
+    private List<bool> readyPlayers;
+
     [SerializeField]
     private Client client;
 
     void Start()
     {
         client = GameManager.Instance.client;
+        readyPlayers.Clear();
     }
 
     void Update()
@@ -34,32 +36,16 @@ public class FirstSceneUIController : MonoBehaviour
 
     void FixedUpdate() 
     {
-        // if (Input.GetKey(KeyCode.Space))
-        // {
-        //     if (readyTime >= 1.5f){
-        //         // 준비 완료
-        //         if (client == null) client = GameManager.Instance.client;
-        //         client.Send(new PacketGameReady{
-        //             uid = GameManager.Instance.UserUID,
-        //             IsReady = true
-        //         });
-        //         readyTime = 0;
-        //     }
-        //     readyTime += Time.deltaTime;
-        // }
-        // if (Input.GetKey(KeyCode.LeftShift))
-        // {
-        //     if (readyTime >= 1.5f){
-        //         // 준비 완료
-        //         if (client == null) client = GameManager.Instance.client;
-        //         client.Send(new PacketGameReady{
-        //             uid = GameManager.Instance.UserUID,
-        //             IsReady = false
-        //         });
-        //         readyTime = 0;
-        //     }
-        //     readyTime += Time.deltaTime;
-        // }
+    }
+
+    public void StartOnClick()
+    {
+        //todo: 모두 준비완료일 때 씬 전환(GamePlay)
+        if (!GameManager.Instance.IsHost) return;
+        if (readyPlayers.Count >= 4)    //! 4 = userList
+        {
+            GameManager.Instance.GameSceneNext();
+        }
     }
 
     public void SetReadyUI(int uid, bool isReady)
@@ -103,6 +89,14 @@ public class FirstSceneUIController : MonoBehaviour
             default:
                 break;
         }
-
+        if (isReady)
+        {
+            readyPlayers.Add(true);
+        }
+        else
+        {
+            if (readyPlayers.Count > 0)
+                readyPlayers.RemoveAt(readyPlayers.Count-1);
+        }
     }
 }
