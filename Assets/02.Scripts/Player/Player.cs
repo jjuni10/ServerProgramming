@@ -78,7 +78,7 @@ public class Player : MonoBehaviour
 
     public void Move(KeyCode keyCode)
     {
-        if (Role == ERole.Runner || !GameManager.Instance.UIPlayers != null)
+        if (Role == ERole.Runner || GameManager.Instance.UIPlayers != null)
         {
             _runner.Move(keyCode);
         }
@@ -91,7 +91,7 @@ public class Player : MonoBehaviour
 
     public void Rotate()
     {
-        if (Role == ERole.Runner || !GameManager.Instance.UIPlayers != null)
+        if (Role == ERole.Runner || GameManager.Instance.UIPlayers != null)
         {
             _runner.Rotate();
         }
@@ -99,7 +99,7 @@ public class Player : MonoBehaviour
 
     public void SetReady(bool isReady)
     {
-        if (!P_Info._localPlayer) return;
+        //if (!P_Info._localPlayer) return;
         PacketGameReady packet = new PacketGameReady();
         packet.uid = UID;
         packet.IsReady = isReady;
