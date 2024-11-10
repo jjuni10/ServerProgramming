@@ -103,6 +103,7 @@ public class Player : MonoBehaviour
         PacketGameReady packet = new PacketGameReady();
         packet.uid = UID;
         packet.IsReady = isReady;
+        Debug.Log("Player PacketGameReady packet UID: "+ packet.uid);
         GameManager.Instance.client.Send(packet);
         //GameManager.Instance.UIPlayers.SetReadyUI(packet.uid, packet.IsReady);
     }
