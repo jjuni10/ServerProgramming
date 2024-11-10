@@ -22,8 +22,8 @@ public class Host : MonoBehaviour
     {
         Debug.Log("클라이언트 접속");
 
-        // 게임이 시작되었다면 접속을 거부한다.
-        if (GameManager.Instance.IsGameStarted)
+        // 게임이 시작되었거나 유저가 4명 이상이라면 접속을 거부한다.
+        if (GameManager.Instance.IsGameStarted || _userList.Count >= 4)
         {
             token.Close();
             return;
