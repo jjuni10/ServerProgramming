@@ -100,9 +100,8 @@ public class Client : MonoBehaviour, IPeer
                     Player player = GameManager.Instance.GetPlayer(packet.ownerUID);
                     if (player == null)
                         return;
-                    Debug.Log("Client PacketGameReady packet UID: " + packet.ownerUID);
 
-                    //player.CreateBullet(packet.position, packet.direction, packet.ownerUID, packet.bulletUID);
+                    player.CreateBullet(packet.position, packet.direction, packet.ownerUID, packet.bulletUID);
                 }
                 break;
             case PacketPlayerDamage packet:

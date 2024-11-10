@@ -105,7 +105,7 @@ public class PacketGameReady : Packet
 {
     [Key(10)]
     public int uid;
-    [Key(10)]
+    [Key(11)]
     public bool IsReady;
 }
 
