@@ -99,11 +99,10 @@ public class Player : MonoBehaviour
 
     public void SetReady(bool isReady)
     {
-        if (!IsLocalPlayer) return;
+        if (!P_Info._localPlayer) return;
         PacketGameReady packet = new PacketGameReady();
         packet.uid = UID;
         packet.IsReady = isReady;
-        Debug.Log("Player PacketGameReady packet UID: "+ packet.uid);
         GameManager.Instance.client.Send(packet);
         //GameManager.Instance.UIPlayers.SetReadyUI(packet.uid, packet.IsReady);
     }

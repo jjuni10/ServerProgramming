@@ -124,7 +124,8 @@ public class GameManager : MonoBehaviour
         if (Input.GetKey(KeyCode.Space))
         {
             if (readyTime >= 1.5f){
-                _localPlayer.SetReady(true);
+                //_localPlayer.SetReady(true);
+                _localPlayer.FireBullet();
                 
                 // PacketGameReady packet = new PacketGameReady();
                 // packet.uid = _localPlayer.UID;
