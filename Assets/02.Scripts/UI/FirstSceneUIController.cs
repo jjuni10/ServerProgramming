@@ -6,46 +6,45 @@ using TMPro;
 
 public class FirstSceneUIController : MonoBehaviour
 {
-    public Image Player1;
-    public TMP_Text Player1Ready;
+    public Image PlayerRed1;
+    public TMP_Text PlayerRed1Ready;
 
-    public Image Player2;
-    public TMP_Text Player2Ready;
+    public Image PlayerRed2;
+    public TMP_Text PlayerRed2Ready;
 
-    public Image Player3;
-    public TMP_Text Player3Ready;
-    
-    public Image Player4;
-    public TMP_Text Player4Ready;
+    public Image PlayerBlue1;
+    public TMP_Text PlayerBlue1Ready;
 
-    private float readyTime;
+    public Image PlayerBlue2;
+    public TMP_Text PlayerBlue2Ready;
+
+    private List<bool> readyPlayers;
+
     [SerializeField]
     private Client client;
 
     void Start()
     {
         client = GameManager.Instance.client;
+        readyPlayers.Clear();
     }
 
     void Update()
     {
-        
+
     }
 
-    void FixedUpdate() 
+    void FixedUpdate()
     {
+    }
 
-        if (Input.GetKey(KeyCode.Space))
+    public void StartOnClick()
+    {
+        //todo: 모두 준비완료일 때 씬 전환(GamePlay) 패킷 만들어서 보내기
+        if (!GameManager.Instance.IsHost) return;
+        if (readyPlayers.Count >= 4)    //! 4 = userList.count
         {
-            if (readyTime >= 1.5f){
-                // 준비 완료
-                if (client == null) client = GameManager.Instance.client;
-                client.Send(new PacketGameReady{
-                    IsReady = true
-                });
-                readyTime = 0;
-            }
-            readyTime += Time.deltaTime;
+            GameManager.Instance.GameSceneNext();
         }
     }
 
@@ -53,47 +52,51 @@ public class FirstSceneUIController : MonoBehaviour
     {
         //Debug.Log($"SetReadyUI({uid})");
         Player player = GameManager.Instance.GetPlayer(uid);
-        switch (uid+1)
+        switch (uid + 1)
         {
             case 1:
                 {
-                    if (isReady) Player1Ready.text = "준비 완료";
-                    else Player1Ready.text = "준비중..";
-                    if (player == null) player = GameManager.Instance.GetPlayer(uid);
-                    Player1Ready.text = "<" + player.ID.ToString() + "> " + Player1Ready.text;
+                    if (isReady) PlayerRed1Ready.text = "준비 완료";
+                    else PlayerRed1Ready.text = "준비중..";
+                    PlayerRed1Ready.text = "<" + player.ID.ToString() + "> " + PlayerRed1Ready.text;
                     //Debug.Log("SetReadyUI()11111111111");
-                }
-                break;
-            case 2:
-                {
-                    if (isReady) Player2Ready.text = "준비 완료";
-                    else Player2Ready.text = "준비중..";
-                    if (player == null) player = GameManager.Instance.GetPlayer(uid);
-                    Player2Ready.text = "<" + player.ID.ToString() + "> " + Player2Ready.text;
-                    //Debug.Log("SetReadyUI()2222222222222");
                 }
                 break;
             case 3:
                 {
-                    if (isReady) Player3Ready.text = "준비 완료";
-                    else Player3Ready.text = "준비중..";
-                    if (player == null) player = GameManager.Instance.GetPlayer(uid);
-                    Player3Ready.text = "<" + player.ID.ToString() + "> " + Player3Ready.text;
+                    if (isReady) PlayerRed2Ready.text = "준비 완료";
+                    else PlayerRed2Ready.text = "준비중..";
+                    PlayerRed2Ready.text = "<" + player.ID.ToString() + "> " + PlayerRed2Ready.text;
+                    //Debug.Log("SetReadyUI()2222222222222");
+                }
+                break;
+            case 2:
+                {
+                    if (isReady) PlayerBlue1Ready.text = "준비 완료";
+                    else PlayerBlue1Ready.text = "준비중..";
+                    PlayerBlue1Ready.text = "<" + player.ID.ToString() + "> " + PlayerBlue1Ready.text;
                     //Debug.Log("SetReadyUI()33333333333333");
                 }
                 break;
             case 4:
                 {
-                    if (isReady) Player4Ready.text = "준비 완료";
-                    else Player4Ready.text = "준비중..";
-                    if (player == null) player = GameManager.Instance.GetPlayer(uid);
-                    Player4Ready.text = "<" + player.ID.ToString() + "> " + Player4Ready.text;
+                    if (isReady) PlayerBlue2Ready.text = "준비 완료";
+                    else PlayerBlue2Ready.text = "준비중..";
+                    PlayerBlue2Ready.text = "<" + player.ID.ToString() + "> " + PlayerBlue2Ready.text;
                     //Debug.Log("SetReadyUI()444444444444444");
                 }
                 break;
             default:
                 break;
         }
-
+        if (isReady)
+        {
+            readyPlayers.Add(true);
+        }
+        else
+        {
+            if (readyPlayers.Count > 0)
+                readyPlayers.RemoveAt(readyPlayers.Count - 1);
+        }
     }
 }

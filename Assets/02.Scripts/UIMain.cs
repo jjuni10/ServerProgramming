@@ -18,7 +18,7 @@ public class UIMain : MonoBehaviour
     public Button buttonBlue;
     public Button buttonGunner;
     public Button buttonRunner;
-    //public Button buttonReady;
+    public Button buttonReady;
     public Button buttonStart;
     //
 
@@ -82,22 +82,17 @@ public class UIMain : MonoBehaviour
             SendRole(ERole.Runner);
         });
 
-        // buttonReady.onClick.AddListener(() =>
-        // {
-        //     PacketGameReady packet = new PacketGameReady();
-        //     _client.Send(packet);
-        // });
+        buttonReady.onClick.AddListener(() =>
+        {
+            PacketGameReady packet = new PacketGameReady();
+            _client.Send(packet);
+        });
 
         buttonStart.onClick.AddListener(() =>
         {
             if (!GameManager.Instance.IsHost)
                 return;
 
-            if(GameManager.Instance.IsHost)
-            {
-                PacketGameReady hostredypacket = new PacketGameReady();
-                _client.Send(hostredypacket);
-            }
             PacketGameReadyOk packet = new PacketGameReadyOk();
             _client.Send(packet);
         });

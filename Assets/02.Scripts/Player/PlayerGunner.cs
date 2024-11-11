@@ -14,26 +14,18 @@ public class PlayerGunner : MonoBehaviour
     [SerializeField]
     private bool RightSite;
 
+    private Vector3 gunnerPos;// = new Vector3(Define.GAME_GUNNER_POSITION_OFFSET,3,0);
+
     void Awake() 
     {
         _player = this.GetComponent<Player>();
     }
     void Start()
     {
-        // if (P_Info.TEAM == ETeam.Red){
-        //     //transform.position = new Vector3(-70, 3, 0);
-        //     transform.Rotate(P_Com.cameraObj.transform.right);
-
-        //     rightDiagonal = new Vector3(1, 0, -1).normalized;
-        //     leftDiagonal = new Vector3(1, 0, 1).normalized;
-        // }
-        // else if (P_Info.TEAM == ETeam.Blue){
-        //     //transform.position = new Vector3(70, 3, 0);
-        //     transform.Rotate(P_Com.cameraObj.transform.right * -1);
-
-        //     rightDiagonal = new Vector3(-1, 0, 1).normalized;
-        //     leftDiagonal = new Vector3(-1, 0, -1).normalized;
-        // }
+        gunnerPos = new Vector3(Define.GAME_GUNNER_POSITION_OFFSET,3,0);
+        if (_player._playerInfos.TEAM == ETeam.Red)
+            gunnerPos.x = gunnerPos.x * -1;
+        this.transform.position = gunnerPos;
     }
     void Update()
     {   
@@ -42,24 +34,10 @@ public class PlayerGunner : MonoBehaviour
         if (!_player.IsLocalPlayer) return;
         if (this.transform.position.x < -70 && (RightSite || LeftSite))
         {
-            transform.position = new Vector3(-70, 3, 0);
+            transform.position = gunnerPos;
             RightSite = false;
             LeftSite = false;
         }
-    }
-
-    public void Init(int uid, string id, ETeam team, Vector3 position, ERole role)
-    {
-        _player._playerInfos.UID = uid; 
-        _player._playerInfos.ID = id; 
-        _player._playerInfos.TEAM = team;
-        _player._playerInfos.ROLE = role;
-        _player._playerComponents.cameraObj = Camera.main;
-        
-        // base.Init(uid, id, team, position);
-        
-        // _destPosition = position;
-        transform.position = position;
     }
 
     public void MoveInput(KeyCode keyCode)
@@ -86,8 +64,7 @@ public class PlayerGunner : MonoBehaviour
         }
         else
         {
-            _player._input
-            .verticalMovement = 0;
+            _player._input.verticalMovement = 0;
             _player._currentState.isRunning = false;
         }
 
@@ -119,8 +96,7 @@ public class PlayerGunner : MonoBehaviour
             .verticalMovement != 0)
             {
                 // 오른쪽 대각선으로 이동
-                _player._currentValue.moveDirection = leftDiagonal * _player._input
-                .verticalMovement;
+                _player._currentValue.moveDirection = leftDiagonal * _player._input.verticalMovement;
             }
             else
             {
@@ -134,8 +110,7 @@ public class PlayerGunner : MonoBehaviour
             .verticalMovement != 0)
             {
                 // 오른쪽 대각선으로 이동
-                _player._currentValue.moveDirection = rightDiagonal * _player._input
-                .verticalMovement;
+                _player._currentValue.moveDirection = rightDiagonal * _player._input.verticalMovement;
             }
             else
             {

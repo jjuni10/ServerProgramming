@@ -13,17 +13,17 @@ public class SecondSceneUIController : MonoBehaviour
     public float SettingPlayTime = 180f;   // 셋팅된 플레이 시간 (현재 3분)
     public Image GaugePlayTime; // 플레이 시간 소비 게이지
 
-    public TMP_Text Player1ID;
-    public TMP_Text Player1Point;
+    public TMP_Text PlayerRed1ID;
+    public TMP_Text PlayerRed1Point;
 
-    public TMP_Text Player2ID;
-    public TMP_Text Player2Point;
+    public TMP_Text PlayerRed2ID;
+    public TMP_Text PlayerRed2Point;
 
-    public TMP_Text Player3ID;
-    public TMP_Text Player3Point;
-    
-    public TMP_Text Player4ID;
-    public TMP_Text Player4Point;
+    public TMP_Text PlayerBlue1ID;
+    public TMP_Text PlayerBlue1Point;
+
+    public TMP_Text PlayerBlue2ID;
+    public TMP_Text PlayerBlue2Point;
 
     void Start()
     {
@@ -100,22 +100,22 @@ public class SecondSceneUIController : MonoBehaviour
         {
             case 1:
                 {
-                    Player1ID.text = "<" + player.ID + ">";
-                }
-                break;
-            case 2:
-                {
-                    Player2ID.text = "<" + player.ID + ">";
+                    PlayerRed1ID.text = "<" + player.ID + ">";
                 }
                 break;
             case 3:
                 {
-                    Player3ID.text = "<" + player.ID + ">";
+                    PlayerRed2ID.text = "<" + player.ID + ">";
+                }
+                break;
+            case 2:
+                {
+                    PlayerBlue1ID.text = "<" + player.ID + ">";
                 }
                 break;
             case 4:
                 {
-                    Player4ID.text = "<" + player.ID + ">";
+                    PlayerBlue2ID.text = "<" + player.ID + ">";
                 }
                 break;
             default:
@@ -124,30 +124,31 @@ public class SecondSceneUIController : MonoBehaviour
 
     }
 
-    public void SetPointUI(int uid)
+    public void SetPointUI(int uid, bool isReset = false)
     {
         //Debug.Log($"SetReadyUI({uid})");
         Player player = GameManager.Instance.GetPlayer(uid);
+        if (isReset) player._currentValue.point = 0;
         switch (uid+1)
         {
             case 1:
                 {
-                    Player1Point.text = player._currentValue.point.ToString() + " Point";
-                }
-                break;
-            case 2:
-                {
-                    Player2Point.text = player._currentValue.point.ToString() + " Point";
+                    PlayerRed1Point.text = player._currentValue.point.ToString() + " Point";
                 }
                 break;
             case 3:
                 {
-                    Player3Point.text = player._currentValue.point.ToString() + " Point";
+                    PlayerRed2Point.text = player._currentValue.point.ToString() + " Point";
+                }
+                break;
+            case 2:
+                {
+                    PlayerBlue1Point.text = player._currentValue.point.ToString() + " Point";
                 }
                 break;
             case 4:
                 {
-                    Player4Point.text = player._currentValue.point.ToString() + " Point";
+                    PlayerBlue2Point.text = player._currentValue.point.ToString() + " Point";
                 }
                 break;
             default:

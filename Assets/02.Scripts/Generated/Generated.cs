@@ -999,7 +999,7 @@ namespace MessagePack.Formatters
                 return;
             }
 
-            writer.WriteArrayHeader(11);
+            writer.WriteArrayHeader(12);
             writer.WriteNil();
             writer.WriteNil();
             writer.WriteNil();
@@ -1010,6 +1010,7 @@ namespace MessagePack.Formatters
             writer.WriteNil();
             writer.WriteNil();
             writer.WriteNil();
+            writer.Write(value.uid);
             writer.Write(value.IsReady);
         }
 
@@ -1029,6 +1030,9 @@ namespace MessagePack.Formatters
                 switch (i)
                 {
                     case 10:
+                        ____result.uid  = reader.ReadInt32();
+                        break;
+                    case 11:
                         ____result.IsReady = reader.ReadBoolean();
                         break;
                     default:

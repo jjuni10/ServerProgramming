@@ -33,16 +33,21 @@ public class Player : MonoBehaviour
 
     public void Init(int uid, string id, ETeam team, Vector3 position, ERole role)
     {
+        P_Com.animator = this.GetComponent<Animator>();
+        P_Com.rigidbody = this.GetComponent<Rigidbody>();
+
         P_Info.UID = uid; 
         P_Info.ID = id; 
         P_Info.TEAM = team;
         P_Info.ROLE = role;
+        if (GameManager.Instance.UserUID == UID)
+            _playerInfos._localPlayer = true;
         P_Com.cameraObj = Camera.main;
 
         _gunner = GetComponent<PlayerGunner>();
         _runner = GetComponent<PlayerRunner>();
 
-        ChangeRole(Role);
+        ChangeRole(role);
         
         _destPosition = position;
         transform.position = position;
@@ -73,7 +78,7 @@ public class Player : MonoBehaviour
 
     public void Move(KeyCode keyCode)
     {
-        if (Role == ERole.Runner || !GameManager.Instance.IsGameStarted)
+        if (Role == ERole.Runner || GameManager.Instance.UIPlayers != null)
         {
             _runner.Move(keyCode);
         }
@@ -86,10 +91,23 @@ public class Player : MonoBehaviour
 
     public void Rotate()
     {
-        if (Role == ERole.Runner || !GameManager.Instance.IsGameStarted)
+        if (Role == ERole.Runner || GameManager.Instance.UIPlayers != null)
         {
             _runner.Rotate();
         }
+    }
+
+    public void SetReady(bool isReady)
+    {
+        //if (!P_Info._localPlayer) return;
+        PacketGameReady packet = new PacketGameReady();
+        packet.uid = UID;
+        packet.IsReady = isReady;
+        GameManager.Instance.client.Send(packet);
+        //GameManager.Instance.UIPlayers.SetReadyUI(packet.uid, packet.IsReady);
+    }
+    public void ReadyUISetting(int uid, bool ready){
+        GameManager.Instance.UIPlayers.SetReadyUI(uid, ready);
     }
 
     public void SetPositionRotation(Vector3 position, float rotation)
@@ -138,7 +156,7 @@ public class Player : MonoBehaviour
     {
         //Debug.Log($"ChangeRole {role}");
         P_Info.ROLE = role;
-        if (P_Info.ROLE == ERole.Runner || !GameManager.Instance.IsGameStarted)
+        if (P_Info.ROLE == ERole.Runner || GameManager.Instance.UIPlayers != null)
         {
             _gunner.enabled = false;
             _runner.enabled = true;

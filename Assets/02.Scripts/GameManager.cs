@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
     private Client _client;
     private Dictionary<int, Player> _playerDic =
         new Dictionary<int, Player>();             // UID, 플레이어 캐릭터
+    [SerializeField]
     private Player _localPlayer;                   // 로컬 플레이어 캐릭터
     private Dictionary<int, Bullet> _bulletDic = new Dictionary<int, Bullet>(); // UID, 총알
     private bool _startGame;                                // 게임이 시작되었는지 여부
@@ -39,7 +40,8 @@ public class GameManager : MonoBehaviour
     //! 나중에 입력 받아서 플레이타임 결정하기
     public float InputPlayTime = 270f;
 
-    
+    private float readyTime;
+
     public int redPoint;
     public int bluePoint;
     public ETeam WinTeam { get; set; }
@@ -62,11 +64,14 @@ public class GameManager : MonoBehaviour
     {
         UpdateInput();
         UpdateCheckGameEnd();
+
+        if (UIPlayers2 != null) UIPlayers2.SetPointUI(UserUID);
     }
 
     private void SceneSetting()
     {
         if (SceneManager.GetActiveScene().name == "GameServer"
+            || SceneManager.GetActiveScene().name == "GameReady"
             || SceneManager.GetActiveScene().name == "Game")
         {
             UIPlayers = FindObjectOfType<FirstSceneUIController>();
@@ -76,6 +81,8 @@ public class GameManager : MonoBehaviour
         {
             UIPlayers2 = FindObjectOfType<SecondSceneUIController>();
             //todo: players Setting(Position, Rotation, UI(ID, Point = 0))
+            UIPlayers2.SetIDUI(UserUID);
+            UIPlayers2.SetPointUI(UserUID, true);
         }
         else if (SceneManager.GetActiveScene().name == "GameResult")
         {
@@ -113,6 +120,25 @@ public class GameManager : MonoBehaviour
         // {
         //     _localPlayer.FireBullet();
         // }
+
+        if (Input.GetKey(KeyCode.Space))
+        {
+            if (readyTime >= 1.5f)
+            {
+                _localPlayer.SetReady(true);
+                readyTime = 0;
+            }
+            readyTime += Time.deltaTime;
+        }
+        if (Input.GetKey(KeyCode.LeftControl))
+        {
+            if (readyTime >= 1.5f)
+            {
+                _localPlayer.SetReady(false);
+                readyTime = 0;
+            }
+            readyTime += Time.deltaTime;
+        }
     }
 
     private void UpdateCheckGameEnd()
@@ -156,58 +182,14 @@ public class GameManager : MonoBehaviour
         }
         else
             _playTime += Time.deltaTime;
-        // int blueAlive = 0;
-        // int redAlive = 0;
-        // foreach (var playerKeyValue in _playerDic)
-        // {
-        //     if (playerKeyValue.Value.Team == ETeam.Blue)
-        //     {
-        //         if (playerKeyValue.Value.IsAlive)
-        //         {
-        //             blueAlive++;
-        //         }
-        //     }
-        //     else
-        //     {
-        //         if (playerKeyValue.Value.IsAlive)
-        //         {
-        //             redAlive++;
-        //         }
-        //     }
-        // }
-        // if (blueAlive == 0 || redAlive == 0)
-        // {
-        //     // 게임 종료 처리
-        //     Host host = FindObjectOfType<Host>();
-        //     if (host != null)
-        //     {
-        //         PacketGameEnd packet = new PacketGameEnd();
-        //         if (blueAlive > 0)
-        //         {
-        //             packet.winTeam = ETeam.Blue;
-        //         }
-        //         else
-        //         {
-        //             packet.winTeam = ETeam.Red;
-        //         }
-        //         host.SendAll(packet);
-
-        //     }
-        //     _startGame = false;
-        // }
 
     }
 
     public void GameReady(PacketGameReady packet)
     {
+        Debug.Log("GameManager PacketGameReady packet UID: " + packet.uid);
         //게임 시작 준비.
-        // _ui.SetUIState(UIMain.EUIState.Game);
-
-        // PacketGameReadyOk packet = new PacketGameReadyOk();
-        // _client.Send(packet);
-
-        //Debug.Log("GameReady()");
-        UIPlayers.SetReadyUI(UserUID, packet.IsReady);
+        UIPlayers.SetReadyUI(packet.uid, packet.IsReady);
     }
 
     public void GameStart(PacketGameStart packet)
@@ -220,7 +202,7 @@ public class GameManager : MonoBehaviour
             // 캐릭터를 인스턴스화 한다.
             var inst = Instantiate(resource) as GameObject;
             // GameObject에 있는 PlayerCharacter 컴포넌트를 가져온다.
-            var player = inst.GetComponent<Player>(); 
+            var player = inst.GetComponent<Player>();
             player.name = $"Player {packet.startInfos[i].uid}";
 
             player.Init(packet.startInfos[i].uid, packet.startInfos[i].id, packet.startInfos[i].team, packet.startInfos[i].position, packet.startInfos[i].role);
@@ -268,11 +250,17 @@ public class GameManager : MonoBehaviour
 
     public void RemoveBullet(int uid)
     {
-        if (!_bulletDic.ContainsKey(uid)) 
+        if (!_bulletDic.ContainsKey(uid))
             return;
 
         Destroy(_bulletDic[uid].gameObject);
         _bulletDic.Remove(uid);
 
+    }
+
+    public void GameSceneNext()
+    {
+        if (SceneManager.GetActiveScene().name == "GameReady")
+            SceneManager.LoadScene("GamePlay");
     }
 }

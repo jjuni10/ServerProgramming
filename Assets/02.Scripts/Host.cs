@@ -17,13 +17,13 @@ public class Host : MonoBehaviour
 
         FindObjectOfType<Client>().StartClient("127.0.0.1");
     }
-    
+
     private void OnClientConnected(UserToken token)
     {
         Debug.Log("클라이언트 접속");
 
-        // 게임이 시작되었다면 접속을 거부한다.
-        if (GameManager.Instance.IsGameStarted)
+        // 게임이 시작되었거나 유저가 4명 이상이라면 접속을 거부한다.
+        if (GameManager.Instance.IsGameStarted || _userList.Count >= 4)
         {
             token.Close();
             return;
@@ -97,11 +97,11 @@ public class Host : MonoBehaviour
 
     public void CheckGameReady()
     {
-        for (int i = 0; i < _userList.Count; i++)
-        {
-            if (!_userList[i].GameReady)
-                return;
-        }
+        // for (int i = 0; i < _userList.Count; i++)
+        // {
+        //     if (!_userList[i].GameReady)
+        //         return;
+        // }
         GameManager.Instance.IsGameStarted = true;
 
         Vector3 redPosition = new Vector3(5, 3, 0F);
@@ -144,6 +144,57 @@ public class Host : MonoBehaviour
                     bluePosition = new Vector3(-bluePosition.x, bluePosition.y, bluePosition.z);
                 }
                 blueCount++;
+            }
+        }
+
+        SendAll(packet);
+    }
+
+    public void ReadyCheckGameStart()
+    {
+        for (int i = 0; i < _userList.Count; i++)
+        {
+            if (!_userList[i].GameReady)
+                return;
+        }
+        GameManager.Instance.IsGameStarted = true;
+
+        Vector3 gunnerPosition = new Vector3(Define.GAME_GUNNER_POSITION_OFFSET, 3, 0);
+        Vector3 runnerPosition = new Vector3(Define.GAME_RUNNER_POSITION_OFFSET, 3, 0);
+
+        // 게임 시작 정보를 전송한다.
+        PacketGameStart packet = new PacketGameStart();
+        packet.userNum = _userList.Count;
+        for (int i = 0; i < _userList.Count; i++)
+        {
+            packet.startInfos[i] = new GameStartInfo();
+            packet.startInfos[i].uid = _userList[i].UID;
+            packet.startInfos[i].id = _userList[i].ID;
+            packet.startInfos[i].team = _userList[i].Team;
+            packet.startInfos[i].role = _userList[i].Role;
+            if (_userList[i].Role == ERole.Gunner)
+            {
+                packet.startInfos[i].position = gunnerPosition;
+                if (_userList[i].Team == ETeam.Red)
+                {
+                    gunnerPosition = new Vector3(gunnerPosition.x * -1, gunnerPosition.y, gunnerPosition.z);
+                }
+                else
+                {
+                    gunnerPosition = new Vector3(gunnerPosition.x, gunnerPosition.y, gunnerPosition.z);
+                }
+            }
+            else
+            {
+                packet.startInfos[i].position = runnerPosition;
+                if (_userList[i].Team == ETeam.Red)
+                {
+                    runnerPosition = new Vector3(runnerPosition.x * -1, runnerPosition.y, runnerPosition.z);
+                }
+                else
+                {
+                    runnerPosition = new Vector3(runnerPosition.x, runnerPosition.y, runnerPosition.z);
+                }
             }
         }
 

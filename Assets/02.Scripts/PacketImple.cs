@@ -104,6 +104,8 @@ public class PacketReqChangeRole : Packet
 public class PacketGameReady : Packet
 {
     [Key(10)]
+    public int uid;
+    [Key(11)]
     public bool IsReady;
 }
 
