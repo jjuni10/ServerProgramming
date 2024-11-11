@@ -14,7 +14,7 @@ public class FirstSceneUIController : MonoBehaviour
 
     public Image PlayerBlue1;
     public TMP_Text PlayerBlue1Ready;
-    
+
     public Image PlayerBlue2;
     public TMP_Text PlayerBlue2Ready;
 
@@ -31,18 +31,18 @@ public class FirstSceneUIController : MonoBehaviour
 
     void Update()
     {
-        
+
     }
 
-    void FixedUpdate() 
+    void FixedUpdate()
     {
     }
 
     public void StartOnClick()
     {
-        //todo: 모두 준비완료일 때 씬 전환(GamePlay)
+        //todo: 모두 준비완료일 때 씬 전환(GamePlay) 패킷 만들어서 보내기
         if (!GameManager.Instance.IsHost) return;
-        if (readyPlayers.Count >= 4)    //! 4 = userList
+        if (readyPlayers.Count >= 4)    //! 4 = userList.count
         {
             GameManager.Instance.GameSceneNext();
         }
@@ -52,7 +52,7 @@ public class FirstSceneUIController : MonoBehaviour
     {
         //Debug.Log($"SetReadyUI({uid})");
         Player player = GameManager.Instance.GetPlayer(uid);
-        switch (uid+1)
+        switch (uid + 1)
         {
             case 1:
                 {
@@ -96,7 +96,7 @@ public class FirstSceneUIController : MonoBehaviour
         else
         {
             if (readyPlayers.Count > 0)
-                readyPlayers.RemoveAt(readyPlayers.Count-1);
+                readyPlayers.RemoveAt(readyPlayers.Count - 1);
         }
     }
 }

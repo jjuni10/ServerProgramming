@@ -123,7 +123,8 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Space))
         {
-            if (readyTime >= 1.5f){
+            if (readyTime >= 1.5f)
+            {
                 _localPlayer.SetReady(true);
                 readyTime = 0;
             }
@@ -131,7 +132,8 @@ public class GameManager : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.LeftControl))
         {
-            if (readyTime >= 1.5f){
+            if (readyTime >= 1.5f)
+            {
                 _localPlayer.SetReady(false);
                 readyTime = 0;
             }
@@ -200,7 +202,7 @@ public class GameManager : MonoBehaviour
             // 캐릭터를 인스턴스화 한다.
             var inst = Instantiate(resource) as GameObject;
             // GameObject에 있는 PlayerCharacter 컴포넌트를 가져온다.
-            var player = inst.GetComponent<Player>(); 
+            var player = inst.GetComponent<Player>();
             player.name = $"Player {packet.startInfos[i].uid}";
 
             player.Init(packet.startInfos[i].uid, packet.startInfos[i].id, packet.startInfos[i].team, packet.startInfos[i].position, packet.startInfos[i].role);
@@ -248,7 +250,7 @@ public class GameManager : MonoBehaviour
 
     public void RemoveBullet(int uid)
     {
-        if (!_bulletDic.ContainsKey(uid)) 
+        if (!_bulletDic.ContainsKey(uid))
             return;
 
         Destroy(_bulletDic[uid].gameObject);
@@ -258,6 +260,7 @@ public class GameManager : MonoBehaviour
 
     public void GameSceneNext()
     {
-        SceneManager.LoadScene("GamePlay");
+        if (SceneManager.GetActiveScene().name == "GameReady")
+            SceneManager.LoadScene("GamePlay");
     }
 }
