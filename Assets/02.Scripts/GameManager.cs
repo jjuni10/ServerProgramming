@@ -33,6 +33,9 @@ public class GameManager : MonoBehaviour
         new Dictionary<int, Player>();             // UID, 플레이어 캐릭터
     [SerializeField]
     private Player _localPlayer;                   // 로컬 플레이어 캐릭터
+    
+    private Dictionary<int, Coin> _coins = new Dictionary<int, Coin>();
+    private Dictionary<int, Bomb> _bombs = new Dictionary<int, Bomb>();
     private Dictionary<int, Bullet> _bulletDic = new Dictionary<int, Bullet>(); // UID, 총알
     private bool _startGame;                                // 게임이 시작되었는지 여부
     private float _playTime = 0f;
@@ -247,6 +250,14 @@ public class GameManager : MonoBehaviour
     {
         _bulletDic.Add(bullet.BulletUID, bullet);
     }
+    public void AddBomb(Bomb bomb)
+    {
+        _bombs.Add(bomb.BombUID, bomb);
+    }
+    public void AddCoin(Coin coin)
+    {
+        _coins.Add(coin.CoinUID, coin);
+    }
 
     public void RemoveBullet(int uid)
     {
@@ -255,7 +266,51 @@ public class GameManager : MonoBehaviour
 
         Destroy(_bulletDic[uid].gameObject);
         _bulletDic.Remove(uid);
+    }
+    public void RemoveBomb(int uid)
+    {
+        if (!_bombs.ContainsKey(uid))
+            return;
 
+        Destroy(_bombs[uid].gameObject);
+        _bombs.Remove(uid);
+    }
+    public void RemoveCoin(int uid)
+    {
+        if (!_coins.ContainsKey(uid))
+            return;
+
+        Destroy(_coins[uid].gameObject);
+        _coins.Remove(uid);
+    }
+
+    public void AddEntity(PacketEntitySpawn packet)
+    {
+        switch (packet.type)
+        {
+            case EEntity.Point:
+                {
+                    //GameObject Coin = 
+                    Instantiate(Resources.Load("Coin"), packet.position, Quaternion.identity);// as GameObject;
+                    //_coins.Add(packet.entityUID, Coin.GetComponent<Coin>());
+                }
+                break;
+            case EEntity.Bomb:
+                {
+                    //GameObject Bomb = 
+                    Instantiate(Resources.Load("Bomb"), packet.position, Quaternion.identity);// as GameObject;
+                    //_bombs.Add(packet.entityUID, Bomb.GetComponent<Bomb>());
+                }
+                break;
+            case EEntity.Bullet:
+                {
+                    
+                }
+                break;
+            default:
+                break;
+        }
+        
     }
 
     public void GameSceneNext()

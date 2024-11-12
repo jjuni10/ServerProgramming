@@ -96,6 +96,11 @@ public class UserPeer : IPeer
                     _host.SendAll(packet, this);
                 }
                 break;
+            case PacketEntitySpawn packet:
+                {
+                    //_host.SendAll(packet);
+                }
+                break;
             case PacketPlayerFire packet:
                 {
                     packet.ownerUID = _uid;

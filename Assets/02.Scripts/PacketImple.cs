@@ -234,8 +234,11 @@ public class PacketEntityPlayerCollision : Packet
 {
     [Key(10)]
     public int playerUID;
-
+    
     [Key(11)]
+    public EEntity type;
+
+    [Key(12)]
     public int entityUID;
 }
 

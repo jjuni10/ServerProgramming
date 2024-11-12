@@ -1,11 +1,14 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 public class Host : MonoBehaviour
 {
     private NetServer _server = new NetServer();
     private List<UserPeer> _userList = new List<UserPeer>();
     private int _curUID;
+    private int _curCoinUID = 0;
+    private int _curBombUID = 0;
 
     public void StartHost()
     {
@@ -199,5 +202,50 @@ public class Host : MonoBehaviour
         }
 
         SendAll(packet);
+    }
+
+    IEnumerator Entity_Co()
+    {
+        float spawnTime = 0f;
+        float createTime = 5f;
+        while (_server.GetRun())
+        {
+            yield return new WaitUntil(() => GameManager.Instance.IsGameStarted == true);
+            if (spawnTime >= createTime)
+            {
+                //todo: create packet
+                PacketEntitySpawn packetPoint = new PacketEntitySpawn();
+                packetPoint.type = EEntity.Point;
+                packetPoint.entityUID = _curCoinUID++;
+                packetPoint.position = SpreadEntity();
+                SendAll(packetPoint);
+                
+                PacketEntitySpawn packetBomb = new PacketEntitySpawn();
+                packetBomb.type = EEntity.Bomb;
+                packetBomb.entityUID = _curBombUID++;
+                packetBomb.position = SpreadEntity();
+                SendAll(packetBomb);
+
+                spawnTime = 0f;
+            }
+            spawnTime += Time.deltaTime;
+
+            yield return null;
+        }
+    }
+
+    public Vector3 SpreadEntity()
+    {
+        int ranPosX;
+        int ranPosZ;
+
+        while (true)
+        {
+            ranPosX = UnityEngine.Random.Range(-60, 60);
+            ranPosZ = UnityEngine.Random.Range(-60, 60);
+            if (System.Math.Abs(ranPosX) + System.Math.Abs(ranPosZ) <= 60) break;
+        }
+
+        return new Vector3(ranPosX, 3, ranPosZ);
     }
 }

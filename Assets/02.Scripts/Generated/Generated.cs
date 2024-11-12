@@ -775,7 +775,8 @@ namespace MessagePack.Formatters
                 return;
             }
 
-            writer.WriteArrayHeader(12);
+            global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
+            writer.WriteArrayHeader(13);
             writer.WriteNil();
             writer.WriteNil();
             writer.WriteNil();
@@ -787,6 +788,7 @@ namespace MessagePack.Formatters
             writer.WriteNil();
             writer.WriteNil();
             writer.Write(value.playerUID);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::EEntity>(formatterResolver).Serialize(ref writer, value.type, options);
             writer.Write(value.entityUID);
         }
 
@@ -798,6 +800,7 @@ namespace MessagePack.Formatters
             }
 
             options.Security.DepthStep(ref reader);
+            global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
             var length = reader.ReadArrayHeader();
             var ____result = new global::PacketEntityPlayerCollision();
 
@@ -809,6 +812,9 @@ namespace MessagePack.Formatters
                         ____result.playerUID = reader.ReadInt32();
                         break;
                     case 11:
+                        ____result.type = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::EEntity>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 12:
                         ____result.entityUID = reader.ReadInt32();
                         break;
                     default:

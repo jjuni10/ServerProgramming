@@ -8,6 +8,7 @@ public class NetServer
 
     public event System.Action<UserToken> onClientConnected;
 
+    public bool GetRun(){ return _run; }
     public void Start(int backlog)
     {
         if (_run)

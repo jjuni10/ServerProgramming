@@ -95,6 +95,12 @@ public class Client : MonoBehaviour, IPeer
                     player.SetPositionRotation(packet.position, packet.rotation);
                 }
                 break;
+            case PacketEntitySpawn packet:
+                {
+                    //todo: 화면에 오브젝트 보이도록
+                    GameManager.Instance.AddEntity(packet);
+                }
+                break;
             case PacketPlayerFire packet:
                 {
                     Player player = GameManager.Instance.GetPlayer(packet.ownerUID);
@@ -112,6 +118,18 @@ public class Client : MonoBehaviour, IPeer
                         return;
 
                     targetPlayer.RecivePoint(attackPlayer.LosePoint);
+                }
+                break;
+            case PacketEntityPlayerCollision packet:
+                {
+                    Player player = GameManager.Instance.GetPlayer(packet.playerUID);
+                    if (player == null)
+                        return;
+
+                    if (packet.type == EEntity.Point)
+                        player.RecivePoint(player.GetPoint);
+                    else
+                        player.RecivePoint(player.LosePoint);
                 }
                 break;
             case PacketBulletDestroy packet:
