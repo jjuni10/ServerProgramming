@@ -1333,14 +1333,14 @@ MonoBehaviour:
   PlayTime: 180
   SettingPlayTime: 180
   GaugePlayTime: {fileID: 2729874152544927878}
-  Player1ID: {fileID: 1116738501897378666}
-  Player1Point: {fileID: 7415723241576842876}
-  Player2ID: {fileID: 2687597001623220582}
-  Player2Point: {fileID: 5398966823623000390}
-  Player3ID: {fileID: 157962758509317313}
-  Player3Point: {fileID: 1747167037794919884}
-  Player4ID: {fileID: 2992493624256289488}
-  Player4Point: {fileID: 1747167037794919884}
+  PlayerRed1ID: {fileID: 1116738501897378666}
+  PlayerRed1Point: {fileID: 7415723241576842876}
+  PlayerRed2ID: {fileID: 2687597001623220582}
+  PlayerRed2Point: {fileID: 5398966823623000390}
+  PlayerBlue1ID: {fileID: 157962758509317313}
+  PlayerBlue1Point: {fileID: 6776948722175666561}
+  PlayerBlue2ID: {fileID: 2992493624256289488}
+  PlayerBlue2Point: {fileID: 1747167037794919884}
 --- !u!1 &6906923257192996669
 GameObject:
   m_ObjectHideFlags: 0

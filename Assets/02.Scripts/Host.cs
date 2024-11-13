@@ -17,6 +17,7 @@ public class Host : MonoBehaviour
         _server.onClientConnected += OnClientConnected;
         _server.Start(10);
         GameManager.Instance.IsHost = true;
+        StartCoroutine(Entity_Co());
 
         FindObjectOfType<Client>().StartClient("127.0.0.1");
     }
@@ -213,7 +214,6 @@ public class Host : MonoBehaviour
             yield return new WaitUntil(() => GameManager.Instance.IsGameStarted == true);
             if (spawnTime >= createTime)
             {
-                //todo: create packet
                 PacketEntitySpawn packetPoint = new PacketEntitySpawn();
                 packetPoint.type = EEntity.Point;
                 packetPoint.entityUID = _curCoinUID++;

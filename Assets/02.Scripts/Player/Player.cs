@@ -149,6 +149,12 @@ public class Player : MonoBehaviour
     public void RecivePoint(int point)
     {
         P_Value.point += point;
+        //todo: PacketTeamScoreUpdate 패킷
+        PacketTeamScoreUpdate packet = new PacketTeamScoreUpdate();
+        packet.uid = UID;
+        packet.score = P_Value.point;
+        
+        GameManager.Instance.client.Send(packet);
     }
 
     //todo: 역할 바꾸는 패킷 들어오면 이 함수 실행

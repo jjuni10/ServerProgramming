@@ -221,6 +221,11 @@ public class GameManager : MonoBehaviour
         StartCoroutine(SendPlayerPosition());
     }
 
+    public void UpdatePoint(int uid, int point)
+    {
+        UIPlayers2.SetPointUI(uid);
+    }
+
     private IEnumerator SendPlayerPosition()
     {
         float interval = 1f / 20f;

@@ -130,11 +130,21 @@ public class Client : MonoBehaviour, IPeer
                         player.RecivePoint(player.GetPoint);
                     else
                         player.RecivePoint(player.LosePoint);
+
+                    //GameManager.Instance.UpdatePoint(packet.playerUID);
                 }
                 break;
             case PacketBulletDestroy packet:
                 {
                     GameManager.Instance.RemoveBullet(packet.bulletUID);
+                }
+                break;
+            case PacketEntityDestroy packet:
+                {
+                    if (packet.type == EEntity.Point)
+                        GameManager.Instance.RemoveCoin(packet.entityUID);
+                    else
+                        GameManager.Instance.RemoveBomb(packet.entityUID);
                 }
                 break;
             case PacketGameEnd packet:

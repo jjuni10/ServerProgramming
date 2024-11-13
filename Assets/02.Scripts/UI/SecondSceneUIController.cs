@@ -124,11 +124,12 @@ public class SecondSceneUIController : MonoBehaviour
 
     }
 
-    public void SetPointUI(int uid, bool isReset = false)
+    public void SetPointUI(int uid, bool isReset = false, int point = 0)
     {
         //Debug.Log($"SetReadyUI({uid})");
         Player player = GameManager.Instance.GetPlayer(uid);
         if (isReset) player._currentValue.point = 0;
+        player._currentValue.point = player._currentValue.point + point;
         switch (uid+1)
         {
             case 1:

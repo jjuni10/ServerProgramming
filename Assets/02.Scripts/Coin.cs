@@ -46,6 +46,7 @@ public class Coin : MonoBehaviour
         // 총알이 파괴되었음을 서버에 알림
         PacketEntityDestroy packetBombDistroy = new PacketEntityDestroy();
         packetBombDistroy.entityUID = CoinUID;
+        packetBombDistroy.type = EEntity.Point;
         GameManager.Instance.client.Send(packetBombDistroy);
 
         // 호스트에서 총알 제거

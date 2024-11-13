@@ -721,7 +721,8 @@ namespace MessagePack.Formatters
                 return;
             }
 
-            writer.WriteArrayHeader(11);
+            global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
+            writer.WriteArrayHeader(12);
             writer.WriteNil();
             writer.WriteNil();
             writer.WriteNil();
@@ -732,6 +733,7 @@ namespace MessagePack.Formatters
             writer.WriteNil();
             writer.WriteNil();
             writer.WriteNil();
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::EEntity>(formatterResolver).Serialize(ref writer, value.type, options);
             writer.Write(value.entityUID);
         }
 
@@ -743,6 +745,7 @@ namespace MessagePack.Formatters
             }
 
             options.Security.DepthStep(ref reader);
+            global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
             var length = reader.ReadArrayHeader();
             var ____result = new global::PacketEntityDestroy();
 
@@ -752,6 +755,9 @@ namespace MessagePack.Formatters
                 {
                     case 10:
                         ____result.entityUID = reader.ReadInt32();
+                        break;
+                    case 11:
+                        ____result.type = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::EEntity>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     default:
                         reader.Skip();
@@ -1526,8 +1532,8 @@ namespace MessagePack.Formatters
             writer.WriteNil();
             writer.WriteNil();
             writer.WriteNil();
-            writer.Write(value.redTeamScore);
-            writer.Write(value.blueTeamScore);
+            writer.Write(value.uid);
+            writer.Write(value.score);
         }
 
         public global::PacketTeamScoreUpdate Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -1546,10 +1552,10 @@ namespace MessagePack.Formatters
                 switch (i)
                 {
                     case 10:
-                        ____result.redTeamScore = reader.ReadInt32();
+                        ____result.uid = reader.ReadInt32();
                         break;
                     case 11:
-                        ____result.blueTeamScore = reader.ReadInt32();
+                        ____result.score = reader.ReadInt32();
                         break;
                     default:
                         reader.Skip();

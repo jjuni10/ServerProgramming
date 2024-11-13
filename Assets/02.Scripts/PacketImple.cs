@@ -164,10 +164,10 @@ public class PacketTimerUpdate : Packet
 public class PacketTeamScoreUpdate : Packet
 {
     [Key(10)]
-    public int redTeamScore;
+    public int uid;
 
     [Key(11)]
-    public int blueTeamScore;
+    public int score;
 }
 
 
@@ -226,6 +226,9 @@ public class PacketEntitySpawn : Packet
 public class PacketEntityDestroy : Packet
 {
     [Key(10)]
+    public EEntity type;
+
+    [Key(11)]
     public int entityUID;
 }
 
