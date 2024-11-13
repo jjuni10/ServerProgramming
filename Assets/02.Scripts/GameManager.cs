@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
         new Dictionary<int, Player>();             // UID, 플레이어 캐릭터
     [SerializeField]
     private Player _localPlayer;                   // 로컬 플레이어 캐릭터
-    
+
     private Dictionary<int, Coin> _coins = new Dictionary<int, Coin>();
     private Dictionary<int, Bomb> _bombs = new Dictionary<int, Bomb>();
     private Dictionary<int, Bullet> _bulletDic = new Dictionary<int, Bullet>(); // UID, 총알
@@ -55,6 +55,8 @@ public class GameManager : MonoBehaviour
     public bool IsGameStarted { get; set; }
     public bool IsGamePlayOn { get; set; }
     public bool IsGameEnd { get; set; }
+
+    public int PlayerCount => _playerDic.Count;
     public Client client => _client;
 
     private void Start()
@@ -125,24 +127,38 @@ public class GameManager : MonoBehaviour
         //     _localPlayer.FireBullet();
         // }
 
-        if (Input.GetKey(KeyCode.Space))
-        {
-            if (readyTime >= 1.5f)
-            {
-                _localPlayer.SetReady(true);
-                readyTime = 0;
-            }
-            readyTime += Time.deltaTime;
-        }
+
+        // Ready 취소
         if (Input.GetKey(KeyCode.LeftControl))
         {
-            if (readyTime >= 1.5f)
+            readyTime -= Time.deltaTime;
+            if (readyTime < 0)
             {
                 _localPlayer.SetReady(false);
                 readyTime = 0;
             }
-            readyTime += Time.deltaTime;
+            else
+            {
+                UIPlayers.SetReadyProgress(UserUID, readyTime / Define.READY_TIME);
+            }
         }
+
+        // Ready 하기
+        if (Input.GetKey(KeyCode.Space))
+        {
+            readyTime += Time.deltaTime;
+            if (readyTime >= Define.READY_TIME)
+            {
+                _localPlayer.SetReady(true);
+                readyTime = Define.READY_TIME;
+            }
+            else
+            {
+                UIPlayers.SetReadyProgress(UserUID, readyTime / Define.READY_TIME);
+            }
+        }
+
+
     }
 
     private void UpdateCheckGameEnd()
@@ -193,7 +209,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("GameManager PacketGameReady packet UID: " + packet.uid);
         //게임 시작 준비.
-        UIPlayers.SetReadyUI(packet.uid, packet.IsReady);
+        UIPlayers.SetReadyState(packet.uid, packet.IsReady);
     }
 
     public void GameStart(PacketGameStart packet)
@@ -313,18 +329,18 @@ public class GameManager : MonoBehaviour
                 break;
             case EEntity.Bullet:
                 {
-                    
+
                 }
                 break;
             default:
                 break;
         }
-        
+
     }
 
     public void GameSceneNext()
     {
-        if (SceneManager.GetActiveScene().name == "GameReady")
+        if (SceneManager.GetActiveScene().name == "Game")
             SceneManager.LoadScene("GamePlay");
     }
 }
