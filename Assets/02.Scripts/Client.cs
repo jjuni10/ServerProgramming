@@ -97,7 +97,6 @@ public class Client : MonoBehaviour, IPeer
                 break;
             case PacketEntitySpawn packet:
                 {
-                    //todo: 화면에 오브젝트 보이도록
                     GameManager.Instance.AddEntity(packet);
                 }
                 break;
@@ -131,7 +130,7 @@ public class Client : MonoBehaviour, IPeer
                     else
                         player.RecivePoint(player.LosePoint);
 
-                    //GameManager.Instance.UpdatePoint(packet.playerUID);
+                    GameManager.Instance.UpdatePoint(packet.playerUID, packet.type);
                 }
                 break;
             case PacketBulletDestroy packet:

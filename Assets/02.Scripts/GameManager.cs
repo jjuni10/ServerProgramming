@@ -53,6 +53,7 @@ public class GameManager : MonoBehaviour
     public string UserID { get; set; }  // 클라이언트 자신의 ID
     public bool IsHost { get; set; }
     public bool IsGameStarted { get; set; }
+    public bool IsGamePlayOn { get; set; }
     public bool IsGameEnd { get; set; }
     public Client client => _client;
 
@@ -221,9 +222,12 @@ public class GameManager : MonoBehaviour
         StartCoroutine(SendPlayerPosition());
     }
 
-    public void UpdatePoint(int uid, int point)
+    public void UpdatePoint(int uid, EEntity type)
     {
-        UIPlayers2.SetPointUI(uid);
+        if (type == EEntity.Point)
+            UIPlayers2.SetPointUI(uid, false, 1);
+        else
+            UIPlayers2.SetPointUI(uid, false, -1);
     }
 
     private IEnumerator SendPlayerPosition()

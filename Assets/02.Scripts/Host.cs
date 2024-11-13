@@ -211,7 +211,7 @@ public class Host : MonoBehaviour
         float createTime = 5f;
         while (_server.GetRun())
         {
-            yield return new WaitUntil(() => GameManager.Instance.IsGameStarted == true);
+            yield return new WaitUntil(() => GameManager.Instance.IsGamePlayOn == true);
             if (spawnTime >= createTime)
             {
                 PacketEntitySpawn packetPoint = new PacketEntitySpawn();

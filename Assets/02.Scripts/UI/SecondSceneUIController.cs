@@ -71,7 +71,7 @@ public class SecondSceneUIController : MonoBehaviour
                 CountNum.text = "게임 시작!!";
                 if (count_Co == null)
                     count_Co = StartCoroutine(PlayTimeCalculate());
-                //! 게임 진짜 시작 패킷 전송? 시작한거 알려야할듯
+                GameManager.Instance.IsGamePlayOn = true;
             }
             time += Time.deltaTime;
             yield return null;
@@ -128,8 +128,8 @@ public class SecondSceneUIController : MonoBehaviour
     {
         //Debug.Log($"SetReadyUI({uid})");
         Player player = GameManager.Instance.GetPlayer(uid);
-        if (isReset) player._currentValue.point = 0;
         player._currentValue.point = player._currentValue.point + point;
+        if (isReset) player._currentValue.point = 0;
         switch (uid+1)
         {
             case 1:
