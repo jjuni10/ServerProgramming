@@ -1,5 +1,6 @@
 using MessagePack;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Client : MonoBehaviour, IPeer
 {
@@ -84,6 +85,11 @@ public class Client : MonoBehaviour, IPeer
                 {
                     GameManager.Instance.IsGameStarted = true;
                     GameManager.Instance.GameStart(packet);
+                }
+                break;
+            case PacketGameOn packet:
+                {
+                    SceneManager.LoadScene("GamePlay");
                 }
                 break;
             case PacketPlayerPosition packet:

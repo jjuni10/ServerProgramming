@@ -16,6 +16,7 @@ public class FirstSceneUIController : MonoBehaviour
     public PlayerReadyUIGroup[] ReadyGroups;
 
     private List<bool> readyPlayers = new List<bool>();
+    private Host host;
 
     [SerializeField]
     private Client client;
@@ -23,6 +24,7 @@ public class FirstSceneUIController : MonoBehaviour
     void Start()
     {
         client = GameManager.Instance.client;
+        host = FindObjectOfType<Host>();
         readyPlayers.Clear();
     }
 
@@ -32,7 +34,8 @@ public class FirstSceneUIController : MonoBehaviour
         if (!GameManager.Instance.IsHost) return;
         if (GameManager.Instance.PlayerCount >= 2)    //! 4 = userList.count
         {
-            GameManager.Instance.GameSceneNext();
+            host.GameOn();
+            //GameManager.Instance.GameSceneNext();
         }
     }
 

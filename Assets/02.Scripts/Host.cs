@@ -248,4 +248,11 @@ public class Host : MonoBehaviour
 
         return new Vector3(ranPosX, 3, ranPosZ);
     }
+
+    // (진짜) 게임 시작
+    public void GameOn()
+    {
+        PacketGameOn packet = new PacketGameOn();
+        SendAll(packet);
+    }
 }

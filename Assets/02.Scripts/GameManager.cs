@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,20 +10,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;
-
-    public static GameManager Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                GameObject container = new GameObject("GameManager");
-                _instance = container.AddComponent<GameManager>();
-            }
-
-            return _instance;
-        }
-    }
+    public static GameManager Instance => _instance;
 
     private UIMain _ui;
     public FirstSceneUIController UIPlayers;
@@ -58,6 +46,19 @@ public class GameManager : MonoBehaviour
 
     public int PlayerCount => _playerDic.Count;
     public Client client => _client;
+
+    private void Awake()
+    {
+        if (_instance == null)
+        {
+            _instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     private void Start()
     {
