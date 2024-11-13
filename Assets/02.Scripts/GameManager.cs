@@ -145,6 +145,11 @@ public class GameManager : MonoBehaviour
                 LobbyController.SetReadyProgress(UserUID, readyTime / Define.READY_TIME);
             }
         }
+        else if (Input.GetKeyUp(KeyCode.LeftControl) && readyTime > 0) 
+        {
+            readyTime = Define.READY_TIME;
+            LobbyController.SetReadyProgress(UserUID, readyTime / Define.READY_TIME);
+        }
 
         // Ready 하기
         if (Input.GetKey(KeyCode.Space))
@@ -159,6 +164,11 @@ public class GameManager : MonoBehaviour
             {
                 LobbyController.SetReadyProgress(UserUID, readyTime / Define.READY_TIME);
             }
+        }
+        else if (Input.GetKeyUp(KeyCode.Space) && readyTime < Define.READY_TIME) 
+        {
+            readyTime = 0;
+            LobbyController.SetReadyProgress(UserUID, readyTime / Define.READY_TIME);
         }
     }
 
@@ -226,7 +236,8 @@ public class GameManager : MonoBehaviour
             var inst = Instantiate(resource) as GameObject;
             // GameObject에 있는 Player 컴포넌트를 가져온다.
             var player = inst.GetComponent<Player>();
-            //player.name = $"Player {packet.startInfos[i].uid}";
+            player.name = $"Player {packet.startInfos[i].uid}";
+            DontDestroyOnLoad(player);
 
             player.Init(packet.startInfos[i].uid, packet.startInfos[i].id, packet.startInfos[i].team, packet.startInfos[i].position, packet.startInfos[i].role);
             _playerDic.Add(packet.startInfos[i].uid, player);

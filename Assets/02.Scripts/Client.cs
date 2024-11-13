@@ -16,6 +16,7 @@ public class Client : MonoBehaviour, IPeer
         PacketMessageDispatcher.Instance.Init();
         _client.onConnected += OnConnected;
         _client.Start(ip);
+        DontDestroyOnLoad(gameObject);
 
         _ui = FindObjectOfType<UIMain>();
     }

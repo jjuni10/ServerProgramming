@@ -16,10 +16,10 @@ public class PlayerRunner : MonoBehaviour
     }
     void Start()
     {
-        runnerPos = new Vector3(Define.GAME_RUNNER_POSITION_OFFSET,3,0);
-        if (_player._playerInfos.TEAM == ETeam.Red)
-            runnerPos.x = runnerPos.x * -1;
-        this.transform.position = runnerPos;
+        // runnerPos = new Vector3(Define.GAME_RUNNER_POSITION_OFFSET,3,0);
+        // if (_player._playerInfos.TEAM == ETeam.Red)
+        //     runnerPos.x = runnerPos.x * -1;
+        // this.transform.position = runnerPos;
         _dodgeCool = 0;
     }
     void Update()

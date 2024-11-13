@@ -22,10 +22,10 @@ public class PlayerGunner : MonoBehaviour
     }
     void Start()
     {
-        gunnerPos = new Vector3(Define.GAME_GUNNER_POSITION_OFFSET,3,0);
-        if (_player._playerInfos.TEAM == ETeam.Red)
-            gunnerPos.x = gunnerPos.x * -1;
-        this.transform.position = gunnerPos;
+        // gunnerPos = new Vector3(Define.GAME_GUNNER_POSITION_OFFSET,3,0);
+        // if (_player._playerInfos.TEAM == ETeam.Red)
+        //     gunnerPos.x = gunnerPos.x * -1;
+        // this.transform.position = gunnerPos;
     }
     void Update()
     {   

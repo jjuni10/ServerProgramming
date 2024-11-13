@@ -18,6 +18,7 @@ public class Host : MonoBehaviour
         _server.onClientConnected += OnClientConnected;
         _server.Start(10);
         GameManager.Instance.IsHost = true;
+        DontDestroyOnLoad(gameObject);
         StartCoroutine(Entity_Co());
 
         FindObjectOfType<Client>().StartClient("127.0.0.1");
@@ -167,7 +168,7 @@ public class Host : MonoBehaviour
         Vector3 runnerPosition = new Vector3(Define.GAME_RUNNER_POSITION_OFFSET, 3, 0);
 
         // 게임 시작 정보를 전송한다.
-        Debug.Log("Host PacketGameOn ReadyCheckGameStart() PacketGameStart packet");
+        Debug.Log("Host ReadyCheckGameStart() PacketGameStart ");
         PacketGameStart packet = new PacketGameStart();
         packet.userNum = _userList.Count;
         for (int i = 0; i < _userList.Count; i++)
@@ -179,7 +180,6 @@ public class Host : MonoBehaviour
             packet.startInfos[i].role = _userList[i].Role;
             if (_userList[i].Role == ERole.Gunner)
             {
-                packet.startInfos[i].position = gunnerPosition;
                 if (_userList[i].Team == ETeam.Red)
                 {
                     gunnerPosition = new Vector3(gunnerPosition.x * -1, gunnerPosition.y, gunnerPosition.z);
@@ -188,10 +188,10 @@ public class Host : MonoBehaviour
                 {
                     gunnerPosition = new Vector3(gunnerPosition.x, gunnerPosition.y, gunnerPosition.z);
                 }
+                packet.startInfos[i].position = gunnerPosition;
             }
             else
             {
-                packet.startInfos[i].position = runnerPosition;
                 if (_userList[i].Team == ETeam.Red)
                 {
                     runnerPosition = new Vector3(runnerPosition.x * -1, runnerPosition.y, runnerPosition.z);
@@ -200,6 +200,7 @@ public class Host : MonoBehaviour
                 {
                     runnerPosition = new Vector3(runnerPosition.x, runnerPosition.y, runnerPosition.z);
                 }
+                packet.startInfos[i].position = runnerPosition;
             }
         }
 
