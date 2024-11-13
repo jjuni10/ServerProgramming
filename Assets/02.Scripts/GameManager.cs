@@ -48,6 +48,7 @@ public class GameManager : MonoBehaviour
 
     public int PlayerCount => _playerDic.Count;
     public Client client => _client;
+    private Host _host;
 
     private void Awake()
     {
@@ -67,6 +68,7 @@ public class GameManager : MonoBehaviour
     {
         _ui = FindObjectOfType<UIMain>();
         _client = FindObjectOfType<Client>();
+        _host = FindObjectOfType<Host>();
     }
 
     private void Update()
@@ -182,8 +184,7 @@ public class GameManager : MonoBehaviour
         if (_playTime >= InputPlayTime)
         {
             // 게임 종료 처리
-            Host host = FindObjectOfType<Host>();
-            if (host != null)
+            if (_host != null)
             {
                 PacketGameEnd packet = new PacketGameEnd();
 
@@ -206,7 +207,7 @@ public class GameManager : MonoBehaviour
                 {
                     packet.winTeam = ETeam.None;
                 }
-                host.SendAll(packet);
+                _host.SendAll(packet);
 
             }
             _startGame = false;
