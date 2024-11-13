@@ -114,6 +114,7 @@ public class PacketGameReadyOk : Packet
 {
 }
 
+
 #endregion
 
 #region 게임 시작
@@ -144,6 +145,11 @@ public class PacketGameStart : Packet
 
     [Key(11)]
     public GameStartInfo[] startInfos = new GameStartInfo[20];
+}
+
+[MessagePackObject]
+public class PacketGameOn : Packet
+{
 }
 #endregion
 
