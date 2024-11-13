@@ -63,21 +63,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    // private void Update()
-    // {
-    //     // 입력에 따른 움직임 처리
-    //     if (P_Value.moveDirection != Vector3.zero)
-    //     {
-    //         P_Com.rigidbody.MovePosition(transform.position + P_Value.moveDirection.normalized * Time.deltaTime * P_COption.runningSpeed);
-    //         P_Value.moveDirection = Vector3.zero;
-    //     }
-    //     // 발사 쿨타임 처리
-    //     if (_curFireCoolTime > 0f)
-    //     {
-    //         _curFireCoolTime -= Time.deltaTime;
-    //     }
-    // }
-
     public void Move(KeyCode keyCode)
     {
         if (Role == ERole.Runner || GameManager.Instance.LobbyController != null)
@@ -152,7 +137,6 @@ public class Player : MonoBehaviour
     public void RecivePoint(int point)
     {
         P_Value.point += point;
-        //todo: PacketTeamScoreUpdate 패킷
         PacketTeamScoreUpdate packet = new PacketTeamScoreUpdate();
         packet.uid = UID;
         packet.score = P_Value.point;
@@ -160,7 +144,7 @@ public class Player : MonoBehaviour
         GameManager.Instance.client.Send(packet);
     }
 
-    //todo: 역할 바꾸는 패킷 들어오면 이 함수 실행
+    // 역할 바꾸는 함수
     public void ChangeRole(ERole role)
     {
         //Debug.Log($"ChangeRole {role}");

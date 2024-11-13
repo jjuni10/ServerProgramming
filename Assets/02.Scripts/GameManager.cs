@@ -81,7 +81,6 @@ public class GameManager : MonoBehaviour
 
     private void SceneSetting()
     {
-        //Debug.Log("SceneSetting()");
         if (SceneManager.GetActiveScene().name == "GameServer"
             || SceneManager.GetActiveScene().name == "GameReady"
             || SceneManager.GetActiveScene().name == "Game")
@@ -92,9 +91,6 @@ public class GameManager : MonoBehaviour
         else if (SceneManager.GetActiveScene().name == "GamePlay")
         {
             UIPlayers2 = FindObjectOfType<SecondSceneUIController>(true);
-            //todo: players Setting(Position, Rotation, UI(ID, Point = 0))
-            //UIPlayers2.SetIDUI(UserUID);
-            //UIPlayers2.SetPointUI(UserUID, true);
         }
         else if (SceneManager.GetActiveScene().name == "GameResult")
         {
@@ -105,7 +101,7 @@ public class GameManager : MonoBehaviour
 
     private void UpdateInput()
     {
-        if (_localPlayer == null)// || !_localPlayer.IsAlive)
+        if (_localPlayer == null)
             return;
 
         if (Input.GetKey(KeyCode.W))
@@ -217,13 +213,6 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void GameReady(PacketGameReady packet)
-    {
-        //Debug.Log("GameManager PacketGameReady packet UID: " + packet.uid);
-        //게임 시작 준비.
-        LobbyController.SetReadyState(packet.uid, packet.IsReady);
-    }
-
     public void GameStart(PacketGameStart packet)
     {
         _playerDic.Clear();
@@ -318,7 +307,6 @@ public class GameManager : MonoBehaviour
 
     public Player GetPlayer(int uid)
     {
-        //Debug.Log($"{_playerDic.Count}");
         // 키가 존재하는지 확인
         if (!_playerDic.ContainsKey(uid))
             return null;
@@ -397,7 +385,6 @@ public class GameManager : MonoBehaviour
 
     private void GameSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        //Debug.Log("GameSceneLoaded()");
         SceneSetting();
         if (UIPlayers2)
         {

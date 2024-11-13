@@ -67,12 +67,12 @@ public class UIMain : MonoBehaviour
 
         buttonRed.onClick.AddListener(() =>
         {
-            SendTeam(ETeam.Red);
+            //SendTeam(ETeam.Red);
         });
 
         buttonBlue.onClick.AddListener(() =>
         {
-            SendTeam(ETeam.Blue);
+            //SendTeam(ETeam.Blue);
         });
 
         buttonGunner.onClick.AddListener(() =>
@@ -131,7 +131,7 @@ public class UIMain : MonoBehaviour
     {
         //todo: 모두 준비완료일 때 씬 전환(GamePlay) 패킷 만들어서 보내기
         if (!GameManager.Instance.IsHost) return;
-        if (GameManager.Instance.PlayerCount >= 2)    //! 4 = userList.count
+        if (GameManager.Instance.PlayerCount >= 2)
         {
             //host.GameOn();
             //GameManager.Instance.GameSceneNext();

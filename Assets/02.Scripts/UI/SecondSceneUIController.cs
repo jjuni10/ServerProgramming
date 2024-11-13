@@ -37,7 +37,7 @@ public class SecondSceneUIController : MonoBehaviour
 
     void FixedUpdate() 
     {
-        if (GameManager.Instance.IsGameEnd || !GameManager.Instance.IsGameStarted) return;
+        //if (GameManager.Instance.IsGameEnd || !GameManager.Instance.IsGameStarted) return;
         //todo: "PlayTime" set scroll value
         GaugePlayTime.fillAmount = PlayTime / SettingPlayTime;
     }
@@ -80,7 +80,7 @@ public class SecondSceneUIController : MonoBehaviour
             if (PlayTime <= 0) 
             {
                 CountNum.gameObject.SetActive(true);
-                CountNum.text = "끝~~";
+                CountNum.text = "종료~~";
                 GameManager.Instance.IsGameEnd = false;
             }
             PlayTime -= Time.deltaTime;

@@ -16,18 +16,12 @@ public class PlayerGunner : MonoBehaviour
     [SerializeField]
     private bool RightSite;
 
-    private Vector3 gunnerPos;// = new Vector3(Define.GAME_GUNNER_POSITION_OFFSET,3,0);
-
     void Awake() 
     {
         _player = this.GetComponent<Player>();
     }
     void Start()
     {
-        // gunnerPos = new Vector3(Define.GAME_GUNNER_POSITION_OFFSET,3,0);
-        // if (_player._playerInfos.TEAM == ETeam.Red)
-        //     gunnerPos.x = gunnerPos.x * -1;
-        // this.transform.position = gunnerPos;
         if (_player.Team == ETeam.Red)
         {
             leftDiagonal = new Vector3(1, 0, 1);

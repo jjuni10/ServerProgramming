@@ -19,15 +19,9 @@ public class LobbyController : MonoBehaviour
     public Transform LobbySpawnPoints;
 
     private List<bool> readyPlayers = new List<bool>();
-    private Host host;
-
-    [SerializeField]
-    private Client client;
 
     void Start()
     {
-        client = GameManager.Instance.client;
-        host = FindObjectOfType<Host>();
         readyPlayers.Clear();
     }
 
