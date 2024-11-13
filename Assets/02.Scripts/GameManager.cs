@@ -53,6 +53,7 @@ public class GameManager : MonoBehaviour
         {
             _instance = this;
             DontDestroyOnLoad(gameObject);
+            SceneManager.sceneLoaded += GameSceneLoaded;
         }
         else
         {
@@ -64,7 +65,6 @@ public class GameManager : MonoBehaviour
     {
         _ui = FindObjectOfType<UIMain>();
         _client = FindObjectOfType<Client>();
-        SceneSetting();
     }
 
     private void Update()
@@ -77,6 +77,7 @@ public class GameManager : MonoBehaviour
 
     private void SceneSetting()
     {
+        //Debug.Log("SceneSetting()");
         if (SceneManager.GetActiveScene().name == "GameServer"
             || SceneManager.GetActiveScene().name == "GameReady"
             || SceneManager.GetActiveScene().name == "Game")
@@ -88,8 +89,8 @@ public class GameManager : MonoBehaviour
         {
             UIPlayers2 = FindObjectOfType<SecondSceneUIController>();
             //todo: players Setting(Position, Rotation, UI(ID, Point = 0))
-            UIPlayers2.SetIDUI(UserUID);
-            UIPlayers2.SetPointUI(UserUID, true);
+            //UIPlayers2.SetIDUI(UserUID);
+            //UIPlayers2.SetPointUI(UserUID, true);
         }
         else if (SceneManager.GetActiveScene().name == "GameResult")
         {
@@ -123,11 +124,10 @@ public class GameManager : MonoBehaviour
         _localPlayer.Rotate();
 
         // 총알 발사
-        // if (Input.GetMouseButtonDown(0))
-        // {
-        //     _localPlayer.FireBullet();
-        // }
-
+        if (Input.GetMouseButtonDown(0))
+        {
+            _localPlayer.FireBullet();
+        }
 
         // Ready 취소
         if (Input.GetKey(KeyCode.LeftControl))
@@ -158,8 +158,6 @@ public class GameManager : MonoBehaviour
                 UIPlayers.SetReadyProgress(UserUID, readyTime / Define.READY_TIME);
             }
         }
-
-
     }
 
     private void UpdateCheckGameEnd()
@@ -206,25 +204,18 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void GameReady(PacketGameReady packet)
-    {
-        Debug.Log("GameManager PacketGameReady packet UID: " + packet.uid);
-        //게임 시작 준비.
-        UIPlayers.SetReadyState(packet.uid, packet.IsReady);
-    }
-
     public void GameStart(PacketGameStart packet)
     {
-        _ui.SetUIState(UIMain.EUIState.Game);
+        if (_ui) _ui.SetUIState(UIMain.EUIState.Game);
         for (int i = 0; i < packet.userNum; i++)
         {
             // Resources 폴더에서 캐릭터를 불러온다.
             var resource = Resources.Load("Player");
             // 캐릭터를 인스턴스화 한다.
             var inst = Instantiate(resource) as GameObject;
-            // GameObject에 있는 PlayerCharacter 컴포넌트를 가져온다.
+            // GameObject에 있는 Player 컴포넌트를 가져온다.
             var player = inst.GetComponent<Player>();
-            player.name = $"Player {packet.startInfos[i].uid}";
+            //player.name = $"Player {packet.startInfos[i].uid}";
 
             player.Init(packet.startInfos[i].uid, packet.startInfos[i].id, packet.startInfos[i].team, packet.startInfos[i].position, packet.startInfos[i].role);
             _playerDic.Add(packet.startInfos[i].uid, player);
@@ -341,9 +332,22 @@ public class GameManager : MonoBehaviour
 
     }
 
+    private void GameSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        //Debug.Log("GameSceneLoaded()");
+        SceneSetting();
+        if (UIPlayers2)
+        {
+            for (int i = 0; i < _playerDic.Count; i++)
+            {
+                UIPlayers2.SetIDUI(i);
+                UIPlayers2.SetPointUI(i);
+            }
+        }
+    }
     public void GameSceneNext()
     {
-        if (SceneManager.GetActiveScene().name == "Game")
-            SceneManager.LoadScene("GamePlay");
+        //if (SceneManager.GetActiveScene().name == "Game")
+           SceneManager.LoadScene("GamePlay");
     }
 }

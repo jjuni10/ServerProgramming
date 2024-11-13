@@ -71,7 +71,7 @@ public class Client : MonoBehaviour, IPeer
             case PacketGameReady packet:
                 {
                     //packet.uid = GameManager.Instance.UserUID;
-                    Debug.Log("Client PacketGameReady packet UID: " + packet.uid);
+                    //Debug.Log("Client PacketGameReady packet UID: " + packet.uid);
                     Player player = GameManager.Instance.GetPlayer(packet.uid);
                     if (player == null)
                         return;
@@ -89,6 +89,7 @@ public class Client : MonoBehaviour, IPeer
                 break;
             case PacketGameOn packet:
                 {
+                    Debug.Log("Client PacketGameOn packet");
                     SceneManager.LoadScene("GamePlay");
                 }
                 break;
