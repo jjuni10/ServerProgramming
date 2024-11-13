@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     public ThirdSceneUIController UIPlayers3;
 
     private Client _client;
-    private Dictionary<int, Player> _lobbyPlayerDic = new Dictionary<int, Player>();
+
     private Dictionary<int, Player> _playerDic =
         new Dictionary<int, Player>();             // UID, 플레이어 캐릭터
     [SerializeField]
@@ -215,6 +215,8 @@ public class GameManager : MonoBehaviour
 
     public void GameStart(PacketGameStart packet)
     {
+        _playerDic.Clear();
+
         //_ui.SetUIState(UIMain.EUIState.Game);
         for (int i = 0; i < packet.userNum; i++)
         {
@@ -240,34 +242,41 @@ public class GameManager : MonoBehaviour
         StartCoroutine(SendPlayerPosition());
     }
 
-    public void SpawnLobbyPlayers(PacketAnsUserList packet)
+    public void OnPlayerListUpdated(PacketAnsUserList packet)
     {
         for (int i = 0; i < packet.userNum; i++)
         {
             var userInfo = packet.userInfos[i];
             int uid = userInfo.uid;
+            Player player;
 
-            if (!_lobbyPlayerDic.ContainsKey(uid))
+            if (_playerDic.ContainsKey(uid))
             {
-                // 만약 플레이어가 존재하지 않으면 새 플레이어 생성
+                player = GetPlayer(uid);
+            }
+            else
+            {
+                // 만약 플레이어가 존재하지 않으면 새 플레이어 스폰
                 var resource = Resources.Load("Player");
                 var inst = Instantiate(resource) as GameObject;
-                var player = inst.GetComponent<Player>();
+                player = inst.GetComponent<Player>();
                 var position = LobbyController.GetSpawnPoint(uid);
 
                 player.name = $"Player {uid}";
                 player.Init(uid, userInfo.id, userInfo.team, position, userInfo.role);
-
-                _playerDic.Add(uid, player);
 
                 if (UserUID == uid)
                 {
                     _localPlayer = player;
                     StartCoroutine(SendPlayerPosition());
                 }
-
-                _lobbyPlayerDic.Add(uid, player);
+                _playerDic.Add(uid, player);
             }
+
+            player.ChangeRole(userInfo.role);
+
+            LobbyController.SetRole(uid, player.Role);
+            LobbyController.SetReadyState(uid, false);
         }
     }
 

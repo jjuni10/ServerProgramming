@@ -66,11 +66,12 @@ public class Client : MonoBehaviour, IPeer
                         {
                             strBlue += $"ID:{userInfo.id} UID:{userInfo.uid} {strHost} 팀:{userInfo.team} 역할:{userInfo.role}\n";
                         }
-                    }
 
+                        
+                    }
                     _ui.SetUIState(UIMain.EUIState.Lobby);
                     _ui.SetLobbyText(strRed, strBlue);
-                    GameManager.Instance.SpawnLobbyPlayers(packet);
+                    GameManager.Instance.OnPlayerListUpdated(packet);
                 }
                 break;
             case PacketGameReady packet:
@@ -88,6 +89,8 @@ public class Client : MonoBehaviour, IPeer
                 break;
             case PacketGameStart packet:
                 {
+                    SceneManager.LoadScene("GamePlay");
+
                     GameManager.Instance.IsGameStarted = true;
                     GameManager.Instance.GameStart(packet);
                 }

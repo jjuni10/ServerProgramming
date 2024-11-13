@@ -136,7 +136,6 @@ public class UIMain : MonoBehaviour
             //host.GameOn();
             //GameManager.Instance.GameSceneNext();
 
-            SceneManager.LoadScene("GamePlay");
             _host.ReadyCheckGameStart();
         }
     }

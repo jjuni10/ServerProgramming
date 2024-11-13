@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     private PlayerGunner _gunner;
     private PlayerRunner _runner;
 
+    public bool IsReady = false;
     public int LosePoint = -1;
     public int GetPoint = 1;
     public int UID => _playerInfos.UID;
@@ -104,6 +105,7 @@ public class Player : MonoBehaviour
         packet.uid = UID;
         packet.IsReady = isReady;
         GameManager.Instance.client.Send(packet);
+        IsReady = isReady;
         //GameManager.Instance.UIPlayers.SetReadyUI(packet.uid, packet.IsReady);
     }
     public void ReadyUISetting(int uid, bool ready){

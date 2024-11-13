@@ -11,6 +11,7 @@ public class LobbyController : MonoBehaviour
     public class PlayerReadyUIGroup
     {
         public Image ProgressImage;
+        public Text RoleText;
         public TMP_Text StateText;
     }
 
@@ -30,6 +31,21 @@ public class LobbyController : MonoBehaviour
         readyPlayers.Clear();
     }
 
+    public void SetRole(int uid, ERole role)
+    {
+        PlayerReadyUIGroup uiGroup = ReadyGroups[uid];
+        switch (role)
+        {
+            case ERole.Gunner:
+                uiGroup.RoleText.text = "G";
+                break;
+            case ERole.Runner:
+                uiGroup.RoleText.text = "R";
+                break;
+            default:
+                break;
+        }
+    }
     public void SetReadyState(int uid, bool isReady)
     {
         //Debug.Log($"SetReadyUI({uid})");
