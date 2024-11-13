@@ -52,6 +52,7 @@ public class Player : MonoBehaviour
         
         _destPosition = position;
         transform.position = position;
+        transform.Rotate(new Vector3(0,180,0));
     }
 
     void Update() {
