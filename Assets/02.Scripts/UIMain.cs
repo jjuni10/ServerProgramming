@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIMain : MonoBehaviour
@@ -23,18 +24,20 @@ public class UIMain : MonoBehaviour
     //
 
     private Client _client;
+    private Host _host;
 
     public enum EUIState
     {
         Start,
         Lobby,
-        Game
+        //Game
     }
 
     // 게임 시작 시 UI 요소를 초기화
     private void Awake()
     {
         _client = FindObjectOfType<Client>();
+        _host = FindObjectOfType<Host>();
 
         buttonHost.onClick.AddListener(() =>
         {
@@ -93,8 +96,10 @@ public class UIMain : MonoBehaviour
             if (!GameManager.Instance.IsHost)
                 return;
 
-            PacketGameReadyOk packet = new PacketGameReadyOk();
-            _client.Send(packet);
+            //PacketGameReadyOk packet = new PacketGameReadyOk();
+            //_client.Send(packet);
+
+            StartGame();
         });
 
         SetUIState(EUIState.Start);
@@ -113,11 +118,26 @@ public class UIMain : MonoBehaviour
                 startUI.SetActive(false);
                 lobbyUI.SetActive(true);
                 break;
-            case EUIState.Game:
-                startUI.SetActive(false);
-                lobbyUI.SetActive(false);
-                GameManager.Instance.UIPlayers.gameObject.SetActive(true);
-                break;
+            //case EUIState.Game:
+            //    startUI.SetActive(false);
+            //    lobbyUI.SetActive(false);
+            //    GameManager.Instance.UIPlayers.gameObject.SetActive(true);
+            //    break;
+        }
+    }
+
+
+    public void StartGame()
+    {
+        //todo: 모두 준비완료일 때 씬 전환(GamePlay) 패킷 만들어서 보내기
+        if (!GameManager.Instance.IsHost) return;
+        if (GameManager.Instance.PlayerCount >= 2)    //! 4 = userList.count
+        {
+            //host.GameOn();
+            //GameManager.Instance.GameSceneNext();
+
+            SceneManager.LoadScene("GamePlay");
+            _host.ReadyCheckGameStart();
         }
     }
 

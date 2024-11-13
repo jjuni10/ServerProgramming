@@ -13,10 +13,12 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance => _instance;
 
     private UIMain _ui;
-    public FirstSceneUIController UIPlayers;
+    public LobbyController LobbyController;
     public SecondSceneUIController UIPlayers2;
     public ThirdSceneUIController UIPlayers3;
+
     private Client _client;
+    private Dictionary<int, Player> _lobbyPlayerDic = new Dictionary<int, Player>();
     private Dictionary<int, Player> _playerDic =
         new Dictionary<int, Player>();             // UID, 플레이어 캐릭터
     [SerializeField]
@@ -81,19 +83,19 @@ public class GameManager : MonoBehaviour
             || SceneManager.GetActiveScene().name == "GameReady"
             || SceneManager.GetActiveScene().name == "Game")
         {
-            UIPlayers = FindObjectOfType<FirstSceneUIController>();
-            if (UIPlayers != null) UIPlayers.gameObject.SetActive(false);
+            LobbyController = FindObjectOfType<LobbyController>(true);
+            if (LobbyController != null) LobbyController.gameObject.SetActive(false);
         }
         else if (SceneManager.GetActiveScene().name == "GamePlay")
         {
-            UIPlayers2 = FindObjectOfType<SecondSceneUIController>();
+            UIPlayers2 = FindObjectOfType<SecondSceneUIController>(true);
             //todo: players Setting(Position, Rotation, UI(ID, Point = 0))
             UIPlayers2.SetIDUI(UserUID);
             UIPlayers2.SetPointUI(UserUID, true);
         }
         else if (SceneManager.GetActiveScene().name == "GameResult")
         {
-            UIPlayers3 = FindObjectOfType<ThirdSceneUIController>();
+            UIPlayers3 = FindObjectOfType<ThirdSceneUIController>(true);
             //if (UIPlayers3 != null) UIPlayers3.gameObject.SetActive(false);
         }
     }
@@ -140,7 +142,7 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                UIPlayers.SetReadyProgress(UserUID, readyTime / Define.READY_TIME);
+                LobbyController.SetReadyProgress(UserUID, readyTime / Define.READY_TIME);
             }
         }
 
@@ -155,7 +157,7 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                UIPlayers.SetReadyProgress(UserUID, readyTime / Define.READY_TIME);
+                LobbyController.SetReadyProgress(UserUID, readyTime / Define.READY_TIME);
             }
         }
 
@@ -210,12 +212,12 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("GameManager PacketGameReady packet UID: " + packet.uid);
         //게임 시작 준비.
-        UIPlayers.SetReadyState(packet.uid, packet.IsReady);
+        LobbyController.SetReadyState(packet.uid, packet.IsReady);
     }
 
     public void GameStart(PacketGameStart packet)
     {
-        _ui.SetUIState(UIMain.EUIState.Game);
+        //_ui.SetUIState(UIMain.EUIState.Game);
         for (int i = 0; i < packet.userNum; i++)
         {
             // Resources 폴더에서 캐릭터를 불러온다.
@@ -234,10 +236,43 @@ public class GameManager : MonoBehaviour
             {
                 _localPlayer = player;
             }
+
         }
         _startGame = true;
         StartCoroutine(SendPlayerPosition());
     }
+
+    public void SpawnLobbyPlayers(PacketAnsUserList packet)
+    {
+        for (int i = 0; i < packet.userNum; i++)
+        {
+            var userInfo = packet.userInfos[i];
+            int uid = userInfo.uid;
+
+            if (!_lobbyPlayerDic.ContainsKey(uid))
+            {
+                // 만약 플레이어가 존재하지 않으면 새 플레이어 생성
+                var resource = Resources.Load("Player");
+                var inst = Instantiate(resource) as GameObject;
+                var player = inst.GetComponent<Player>();
+                var position = LobbyController.GetSpawnPoint(uid);
+
+                player.name = $"Player {uid}";
+                player.Init(uid, userInfo.id, userInfo.team, position, userInfo.role);
+
+                _playerDic.Add(uid, player);
+
+                if (UserUID == uid)
+                {
+                    _localPlayer = player;
+                    StartCoroutine(SendPlayerPosition());
+                }
+
+                _lobbyPlayerDic.Add(uid, player);
+            }
+        }
+    }
+
 
     public void UpdatePoint(int uid, EEntity type)
     {

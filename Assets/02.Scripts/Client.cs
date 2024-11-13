@@ -1,4 +1,5 @@
 using MessagePack;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,6 +8,7 @@ public class Client : MonoBehaviour, IPeer
     private NetClient _client = new NetClient();
     private UserToken _userToken;
     private UIMain _ui;
+
 
     public void StartClient(string ip)
     {
@@ -50,22 +52,25 @@ public class Client : MonoBehaviour, IPeer
 
                     for (int i = 0; i < packet.userNum; i++)
                     {
+                        var userInfo = packet.userInfos[i];
+
                         string strHost = string.Empty;
-                        if (packet.userInfos[i].host)
+                        if (userInfo.host)
                             strHost = "HOST";
 
-                        if (packet.userInfos[i].team == ETeam.Red)
+                        if (userInfo.team == ETeam.Red)
                         {
-                            strRed += $"ID:{packet.userInfos[i].id} UID:{packet.userInfos[i].uid} {strHost} 팀:{packet.userInfos[i].team} 역할:{packet.userInfos[i].role}\n";
+                            strRed += $"ID:{userInfo.id} UID:{userInfo.uid} {strHost} 팀:{userInfo.team} 역할:{userInfo.role}\n";
                         }
                         else
                         {
-                            strBlue += $"ID:{packet.userInfos[i].id} UID:{packet.userInfos[i].uid} {strHost} 팀:{packet.userInfos[i].team} 역할:{packet.userInfos[i].role}\n";
+                            strBlue += $"ID:{userInfo.id} UID:{userInfo.uid} {strHost} 팀:{userInfo.team} 역할:{userInfo.role}\n";
                         }
                     }
 
                     _ui.SetUIState(UIMain.EUIState.Lobby);
                     _ui.SetLobbyText(strRed, strBlue);
+                    GameManager.Instance.SpawnLobbyPlayers(packet);
                 }
                 break;
             case PacketGameReady packet:
@@ -85,11 +90,6 @@ public class Client : MonoBehaviour, IPeer
                 {
                     GameManager.Instance.IsGameStarted = true;
                     GameManager.Instance.GameStart(packet);
-                }
-                break;
-            case PacketGameOn packet:
-                {
-                    SceneManager.LoadScene("GamePlay");
                 }
                 break;
             case PacketPlayerPosition packet:

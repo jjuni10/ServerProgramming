@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using System.Text;
 
 public class Host : MonoBehaviour
 {
@@ -56,7 +57,6 @@ public class Host : MonoBehaviour
         packet.team = user.Team;
 
         user.Send(packet);
-
         _curUID++;
     }
 
@@ -247,12 +247,5 @@ public class Host : MonoBehaviour
         }
 
         return new Vector3(ranPosX, 3, ranPosZ);
-    }
-
-    // (진짜) 게임 시작
-    public void GameOn()
-    {
-        PacketGameOn packet = new PacketGameOn();
-        SendAll(packet);
     }
 }

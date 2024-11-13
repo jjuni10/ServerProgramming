@@ -78,7 +78,7 @@ public class Player : MonoBehaviour
 
     public void Move(KeyCode keyCode)
     {
-        if (Role == ERole.Runner || GameManager.Instance.UIPlayers != null)
+        if (Role == ERole.Runner || GameManager.Instance.LobbyController != null)
         {
             _runner.Move(keyCode);
         }
@@ -91,7 +91,7 @@ public class Player : MonoBehaviour
 
     public void Rotate()
     {
-        if (Role == ERole.Runner || GameManager.Instance.UIPlayers != null)
+        if (Role == ERole.Runner || GameManager.Instance.LobbyController != null)
         {
             _runner.Rotate();
         }
@@ -107,7 +107,7 @@ public class Player : MonoBehaviour
         //GameManager.Instance.UIPlayers.SetReadyUI(packet.uid, packet.IsReady);
     }
     public void ReadyUISetting(int uid, bool ready){
-        GameManager.Instance.UIPlayers.SetReadyState(uid, ready);
+        GameManager.Instance.LobbyController.SetReadyState(uid, ready);
     }
 
     public void SetPositionRotation(Vector3 position, float rotation)
@@ -162,7 +162,7 @@ public class Player : MonoBehaviour
     {
         //Debug.Log($"ChangeRole {role}");
         P_Info.ROLE = role;
-        if (P_Info.ROLE == ERole.Runner || GameManager.Instance.UIPlayers != null)
+        if (P_Info.ROLE == ERole.Runner || GameManager.Instance.LobbyController != null)
         {
             _gunner.enabled = false;
             _runner.enabled = true;

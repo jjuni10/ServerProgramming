@@ -85,11 +85,11 @@ public class UserPeer : IPeer
                     _host.SendAll(packet);
                 }
                 break;
-            case PacketGameReadyOk packet:
-                {
-                    _host.CheckGameReady();
-                }
-                break;
+            //case PacketGameReadyOk packet:
+            //    {
+            //        _host.CheckGameReady();
+            //    }
+            //    break;
             case PacketPlayerPosition packet:
                 {
                     packet.uid = _uid;

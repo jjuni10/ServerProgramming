@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
-public class FirstSceneUIController : MonoBehaviour
+public class LobbyController : MonoBehaviour
 {
     [System.Serializable]
     public class PlayerReadyUIGroup
@@ -14,6 +15,7 @@ public class FirstSceneUIController : MonoBehaviour
     }
 
     public PlayerReadyUIGroup[] ReadyGroups;
+    public Transform LobbySpawnPoints;
 
     private List<bool> readyPlayers = new List<bool>();
     private Host host;
@@ -26,17 +28,6 @@ public class FirstSceneUIController : MonoBehaviour
         client = GameManager.Instance.client;
         host = FindObjectOfType<Host>();
         readyPlayers.Clear();
-    }
-
-    public void StartOnClick()
-    {
-        //todo: 모두 준비완료일 때 씬 전환(GamePlay) 패킷 만들어서 보내기
-        if (!GameManager.Instance.IsHost) return;
-        if (GameManager.Instance.PlayerCount >= 2)    //! 4 = userList.count
-        {
-            host.GameOn();
-            //GameManager.Instance.GameSceneNext();
-        }
     }
 
     public void SetReadyState(int uid, bool isReady)
@@ -71,5 +62,10 @@ public class FirstSceneUIController : MonoBehaviour
     public void SetReadyProgress(int uid, float progress)
     {
         ReadyGroups[uid].ProgressImage.fillAmount = Mathf.Clamp01(progress);
+    }
+
+    public Vector3 GetSpawnPoint(int uid)
+    {
+        return LobbySpawnPoints.GetChild(uid).position;
     }
 }
