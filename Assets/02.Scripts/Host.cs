@@ -167,6 +167,7 @@ public class Host : MonoBehaviour
         Vector3 runnerPosition = new Vector3(Define.GAME_RUNNER_POSITION_OFFSET, 3, 0);
 
         // 게임 시작 정보를 전송한다.
+        Debug.Log("Host PacketGameOn ReadyCheckGameStart() PacketGameStart packet");
         PacketGameStart packet = new PacketGameStart();
         packet.userNum = _userList.Count;
         for (int i = 0; i < _userList.Count; i++)

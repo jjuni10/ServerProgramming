@@ -80,7 +80,7 @@ public class UserPeer : IPeer
                     //packet.IsReady = true;
                     //GameManager.Instance.GameReady(packet);
                     //GameManager.Instance.UIPlayers.SetReadyUI(packet.uid, packet.IsReady);
-                    Debug.Log("UserPeer PacketGameReady packet UID: " + packet.uid);
+                    //Debug.Log("UserPeer PacketGameReady packet UID: " + packet.uid);
                     //GameManager.Instance.client.Send(packet);
                     _host.SendAll(packet);
                 }
