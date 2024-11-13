@@ -44,10 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c4ee0068a9da9e43b41cbe896eb40b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIPlayers: {fileID: 0}
+  LobbyController: {fileID: 0}
   UIPlayers2: {fileID: 0}
   UIPlayers3: {fileID: 0}
   _localPlayer: {fileID: 0}
   InputPlayTime: 270
   redPoint: 0
   bluePoint: 0
+  Host: {fileID: 286337909361859282, guid: ad060df9abe2840cfa60b0d3151d4825, type: 3}

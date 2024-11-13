@@ -27,8 +27,6 @@ public class SecondSceneUIController : MonoBehaviour
 
     void Start()
     {
-        //todo: get each Player's ID, And set ID
-
         StartCoroutine(StartCount());
     }
 
@@ -42,9 +40,6 @@ public class SecondSceneUIController : MonoBehaviour
         if (GameManager.Instance.IsGameEnd || !GameManager.Instance.IsGameStarted) return;
         //todo: "PlayTime" set scroll value
         GaugePlayTime.fillAmount = PlayTime / SettingPlayTime;
-
-        //todo: get each Player's Point And set Point
-
     }
 
     IEnumerator StartCount()
@@ -86,6 +81,7 @@ public class SecondSceneUIController : MonoBehaviour
             {
                 CountNum.gameObject.SetActive(true);
                 CountNum.text = "끝~~";
+                GameManager.Instance.IsGameEnd = false;
             }
             PlayTime -= Time.deltaTime;
             yield return null;

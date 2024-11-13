@@ -210,26 +210,30 @@ public class Host : MonoBehaviour
     {
         float spawnTime = 0f;
         float createTime = 5f;
-        while (_server.GetRun())
+        while (true)
         {
-            yield return new WaitUntil(() => GameManager.Instance.IsGamePlayOn == true);
-            if (spawnTime >= createTime)
+            if (GameManager.Instance.IsGamePlayOn) 
             {
-                PacketEntitySpawn packetPoint = new PacketEntitySpawn();
-                packetPoint.type = EEntity.Point;
-                packetPoint.entityUID = _curCoinUID++;
-                packetPoint.position = SpreadEntity();
-                SendAll(packetPoint);
-                
-                PacketEntitySpawn packetBomb = new PacketEntitySpawn();
-                packetBomb.type = EEntity.Bomb;
-                packetBomb.entityUID = _curBombUID++;
-                packetBomb.position = SpreadEntity();
-                SendAll(packetBomb);
+                if (spawnTime >= createTime)
+                {
+                    PacketEntitySpawn packetPoint = new PacketEntitySpawn();
+                    packetPoint.type = EEntity.Point;
+                    packetPoint.entityUID = _curCoinUID++;
+                    packetPoint.position = SpreadEntity();
+                    SendAll(packetPoint);
+                    
+                    PacketEntitySpawn packetBomb = new PacketEntitySpawn();
+                    packetBomb.type = EEntity.Bomb;
+                    packetBomb.entityUID = _curBombUID++;
+                    packetBomb.position = SpreadEntity();
+                    SendAll(packetBomb);
 
-                spawnTime = 0f;
+                    spawnTime = 0f;
+                }
+                spawnTime += Time.deltaTime;
             }
-            spawnTime += Time.deltaTime;
+
+            if (GameManager.Instance.IsGameEnd) break;
 
             yield return null;
         }
