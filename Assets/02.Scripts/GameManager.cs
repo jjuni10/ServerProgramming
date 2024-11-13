@@ -404,6 +404,7 @@ public class GameManager : MonoBehaviour
             {
                 UIPlayers2.SetIDUI(i);
                 UIPlayers2.SetPointUI(i);
+                _localPlayer.ChangeRole(_localPlayer.Role);
             }
         }
     }
