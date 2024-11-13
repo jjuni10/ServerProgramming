@@ -271,6 +271,7 @@ public class GameManager : MonoBehaviour
         return _playerDic[uid];
     }
 
+#region Add / Remove Entity
     public void AddBullet(Bullet bullet)
     {
         _bulletDic.Add(bullet.BulletUID, bullet);
@@ -308,6 +309,7 @@ public class GameManager : MonoBehaviour
         Destroy(_coins[uid].gameObject);
         _coins.Remove(uid);
     }
+#endregion
 
     public void AddEntity(PacketEntitySpawn packet)
     {
