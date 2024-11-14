@@ -26,4 +26,11 @@ public class Define
     public const float GAME_GUNNER_POSITION_OFFSET = 70f;
     public const float GAME_RUNNER_POSITION_OFFSET = 10f;
     public const float READY_TIME = 1.5f;
+
+    // public static float START_POSITION_OFFSET;
+    // public static float START_DISTANCE_OFFSET;
+    // public static float FIRE_COOL_TIME;
+    // public static float GAME_GUNNER_POSITION_OFFSET;
+    // public static float GAME_RUNNER_POSITION_OFFSET;
+    // public static float READY_TIME;
 }
