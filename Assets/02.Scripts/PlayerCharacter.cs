@@ -94,7 +94,7 @@ public class PlayerCharacter : MonoBehaviour
         packet.ownerUID = _uid;
         packet.position = transform.position + new Vector3(0f, 0.5f, 0f);
         packet.direction = transform.forward;
-        GameManager.Instance.client.Send(packet);
+        GameManager.Instance.Client.Send(packet);
 
         _curFireCoolTime = Define.FIRE_COOL_TIME;
     }

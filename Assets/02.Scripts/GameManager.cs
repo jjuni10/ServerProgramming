@@ -12,7 +12,9 @@ public class GameManager : MonoBehaviour
     private static GameManager _instance;
     public static GameManager Instance => _instance;
 
-    private UIMain _ui;
+    public Client Client { get; private set; }
+    public Host Host { get; private set; }
+
     public LobbyController LobbyController;
     public SecondSceneUIController UIPlayers2;
     public ThirdSceneUIController UIPlayers3;
@@ -29,6 +31,7 @@ public class GameManager : MonoBehaviour
     private Dictionary<int, Bullet> _bulletDic = new Dictionary<int, Bullet>(); // UID, 총알
     private bool _startGame;                                // 게임이 시작되었는지 여부
     private float _playTime = 0f;
+    private PacketGameStart _gameStartPacket;
 
     //! 나중에 입력 받아서 플레이타임 결정하기
     public float InputPlayTime = 270f;
@@ -47,28 +50,28 @@ public class GameManager : MonoBehaviour
     public bool IsGameEnd { get; set; }
 
     public int PlayerCount => _playerDic.Count;
-    public Client client => _client;
-    public Host Host;
+
+
 
     private void Awake()
     {
         if (_instance == null)
         {
             _instance = this;
-            DontDestroyOnLoad(gameObject);
-            SceneManager.sceneLoaded += GameSceneLoaded;
         }
         else
         {
-            Destroy(gameObject);
+            Destroy(this);
         }
     }
 
     private void Start()
     {
-        _ui = FindObjectOfType<UIMain>();
-        _client = FindObjectOfType<Client>();
-        Host = FindObjectOfType<Host>();
+        Client = GetComponent<Client>();
+        Host = GetComponent<Host>();
+
+        SceneSetting();
+        SceneManager.sceneLoaded += GameSceneLoaded;
     }
 
     private void Update()
@@ -215,8 +218,16 @@ public class GameManager : MonoBehaviour
 
     public void GameStart(PacketGameStart packet)
     {
-        _playerDic.Clear();
+        SceneManager.LoadScene("GamePlay");
 
+        _gameStartPacket = packet;
+    }
+
+    private void OnGamePlaySceneLoaded(PacketGameStart packet)
+    {
+        _playerDic.Clear();
+        Debug.Log(SceneManager.GetActiveScene().name);
+        Debug.Log("게임 시작! 유저 수: " + packet.userNum);
         //_ui.SetUIState(UIMain.EUIState.Game);
         for (int i = 0; i < packet.userNum; i++)
         {
@@ -227,8 +238,8 @@ public class GameManager : MonoBehaviour
             // GameObject에 있는 Player 컴포넌트를 가져온다.
             var player = inst.GetComponent<Player>();
             player.name = $"Player {packet.startInfos[i].uid}";
-            DontDestroyOnLoad(player);
 
+            Debug.Log(player);
             player.Init(packet.startInfos[i].uid, packet.startInfos[i].id, packet.startInfos[i].team, packet.startInfos[i].position, packet.startInfos[i].role);
             _playerDic.Add(packet.startInfos[i].uid, player);
             //Debug.Log("GameStart() _playerDic.Add()");
@@ -237,9 +248,19 @@ public class GameManager : MonoBehaviour
             {
                 _localPlayer = player;
             }
-
         }
+
         _startGame = true;
+
+        if (UIPlayers2)
+        {
+            for (int i = 0; i < _playerDic.Count; i++)
+            {
+                UIPlayers2.SetIDUI(i);
+                UIPlayers2.SetPointUI(i);
+                _localPlayer.ChangeRole(_localPlayer.Role);
+            }
+        }
         StartCoroutine(SendPlayerPosition());
     }
 
@@ -299,8 +320,9 @@ public class GameManager : MonoBehaviour
             packet.uid = UserUID;
             packet.position = _localPlayer.transform.position;
             packet.rotation = _localPlayer.transform.eulerAngles.y;
-            _client.Send(packet);
+            Client.Send(packet);
 
+            Debug.Log("Position 패킷 보냄!");
             yield return new WaitForSeconds(interval);
         }
     }
@@ -386,14 +408,10 @@ public class GameManager : MonoBehaviour
     private void GameSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         SceneSetting();
-        if (UIPlayers2)
+
+        if (scene.name == "GamePlay")
         {
-            for (int i = 0; i < _playerDic.Count; i++)
-            {
-                UIPlayers2.SetIDUI(i);
-                UIPlayers2.SetPointUI(i);
-                _localPlayer.ChangeRole(_localPlayer.Role);
-            }
+            OnGamePlaySceneLoaded(_gameStartPacket);
         }
     }
     public void GameSceneNext()

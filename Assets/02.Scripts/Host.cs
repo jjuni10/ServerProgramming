@@ -13,15 +13,12 @@ public class Host : MonoBehaviour
 
     public void StartHost()
     {
-        MainThread.Instance.Init();
-        PacketMessageDispatcher.Instance.Init();
         _server.onClientConnected += OnClientConnected;
         _server.Start(10);
-        GameManager.Instance.IsHost = true;
-        DontDestroyOnLoad(gameObject);
         StartCoroutine(Entity_Co());
 
-        FindObjectOfType<Client>().StartClient("127.0.0.1");
+        GameManager.Instance.IsHost = true;
+        GameManager.Instance.Client.StartClient("127.0.0.1");
     }
 
     private void OnClientConnected(UserToken token)
@@ -63,6 +60,7 @@ public class Host : MonoBehaviour
 
     private void OnClosed(UserToken token)
     {
+        Debug.Log("Token Closed: " + (token.Peer as UserPeer).ID);
         _userList.Remove(token.Peer as UserPeer);
     }
 

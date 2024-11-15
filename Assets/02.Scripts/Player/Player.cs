@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
     public CheckOption _checkOption = new CheckOption();
     public CurrentState _currentState = new CurrentState();
     public CurrentValue _currentValue = new CurrentValue();
-    
+
     protected PlayerInfo P_Info => _playerInfos;
     protected PlayerComponents P_Com => _playerComponents;
     protected PlayerInput P_Input => _input;
@@ -37,8 +37,8 @@ public class Player : MonoBehaviour
         P_Com.animator = this.GetComponent<Animator>();
         P_Com.rigidbody = this.GetComponent<Rigidbody>();
 
-        P_Info.UID = uid; 
-        P_Info.ID = id; 
+        P_Info.UID = uid;
+        P_Info.ID = id;
         P_Info.TEAM = team;
         P_Info.ROLE = role;
         if (GameManager.Instance.UserUID == UID)
@@ -49,13 +49,14 @@ public class Player : MonoBehaviour
         _runner = GetComponent<PlayerRunner>();
 
         ChangeRole(role);
-        
+
         _destPosition = position;
         transform.position = position;
-        transform.Rotate(new Vector3(0,180,0));
+        transform.Rotate(new Vector3(0, 180, 0));
     }
 
-    void Update() {
+    void Update()
+    {
         if (!IsLocalPlayer)
         {
             // 위치 보정
@@ -90,11 +91,12 @@ public class Player : MonoBehaviour
         PacketGameReady packet = new PacketGameReady();
         packet.uid = UID;
         packet.IsReady = isReady;
-        GameManager.Instance.client.Send(packet);
+        GameManager.Instance.Client.Send(packet);
         IsReady = isReady;
         //GameManager.Instance.UIPlayers.SetReadyUI(packet.uid, packet.IsReady);
     }
-    public void ReadyUISetting(int uid, bool ready){
+    public void ReadyUISetting(int uid, bool ready)
+    {
         GameManager.Instance.LobbyController.SetReadyState(uid, ready);
     }
 
@@ -113,14 +115,14 @@ public class Player : MonoBehaviour
         packet.ownerUID = UID;
         packet.position = transform.position + new Vector3(0f, 0.5f, 0f);
         packet.direction = transform.forward;
-        GameManager.Instance.client.Send(packet);
+        GameManager.Instance.Client.Send(packet);
 
         _curFireCoolTime = Define.FIRE_COOL_TIME;
     }
     public void CreateBullet(Vector3 position, Vector3 direction, int ownerUID, int bulletUID)
     {
         GameObject bulletResource = null;
-        if(Team == ETeam.Red)
+        if (Team == ETeam.Red)
         {
             bulletResource = Resources.Load("RedBullet") as GameObject;
         }
@@ -140,8 +142,8 @@ public class Player : MonoBehaviour
         PacketTeamScoreUpdate packet = new PacketTeamScoreUpdate();
         packet.uid = UID;
         packet.score = P_Value.point;
-        
-        GameManager.Instance.client.Send(packet);
+
+        GameManager.Instance.Client.Send(packet);
     }
 
     // 역할 바꾸는 함수

@@ -4,18 +4,18 @@ using UnityEngine;
 public class MainThread : MonoBehaviour
 {
     private static MainThread _instance;
+    public static MainThread Instance => _instance;
 
-    public static MainThread Instance
+    private void Awake()
     {
-        get
+        if (_instance == null)
         {
-            if (_instance == null)
-            {
-                GameObject container = new GameObject("MainThread");
-                _instance = container.AddComponent<MainThread>();
-            }
-
-            return _instance;
+            _instance = this;
+            Init();
+        }
+        else
+        {
+            Destroy(this);
         }
     }
 

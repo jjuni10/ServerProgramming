@@ -34,10 +34,10 @@ public class UIMain : MonoBehaviour
     }
 
     // 게임 시작 시 UI 요소를 초기화
-    private void Awake()
+    private void Start()
     {
-        _client = FindObjectOfType<Client>();
-        _host = FindObjectOfType<Host>();
+        _client = GameManager.Instance.Client;
+        _host = GameManager.Instance.Host;
 
         buttonHost.onClick.AddListener(() =>
         {
@@ -47,7 +47,7 @@ public class UIMain : MonoBehaviour
 
             GameManager.Instance.UserID = inputID.text;
             // Host 객체를 찾아서 시작한다.
-            FindObjectOfType<Host>().StartHost();
+            GameManager.Instance.Host.StartHost();
         });
 
         buttonClient.onClick.AddListener(() =>
@@ -62,7 +62,7 @@ public class UIMain : MonoBehaviour
 
             GameManager.Instance.UserID = inputID.text;
             // Client 객체를 찾아서 시작한다.
-            FindObjectOfType<Client>().StartClient(inputIP.text);
+            GameManager.Instance.Client.StartClient(inputIP.text);
         });
 
         buttonRed.onClick.AddListener(() =>

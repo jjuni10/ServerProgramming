@@ -34,7 +34,7 @@ public class Coin : MonoBehaviour
         packet.entityUID = CoinUID;
         packet.type = EEntity.Point;
         packet.playerUID = player.UID;
-        GameManager.Instance.client.Send(packet);
+        GameManager.Instance.Client.Send(packet);
         RemoveCoin();
     }
 
@@ -47,7 +47,7 @@ public class Coin : MonoBehaviour
         PacketEntityDestroy packetBombDistroy = new PacketEntityDestroy();
         packetBombDistroy.entityUID = CoinUID;
         packetBombDistroy.type = EEntity.Point;
-        GameManager.Instance.client.Send(packetBombDistroy);
+        GameManager.Instance.Client.Send(packetBombDistroy);
 
         // 호스트에서 총알 제거
         GameManager.Instance.RemoveCoin(_coinUID);

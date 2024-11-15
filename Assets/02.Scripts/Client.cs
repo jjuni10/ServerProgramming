@@ -1,4 +1,5 @@
 using MessagePack;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -9,14 +10,13 @@ public class Client : MonoBehaviour, IPeer
     private UserToken _userToken;
     private UIMain _ui;
 
+    private ConcurrentQueue<Packet> queue = new ConcurrentQueue<Packet>();
+
 
     public void StartClient(string ip)
     {
-        MainThread.Instance.Init();
-        PacketMessageDispatcher.Instance.Init();
         _client.onConnected += OnConnected;
         _client.Start(ip);
-        DontDestroyOnLoad(gameObject);
 
         _ui = FindObjectOfType<UIMain>();
     }
@@ -34,6 +34,11 @@ public class Client : MonoBehaviour, IPeer
     public void ProcessMessage(short protocolID, byte[] buffer)
     {
         Packet receivedPacket = MessagePackSerializer.Deserialize<Packet>(buffer);
+        queue.Enqueue(receivedPacket);
+    }
+
+    private void ProcessPacket(Packet receivedPacket)
+    {
         switch (receivedPacket)
         {
             case PacketReqUserInfo packet:
@@ -68,7 +73,7 @@ public class Client : MonoBehaviour, IPeer
                             strBlue += $"ID:{userInfo.id} UID:{userInfo.uid} {strHost} 팀:{userInfo.team} 역할:{userInfo.role}\n";
                         }
 
-                        
+
                     }
                     _ui.SetUIState(UIMain.EUIState.Lobby);
                     _ui.SetLobbyText(strRed, strBlue);
@@ -86,7 +91,7 @@ public class Client : MonoBehaviour, IPeer
                 break;
             case PacketGameStart packet:
                 {
-                    SceneManager.LoadScene("GamePlay");
+                    
 
                     GameManager.Instance.IsGameStarted = true;
                     GameManager.Instance.GameStart(packet);
@@ -162,6 +167,16 @@ public class Client : MonoBehaviour, IPeer
         }
     }
 
+    void Update()
+    {
+        while (queue.Count > 0)
+        {
+            if (queue.TryDequeue(out Packet packet))
+            {
+                ProcessPacket(packet);
+            }
+        }
+    }
     public void Remove()
     {
     }

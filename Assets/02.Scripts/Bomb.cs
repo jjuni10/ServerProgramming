@@ -34,7 +34,7 @@ public class Bomb : MonoBehaviour
         packet.entityUID = BombUID;
         packet.type = EEntity.Bomb;
         packet.playerUID = player.UID;
-        GameManager.Instance.client.Send(packet);
+        GameManager.Instance.Client.Send(packet);
         RemoveBomb();
     }
 
@@ -47,7 +47,7 @@ public class Bomb : MonoBehaviour
         PacketEntityDestroy packetBombDistroy = new PacketEntityDestroy();
         packetBombDistroy.entityUID = BombUID;
         packetBombDistroy.type = EEntity.Bomb;
-        GameManager.Instance.client.Send(packetBombDistroy);
+        GameManager.Instance.Client.Send(packetBombDistroy);
 
         // 호스트에서 총알 제거
         GameManager.Instance.RemoveBomb(_bombUID);
