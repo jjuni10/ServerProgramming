@@ -113,7 +113,7 @@ public class Player : MonoBehaviour
         }
         PacketPlayerFire packet = new PacketPlayerFire();
         packet.ownerUID = UID;
-        packet.position = transform.position + new Vector3(0f, 0.5f, 0f);
+        packet.position = transform.position + new Vector3(0f, 4.5f, 0f);
         packet.direction = transform.forward;
         GameManager.Instance.Client.Send(packet);
 
