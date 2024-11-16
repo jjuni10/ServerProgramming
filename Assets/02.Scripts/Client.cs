@@ -91,7 +91,7 @@ public class Client : MonoBehaviour, IPeer
                 break;
             case PacketGameStart packet:
                 {
-                    
+
 
                     GameManager.Instance.IsGameStarted = true;
                     GameManager.Instance.GameStart(packet);
@@ -140,8 +140,11 @@ public class Client : MonoBehaviour, IPeer
                         player.RecivePoint(player.GetPoint);
                     else
                         player.RecivePoint(player.LosePoint);
-
-                    GameManager.Instance.UpdatePoint(packet.playerUID, packet.type);
+                }
+                break;
+            case PacketTeamScoreUpdate packet:
+                {
+                    GameManager.Instance.UpdatePoint(packet.uid, packet.score);
                 }
                 break;
             case PacketBulletDestroy packet:

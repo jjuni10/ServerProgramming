@@ -21,7 +21,7 @@ public class Coin : MonoBehaviour
         }
 
         Player player = other.GetComponent<Player>();
-        
+
         // 플레이어가 아닌 다른 객체에 충돌하면 총알을 제거함
         if (player == null)
         {
