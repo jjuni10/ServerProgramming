@@ -40,7 +40,8 @@ public class GoogleSheetsManager : MonoBehaviour
     // 데이터를 Define 클래스에 반영
     public async Task ApplyData()
     {
-        var sheetNames = new List<string> { "PlayerBasic", "Gunner", "Runner", "WinCheck", "Item", "Bullet" };
+
+        var sheetNames = new List<string> { "PlayerBasic", "Gunner", "Runner", "WinCheck", "Item", "Bullet", "Origin" };
 
         foreach (var sheetName in sheetNames)
         {
@@ -70,6 +71,19 @@ public class GoogleSheetsManager : MonoBehaviour
                         };
                         Define.Players[playerId] = playerData;
                     }
+                    break;
+
+                case "Origin":
+                    var originData = data[0]; // Origin 시트의 첫 번째 데이터만 사용
+                    Define.START_POSITION_OFFSET = float.Parse(originData["START_POSITION_OFFSET"]);
+                    Define.START_DISTANCE_OFFSET = float.Parse(originData["START_DISTANCE_OFFSET"]);
+                    Define.FIRE_COOL_TIME = float.Parse(originData["FIRE_COOL_TIME"]);
+                    Define.GAME_GUNNER_POSITION_OFFSET = float.Parse(originData["GAME_GUNNER_POSITION_OFFSET"]);
+                    Define.GAME_RUNNER_POSITION_OFFSET = float.Parse(originData["GAME_RUNNER_POSITION_OFFSET"]);
+                    Define.READY_TIME = float.Parse(originData["READY_TIME"]);
+
+                    Debug.Log("Origin data applied to Define constants:");
+                    Debug.Log($"START_POSITION_OFFSET: {Define.START_POSITION_OFFSET}");
                     break;
 
                 case "Gunner":
