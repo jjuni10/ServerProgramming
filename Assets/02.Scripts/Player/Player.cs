@@ -138,10 +138,12 @@ public class Player : MonoBehaviour
     }
     public void RecivePoint(int point)
     {
+        //if (!IsLocalPlayer) return;
         P_Value.point += point;
         PacketTeamScoreUpdate packet = new PacketTeamScoreUpdate();
         packet.uid = UID;
         packet.score = P_Value.point;
+        Debug.Log($"player {packet.uid}, {packet.score}");
 
         GameManager.Instance.Client.Send(packet);
     }

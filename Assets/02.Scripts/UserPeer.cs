@@ -101,6 +101,16 @@ public class UserPeer : IPeer
                     //_host.SendAll(packet);
                 }
                 break;
+            case PacketEntityPlayerCollision packet:
+                {
+                    _host.SendAll(packet);
+                }
+                break;
+            case PacketTeamScoreUpdate packet:
+                {
+                    _host.SendAll(packet);
+                }
+                break;
             case PacketPlayerFire packet:
                 {
                     packet.ownerUID = _uid;
@@ -117,6 +127,11 @@ public class UserPeer : IPeer
             case PacketBulletDestroy packet:
                 {
                     _host.SendAll(packet, this);
+                }
+                break;
+            case PacketEntityDestroy packet:
+                {
+                    _host.SendAll(packet);
                 }
                 break;
         }

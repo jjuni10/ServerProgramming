@@ -32,10 +32,10 @@ public class SecondSceneUIController : MonoBehaviour
 
     void Update()
     {
-        
+
     }
 
-    void FixedUpdate() 
+    void FixedUpdate()
     {
         //if (GameManager.Instance.IsGameEnd || !GameManager.Instance.IsGameStarted) return;
         //todo: "PlayTime" set scroll value
@@ -77,7 +77,7 @@ public class SecondSceneUIController : MonoBehaviour
     {
         while (!GameManager.Instance.IsGameEnd)
         {
-            if (PlayTime <= 0) 
+            if (PlayTime <= 0)
             {
                 CountNum.gameObject.SetActive(true);
                 CountNum.text = "종료~~";
@@ -92,7 +92,7 @@ public class SecondSceneUIController : MonoBehaviour
     {
         //Debug.Log($"SetReadyUI({uid})");
         Player player = GameManager.Instance.GetPlayer(uid);
-        switch (uid+1)
+        switch (uid + 1)
         {
             case 1:
                 {
@@ -120,32 +120,32 @@ public class SecondSceneUIController : MonoBehaviour
 
     }
 
-    public void SetPointUI(int uid, bool isReset = false, int point = 0)
+    public void SetPointUI(int uid, int point = 0)
     {
         //Debug.Log($"SetReadyUI({uid})");
         Player player = GameManager.Instance.GetPlayer(uid);
-        player._currentValue.point = player._currentValue.point + point;
-        if (isReset) player._currentValue.point = 0;
-        switch (uid+1)
+        //player._currentValue.point = player._currentValue.point + point;
+        //if (isReset) player._currentValue.point = 0;
+        switch (uid + 1)
         {
             case 1:
                 {
-                    PlayerRed1Point.text = player._currentValue.point.ToString() + " Point";
+                    PlayerRed1Point.text = point + " Point";
                 }
                 break;
             case 3:
                 {
-                    PlayerRed2Point.text = player._currentValue.point.ToString() + " Point";
+                    PlayerRed2Point.text = point + " Point";
                 }
                 break;
             case 2:
                 {
-                    PlayerBlue1Point.text = player._currentValue.point.ToString() + " Point";
+                    PlayerBlue1Point.text = point + " Point";
                 }
                 break;
             case 4:
                 {
-                    PlayerBlue2Point.text = player._currentValue.point.ToString() + " Point";
+                    PlayerBlue2Point.text = point + " Point";
                 }
                 break;
             default:

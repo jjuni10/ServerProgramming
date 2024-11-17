@@ -124,25 +124,25 @@ public class Host : MonoBehaviour
             {
                 if (_userList[i].Team == ETeam.Red)
                 {
-                    gunnerPosition = new Vector3(gunnerPosition.x * -1, gunnerPosition.y, gunnerPosition.z);
+                    packet.startInfos[i].position = new Vector3(gunnerPosition.x * -1, gunnerPosition.y, gunnerPosition.z);
                 }
                 else
                 {
-                    gunnerPosition = new Vector3(gunnerPosition.x, gunnerPosition.y, gunnerPosition.z);
+                    packet.startInfos[i].position = new Vector3(gunnerPosition.x, gunnerPosition.y, gunnerPosition.z);
                 }
-                packet.startInfos[i].position = gunnerPosition;
+                //packet.startInfos[i].position = gunnerPosition;
             }
             else
             {
                 if (_userList[i].Team == ETeam.Red)
                 {
-                    runnerPosition = new Vector3(runnerPosition.x * -1, runnerPosition.y, runnerPosition.z);
+                    packet.startInfos[i].position = new Vector3(runnerPosition.x * -1, runnerPosition.y, runnerPosition.z);
                 }
                 else
                 {
-                    runnerPosition = new Vector3(runnerPosition.x, runnerPosition.y, runnerPosition.z);
+                    packet.startInfos[i].position = new Vector3(runnerPosition.x, runnerPosition.y, runnerPosition.z);
                 }
-                packet.startInfos[i].position = runnerPosition;
+                //packet.startInfos[i].position = runnerPosition;
             }
         }
 
@@ -155,7 +155,7 @@ public class Host : MonoBehaviour
         float createTime = 5f;
         while (true)
         {
-            if (GameManager.Instance.IsGamePlayOn) 
+            if (GameManager.Instance.IsGamePlayOn)
             {
                 if (spawnTime >= createTime)
                 {
@@ -164,7 +164,7 @@ public class Host : MonoBehaviour
                     packetPoint.entityUID = _curCoinUID++;
                     packetPoint.position = SpreadEntity();
                     SendAll(packetPoint);
-                    
+
                     PacketEntitySpawn packetBomb = new PacketEntitySpawn();
                     packetBomb.type = EEntity.Bomb;
                     packetBomb.entityUID = _curBombUID++;

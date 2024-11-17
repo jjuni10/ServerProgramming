@@ -79,7 +79,7 @@ public class GameManager : MonoBehaviour
         UpdateInput();
         UpdateCheckGameEnd();
 
-        if (UIPlayers2 != null) UIPlayers2.SetPointUI(UserUID);
+        //if (UIPlayers2 != null) UIPlayers2.SetPointUI(UserUID);
     }
 
     private void SceneSetting()
@@ -146,7 +146,7 @@ public class GameManager : MonoBehaviour
                 LobbyController.SetReadyProgress(UserUID, readyTime / Define.READY_TIME);
             }
         }
-        else if (Input.GetKeyUp(KeyCode.LeftControl) && readyTime > 0) 
+        else if (Input.GetKeyUp(KeyCode.LeftControl) && readyTime > 0)
         {
             readyTime = Define.READY_TIME;
             LobbyController.SetReadyProgress(UserUID, readyTime / Define.READY_TIME);
@@ -166,7 +166,7 @@ public class GameManager : MonoBehaviour
                 LobbyController.SetReadyProgress(UserUID, readyTime / Define.READY_TIME);
             }
         }
-        else if (Input.GetKeyUp(KeyCode.Space) && readyTime < Define.READY_TIME) 
+        else if (Input.GetKeyUp(KeyCode.Space) && readyTime < Define.READY_TIME)
         {
             readyTime = 0;
             LobbyController.SetReadyProgress(UserUID, readyTime / Define.READY_TIME);
@@ -303,12 +303,13 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public void UpdatePoint(int uid, EEntity type)
+    public void UpdatePoint(int uid, int point)// EEntity type)
     {
-        if (type == EEntity.Point)
-            UIPlayers2.SetPointUI(uid, false, 1);
-        else
-            UIPlayers2.SetPointUI(uid, false, -1);
+        // if (type == EEntity.Point)
+        //     UIPlayers2.SetPointUI(uid, false, 1);
+        // else
+        //     UIPlayers2.SetPointUI(uid, false, -1);
+        UIPlayers2.SetPointUI(uid, point);
     }
 
     private IEnumerator SendPlayerPosition()
@@ -336,7 +337,7 @@ public class GameManager : MonoBehaviour
         return _playerDic[uid];
     }
 
-#region Add / Remove Entity
+    #region Add / Remove Entity
     public void AddBullet(Bullet bullet)
     {
         _bulletDic.Add(bullet.BulletUID, bullet);
@@ -374,7 +375,7 @@ public class GameManager : MonoBehaviour
         Destroy(_coins[uid].gameObject);
         _coins.Remove(uid);
     }
-#endregion
+    #endregion
 
     public void AddEntity(PacketEntitySpawn packet)
     {
@@ -382,15 +383,15 @@ public class GameManager : MonoBehaviour
         {
             case EEntity.Point:
                 {
-                    //GameObject Coin = 
-                    Instantiate(Resources.Load("Coin"), packet.position, Quaternion.identity);// as GameObject;
+                    GameObject Coin = Instantiate(Resources.Load("Coin"), packet.position, Quaternion.identity) as GameObject;
+                    Coin.GetComponent<Coin>().Init(packet.entityUID);
                     //_coins.Add(packet.entityUID, Coin.GetComponent<Coin>());
                 }
                 break;
             case EEntity.Bomb:
                 {
-                    //GameObject Bomb = 
-                    Instantiate(Resources.Load("Bomb"), packet.position, Quaternion.identity);// as GameObject;
+                    GameObject Bomb = Instantiate(Resources.Load("Bomb"), packet.position, Quaternion.identity) as GameObject;
+                    Bomb.GetComponent<Bomb>().Init(packet.entityUID);
                     //_bombs.Add(packet.entityUID, Bomb.GetComponent<Bomb>());
                 }
                 break;
@@ -417,6 +418,6 @@ public class GameManager : MonoBehaviour
     public void GameSceneNext()
     {
         //if (SceneManager.GetActiveScene().name == "Game")
-           SceneManager.LoadScene("GamePlay");
+        SceneManager.LoadScene("GamePlay");
     }
 }
