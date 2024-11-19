@@ -18,6 +18,7 @@ public class PlayerInfo
     public int UID;
     public string ID;
     public ETeam TEAM;
+    public ERole ROLE;
     public bool _localPlayer;
 }
 
@@ -54,6 +55,9 @@ public class CheckOption
 
     [Range(1f, 30f), Tooltip("대쉬 속도")]
     public float dashingSpeed = 25f;
+
+    [Range(1f, 30f), Tooltip("닷지 힘")]
+    public float dodgingForce = 4f;
 }
 
 [Serializable]

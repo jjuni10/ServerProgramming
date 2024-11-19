@@ -13,8 +13,9 @@ public class UserPeer : IPeer
     private int _uid;               // 유저 고유 식별 번호
     private string _id;
     private ETeam _team;
+    private ERole _role;
     private bool _isHost;
-    private bool _gameReady;        // 게임 준비 완료 여부
+    private bool _gameReady = false;        // 게임 준비 완료 여부
 
     public int UID => _uid;
     public string ID => _id;
@@ -29,6 +30,12 @@ public class UserPeer : IPeer
     {
         get => _team;
         set => _team = value;
+    }
+
+    public ERole Role
+    {
+        get => _role;
+        set => _role = value;
     }
 
     public UserPeer(UserToken userToken, int uid, Host host)
@@ -60,21 +67,48 @@ public class UserPeer : IPeer
                     _host.SendUserList();
                 }
                 break;
+            case PacketReqChangeRole packet:
+                {
+                    _role = packet.role;
+                    _host.SendUserList();
+                }
+                break;
             case PacketGameReady packet:
                 {
+                    _gameReady = packet.IsReady;
+                    //packet.uid = _uid;
+                    //packet.IsReady = true;
+                    //GameManager.Instance.GameReady(packet);
+                    //GameManager.Instance.UIPlayers.SetReadyUI(packet.uid, packet.IsReady);
+                    //Debug.Log("UserPeer PacketGameReady packet UID: " + packet.uid);
+                    //GameManager.Instance.client.Send(packet);
                     _host.SendAll(packet);
                 }
                 break;
-            case PacketGameReadyOk packet:
-                {
-                    _gameReady = true;
-                    _host.CheckGameReady();
-                }
-                break;
+            //case PacketGameReadyOk packet:
+            //    {
+            //        _host.CheckGameReady();
+            //    }
+            //    break;
             case PacketPlayerPosition packet:
                 {
                     packet.uid = _uid;
                     _host.SendAll(packet, this);
+                }
+                break;
+            case PacketEntitySpawn packet:
+                {
+                    //_host.SendAll(packet);
+                }
+                break;
+            case PacketEntityPlayerCollision packet:
+                {
+                    _host.SendAll(packet);
+                }
+                break;
+            case PacketTeamScoreUpdate packet:
+                {
+                    _host.SendAll(packet);
                 }
                 break;
             case PacketPlayerFire packet:
@@ -93,6 +127,11 @@ public class UserPeer : IPeer
             case PacketBulletDestroy packet:
                 {
                     _host.SendAll(packet, this);
+                }
+                break;
+            case PacketEntityDestroy packet:
+                {
+                    _host.SendAll(packet);
                 }
                 break;
         }

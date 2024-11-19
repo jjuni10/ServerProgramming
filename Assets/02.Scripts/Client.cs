@@ -1,5 +1,8 @@
 using MessagePack;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Client : MonoBehaviour, IPeer
 {
@@ -7,10 +10,11 @@ public class Client : MonoBehaviour, IPeer
     private UserToken _userToken;
     private UIMain _ui;
 
+    private ConcurrentQueue<Packet> queue = new ConcurrentQueue<Packet>();
+
+
     public void StartClient(string ip)
     {
-        MainThread.Instance.Init();
-        PacketMessageDispatcher.Instance.Init();
         _client.onConnected += OnConnected;
         _client.Start(ip);
 
@@ -30,6 +34,11 @@ public class Client : MonoBehaviour, IPeer
     public void ProcessMessage(short protocolID, byte[] buffer)
     {
         Packet receivedPacket = MessagePackSerializer.Deserialize<Packet>(buffer);
+        queue.Enqueue(receivedPacket);
+    }
+
+    private void ProcessPacket(Packet receivedPacket)
+    {
         switch (receivedPacket)
         {
             case PacketReqUserInfo packet:
@@ -49,31 +58,41 @@ public class Client : MonoBehaviour, IPeer
 
                     for (int i = 0; i < packet.userNum; i++)
                     {
+                        var userInfo = packet.userInfos[i];
+
                         string strHost = string.Empty;
-                        if (packet.userInfos[i].host)
+                        if (userInfo.host)
                             strHost = "HOST";
 
-                        if (packet.userInfos[i].team == ETeam.Red)
+                        if (userInfo.team == ETeam.Red)
                         {
-                            strRed += $"ID:{packet.userInfos[i].id} UID:{packet.userInfos[i].uid} {strHost} 팀:{packet.userInfos[i].team}\n";
+                            strRed += $"ID:{userInfo.id} UID:{userInfo.uid} {strHost} 팀:{userInfo.team} 역할:{userInfo.role}\n";
                         }
                         else
                         {
-                            strBlue += $"ID:{packet.userInfos[i].id} UID:{packet.userInfos[i].uid} {strHost} 팀:{packet.userInfos[i].team}\n";
+                            strBlue += $"ID:{userInfo.id} UID:{userInfo.uid} {strHost} 팀:{userInfo.team} 역할:{userInfo.role}\n";
                         }
-                    }
 
+
+                    }
                     _ui.SetUIState(UIMain.EUIState.Lobby);
                     _ui.SetLobbyText(strRed, strBlue);
+                    GameManager.Instance.OnPlayerListUpdated(packet);
                 }
                 break;
-            case PacketGameReady _:
+            case PacketGameReady packet:
                 {
-                    GameManager.Instance.GameReady();
+                    Player player = GameManager.Instance.GetPlayer(packet.uid);
+                    if (player == null)
+                        return;
+
+                    player.ReadyUISetting(packet.uid, packet.IsReady);
                 }
                 break;
             case PacketGameStart packet:
                 {
+
+
                     GameManager.Instance.IsGameStarted = true;
                     GameManager.Instance.GameStart(packet);
                 }
@@ -85,6 +104,11 @@ public class Client : MonoBehaviour, IPeer
                         return;
 
                     player.SetPositionRotation(packet.position, packet.rotation);
+                }
+                break;
+            case PacketEntitySpawn packet:
+                {
+                    GameManager.Instance.AddEntity(packet);
                 }
                 break;
             case PacketPlayerFire packet:
@@ -106,19 +130,56 @@ public class Client : MonoBehaviour, IPeer
                     targetPlayer.RecivePoint(attackPlayer.LosePoint);
                 }
                 break;
+            case PacketEntityPlayerCollision packet:
+                {
+                    Player player = GameManager.Instance.GetPlayer(packet.playerUID);
+                    if (player == null)
+                        return;
+
+                    if (packet.type == EEntity.Point)
+                        player.RecivePoint(player.GetPoint);
+                    else
+                        player.RecivePoint(player.LosePoint);
+                }
+                break;
+            case PacketTeamScoreUpdate packet:
+                {
+                    GameManager.Instance.UpdatePoint(packet.uid, packet.score);
+                }
+                break;
             case PacketBulletDestroy packet:
                 {
                     GameManager.Instance.RemoveBullet(packet.bulletUID);
                 }
                 break;
+            case PacketEntityDestroy packet:
+                {
+                    if (packet.type == EEntity.Point)
+                        GameManager.Instance.RemoveCoin(packet.entityUID);
+                    else
+                        GameManager.Instance.RemoveBomb(packet.entityUID);
+                }
+                break;
             case PacketGameEnd packet:
                 {
+                    GameManager.Instance.IsGameEnd = true;
+                    GameManager.Instance.WinTeam = packet.winTeam;
                     Debug.Log($"승리팀은 {packet.winTeam}");
                 }
                 break;
         }
     }
 
+    void Update()
+    {
+        while (queue.Count > 0)
+        {
+            if (queue.TryDequeue(out Packet packet))
+            {
+                ProcessPacket(packet);
+            }
+        }
+    }
     public void Remove()
     {
     }
