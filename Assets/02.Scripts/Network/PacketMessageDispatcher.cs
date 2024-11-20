@@ -1,23 +1,11 @@
 using System.Collections.Concurrent;
+using System.ComponentModel;
 using UnityEngine;
 
 public class PacketMessageDispatcher : MonoBehaviour, IMessage
 {
+    public static PacketMessageDispatcher Instance => _instance;
     private static PacketMessageDispatcher _instance;
-    public static PacketMessageDispatcher Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                GameObject container = new GameObject("PacketMessageDispatcher");
-                container.name = "PacketMessageDispatcher";
-                _instance = container.AddComponent<PacketMessageDispatcher>();
-            }
-
-            return _instance;
-        }
-    }
 
     public struct PacketMessage
     {
@@ -32,11 +20,19 @@ public class PacketMessageDispatcher : MonoBehaviour, IMessage
     }
 
     private ConcurrentQueue<PacketMessage> _messageQueue;
-
-    public void Init()
+    void Awake()
     {
-       _messageQueue = new ConcurrentQueue<PacketMessage>();
+        if (_instance == null)
+        {
+            _instance = this;
+            _messageQueue = new ConcurrentQueue<PacketMessage>();
+        }
+        else
+        {
+            Destroy(this);
+        }
     }
+
 
     private void Update()
     {

@@ -1,9 +1,10 @@
+
 using MessagePack;
 using MessagePack.Resolvers;
 using UnityEngine;
 
 /*
- * ÀÌ Å¬·¡½º´Â À¯´ÏÆ¼ÀÇ ¾ÀÀÌ ·ÎµåµÇ±â Àü MessagePackÀÇ Resolver ¸ñ·ÏÀ» ÃÊ±âÈ­ÇÏ±â À§ÇØ »ç¿ëµË´Ï´Ù.
+ * ì´ í´ë˜ìŠ¤ëŠ” ìœ ë‹ˆí‹°ì˜ ì”¬ì´ ë¡œë“œë˜ê¸° ì „ MessagePackì˜ Resolver ëª©ë¡ì„ ì´ˆê¸°í™”í•˜ê¸° ìœ„í•´ ì‚¬ìš©ë©ë‹ˆë‹¤.
  */
 public class Startup
 {

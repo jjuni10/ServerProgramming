@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIMain : MonoBehaviour
@@ -16,22 +17,27 @@ public class UIMain : MonoBehaviour
     public Text textBlue;
     public Button buttonRed;
     public Button buttonBlue;
+    public Button buttonGunner;
+    public Button buttonRunner;
+    public Button buttonReady;
     public Button buttonStart;
     //
 
     private Client _client;
+    private Host _host;
 
     public enum EUIState
     {
         Start,
         Lobby,
-        Game
+        //Game
     }
 
     // 게임 시작 시 UI 요소를 초기화
-    private void Awake()
+    private void Start()
     {
-        _client = FindObjectOfType<Client>();
+        _client = GameManager.Instance.Client;
+        _host = GameManager.Instance.Host;
 
         buttonHost.onClick.AddListener(() =>
         {
@@ -41,7 +47,7 @@ public class UIMain : MonoBehaviour
 
             GameManager.Instance.UserID = inputID.text;
             // Host 객체를 찾아서 시작한다.
-            FindObjectOfType<Host>().StartHost();
+            GameManager.Instance.Host.StartHost();
         });
 
         buttonClient.onClick.AddListener(() =>
@@ -56,17 +62,33 @@ public class UIMain : MonoBehaviour
 
             GameManager.Instance.UserID = inputID.text;
             // Client 객체를 찾아서 시작한다.
-            FindObjectOfType<Client>().StartClient(inputIP.text);
+            GameManager.Instance.Client.StartClient(inputIP.text);
         });
 
         buttonRed.onClick.AddListener(() =>
         {
-            SendTeam(ETeam.Red);
+            //SendTeam(ETeam.Red);
         });
 
         buttonBlue.onClick.AddListener(() =>
         {
-            SendTeam(ETeam.Blue);
+            //SendTeam(ETeam.Blue);
+        });
+
+        buttonGunner.onClick.AddListener(() =>
+        {
+            SendRole(ERole.Gunner);
+        });
+
+        buttonRunner.onClick.AddListener(() =>
+        {
+            SendRole(ERole.Runner);
+        });
+
+        buttonReady.onClick.AddListener(() =>
+        {
+            PacketGameReady packet = new PacketGameReady();
+            _client.Send(packet);
         });
 
         buttonStart.onClick.AddListener(() =>
@@ -74,8 +96,10 @@ public class UIMain : MonoBehaviour
             if (!GameManager.Instance.IsHost)
                 return;
 
-            PacketGameReady packet = new PacketGameReady();
-            _client.Send(packet);
+            //PacketGameReadyOk packet = new PacketGameReadyOk();
+            //_client.Send(packet);
+
+            StartGame();
         });
 
         SetUIState(EUIState.Start);
@@ -94,10 +118,25 @@ public class UIMain : MonoBehaviour
                 startUI.SetActive(false);
                 lobbyUI.SetActive(true);
                 break;
-            case EUIState.Game:
-                startUI.SetActive(false);
-                lobbyUI.SetActive(false);
-                break;
+            //case EUIState.Game:
+            //    startUI.SetActive(false);
+            //    lobbyUI.SetActive(false);
+            //    GameManager.Instance.UIPlayers.gameObject.SetActive(true);
+            //    break;
+        }
+    }
+
+
+    public void StartGame()
+    {
+        //todo: 모두 준비완료일 때 씬 전환(GamePlay) 패킷 만들어서 보내기
+        if (!GameManager.Instance.IsHost) return;
+        if (GameManager.Instance.PlayerCount >= 2)
+        {
+            //host.GameOn();
+            //GameManager.Instance.GameSceneNext();
+
+            _host.ReadyCheckGameStart();
         }
     }
 
@@ -113,6 +152,15 @@ public class UIMain : MonoBehaviour
     {
         PacketReqChangeTeam packet = new PacketReqChangeTeam();
         packet.team = team;
+
+        _client.Send(packet);
+    }
+
+    // 선택한 역할을 서버에 전송한다
+    public void SendRole(ERole role)
+    {
+        PacketReqChangeRole packet = new PacketReqChangeRole();
+        packet.role = role;
 
         _client.Send(packet);
     }
