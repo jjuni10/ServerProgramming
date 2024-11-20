@@ -126,7 +126,7 @@ public class Client : MonoBehaviour, IPeer
                     if (attackPlayer == null || targetPlayer == null)
                         return;
 
-                    Debug.Log("[bullet] Client PacketPlayerDamage packet");
+                    //Debug.Log("[bullet] Client PacketPlayerDamage packet");
 
                     if (attackPlayer.Team == targetPlayer.Team) //같은 팀이면
                         attackPlayer.RecivePoint(attackPlayer.LosePoint);   //실점

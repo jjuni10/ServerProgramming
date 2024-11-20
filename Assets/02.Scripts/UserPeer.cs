@@ -116,7 +116,7 @@ public class UserPeer : IPeer
                 break;
             case PacketPlayerDamage packet:
                 {
-                    Debug.Log("[bullet] UserPeer PacketPlayerDamage packet");
+                    //Debug.Log("[bullet] UserPeer PacketPlayerDamage packet");
                     _host.SendAll(packet);
                 }
                 break;
