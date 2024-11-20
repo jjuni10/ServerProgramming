@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -290,6 +291,7 @@ public class GameManager : MonoBehaviour
                 if (UserUID == uid)
                 {
                     _localPlayer = player;
+                    LobbyController.OnLocalPlayerJoin();
                     StartCoroutine(SendPlayerPosition());
                 }
                 _playerDic.Add(uid, player);
@@ -298,8 +300,14 @@ public class GameManager : MonoBehaviour
             player.ChangeRole(userInfo.role);
 
             LobbyController.SetRole(uid, player.Role);
-            LobbyController.SetReadyState(uid, false);
+            LobbyController.SetReadyState(uid, player.IsReady);
         }
+    }
+
+    public bool IsAllPlayerReady()
+    {
+        // 모든 플레이어가 준비되었는지 확인
+        return _playerDic.Values.All(p => p.IsReady);
     }
 
 
@@ -323,7 +331,6 @@ public class GameManager : MonoBehaviour
             packet.rotation = _localPlayer.transform.eulerAngles.y;
             Client.Send(packet);
 
-            Debug.Log("Position 패킷 보냄!");
             yield return new WaitForSeconds(interval);
         }
     }

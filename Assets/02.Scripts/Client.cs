@@ -86,6 +86,7 @@ public class Client : MonoBehaviour, IPeer
                     if (player == null)
                         return;
 
+                    player.IsReady = packet.IsReady;
                     player.ReadyUISetting(packet.uid, packet.IsReady);
                 }
                 break;
