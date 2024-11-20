@@ -13,38 +13,33 @@ public class SecondSceneUIController : MonoBehaviour
     public float SettingPlayTime = 180f;   // 셋팅된 플레이 시간 (현재 3분)
     public Image GaugePlayTime; // 플레이 시간 소비 게이지
 
-    public TMP_Text Player1ID;
-    public TMP_Text Player1Point;
+    public TMP_Text PlayerRed1ID;
+    public TMP_Text PlayerRed1Point;
 
-    public TMP_Text Player2ID;
-    public TMP_Text Player2Point;
+    public TMP_Text PlayerRed2ID;
+    public TMP_Text PlayerRed2Point;
 
-    public TMP_Text Player3ID;
-    public TMP_Text Player3Point;
-    
-    public TMP_Text Player4ID;
-    public TMP_Text Player4Point;
+    public TMP_Text PlayerBlue1ID;
+    public TMP_Text PlayerBlue1Point;
+
+    public TMP_Text PlayerBlue2ID;
+    public TMP_Text PlayerBlue2Point;
 
     void Start()
     {
-        //todo: get each Player's ID, And set ID
-
         StartCoroutine(StartCount());
     }
 
     void Update()
     {
-        
+
     }
 
-    void FixedUpdate() 
+    void FixedUpdate()
     {
-        if (GameManager.Instance.IsGameEnd || !GameManager.Instance.IsGameStarted) return;
+        //if (GameManager.Instance.IsGameEnd || !GameManager.Instance.IsGameStarted) return;
         //todo: "PlayTime" set scroll value
         GaugePlayTime.fillAmount = PlayTime / SettingPlayTime;
-
-        //todo: get each Player's Point And set Point
-
     }
 
     IEnumerator StartCount()
@@ -71,7 +66,7 @@ public class SecondSceneUIController : MonoBehaviour
                 CountNum.text = "게임 시작!!";
                 if (count_Co == null)
                     count_Co = StartCoroutine(PlayTimeCalculate());
-                //! 게임 진짜 시작 패킷 전송? 시작한거 알려야할듯
+                GameManager.Instance.IsGamePlayOn = true;
             }
             time += Time.deltaTime;
             yield return null;
@@ -82,10 +77,11 @@ public class SecondSceneUIController : MonoBehaviour
     {
         while (!GameManager.Instance.IsGameEnd)
         {
-            if (PlayTime <= 0) 
+            if (PlayTime <= 0)
             {
                 CountNum.gameObject.SetActive(true);
-                CountNum.text = "끝~~";
+                CountNum.text = "종료~~";
+                GameManager.Instance.IsGameEnd = false;
             }
             PlayTime -= Time.deltaTime;
             yield return null;
@@ -96,26 +92,26 @@ public class SecondSceneUIController : MonoBehaviour
     {
         //Debug.Log($"SetReadyUI({uid})");
         Player player = GameManager.Instance.GetPlayer(uid);
-        switch (uid+1)
+        switch (uid + 1)
         {
             case 1:
                 {
-                    Player1ID.text = "<" + player.ID + ">";
-                }
-                break;
-            case 2:
-                {
-                    Player2ID.text = "<" + player.ID + ">";
+                    PlayerRed1ID.text = "<" + player.ID + ">";
                 }
                 break;
             case 3:
                 {
-                    Player3ID.text = "<" + player.ID + ">";
+                    PlayerRed2ID.text = "<" + player.ID + ">";
+                }
+                break;
+            case 2:
+                {
+                    PlayerBlue1ID.text = "<" + player.ID + ">";
                 }
                 break;
             case 4:
                 {
-                    Player4ID.text = "<" + player.ID + ">";
+                    PlayerBlue2ID.text = "<" + player.ID + ">";
                 }
                 break;
             default:
@@ -124,30 +120,32 @@ public class SecondSceneUIController : MonoBehaviour
 
     }
 
-    public void SetPointUI(int uid)
+    public void SetPointUI(int uid, int point = 0)
     {
         //Debug.Log($"SetReadyUI({uid})");
         Player player = GameManager.Instance.GetPlayer(uid);
-        switch (uid+1)
+        //player._currentValue.point = player._currentValue.point + point;
+        //if (isReset) player._currentValue.point = 0;
+        switch (uid + 1)
         {
             case 1:
                 {
-                    Player1Point.text = player._currentValue.point.ToString() + " Point";
-                }
-                break;
-            case 2:
-                {
-                    Player2Point.text = player._currentValue.point.ToString() + " Point";
+                    PlayerRed1Point.text = point + " Point";
                 }
                 break;
             case 3:
                 {
-                    Player3Point.text = player._currentValue.point.ToString() + " Point";
+                    PlayerRed2Point.text = point + " Point";
+                }
+                break;
+            case 2:
+                {
+                    PlayerBlue1Point.text = point + " Point";
                 }
                 break;
             case 4:
                 {
-                    Player4Point.text = player._currentValue.point.ToString() + " Point";
+                    PlayerBlue2Point.text = point + " Point";
                 }
                 break;
             default:

@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
     public CheckOption _checkOption = new CheckOption();
     public CurrentState _currentState = new CurrentState();
     public CurrentValue _currentValue = new CurrentValue();
-    
+
     protected PlayerInfo P_Info => _playerInfos;
     protected PlayerComponents P_Com => _playerComponents;
     protected PlayerInput P_Input => _input;
@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     private PlayerGunner _gunner;
     private PlayerRunner _runner;
 
+    public bool IsReady = false;
     public int LosePoint = -1;
     public int GetPoint = 1;
     public int UID => _playerInfos.UID;
@@ -33,22 +34,29 @@ public class Player : MonoBehaviour
 
     public void Init(int uid, string id, ETeam team, Vector3 position, ERole role)
     {
-        P_Info.UID = uid; 
-        P_Info.ID = id; 
+        P_Com.animator = this.GetComponent<Animator>();
+        P_Com.rigidbody = this.GetComponent<Rigidbody>();
+
+        P_Info.UID = uid;
+        P_Info.ID = id;
         P_Info.TEAM = team;
         P_Info.ROLE = role;
+        if (GameManager.Instance.UserUID == UID)
+            _playerInfos._localPlayer = true;
         P_Com.cameraObj = Camera.main;
 
         _gunner = GetComponent<PlayerGunner>();
         _runner = GetComponent<PlayerRunner>();
 
-        ChangeRole(Role);
-        
+        ChangeRole(role);
+
         _destPosition = position;
         transform.position = position;
+        transform.Rotate(new Vector3(0, 180, 0));
     }
 
-    void Update() {
+    void Update()
+    {
         if (!IsLocalPlayer)
         {
             // 위치 보정
@@ -56,24 +64,9 @@ public class Player : MonoBehaviour
         }
     }
 
-    // private void Update()
-    // {
-    //     // 입력에 따른 움직임 처리
-    //     if (P_Value.moveDirection != Vector3.zero)
-    //     {
-    //         P_Com.rigidbody.MovePosition(transform.position + P_Value.moveDirection.normalized * Time.deltaTime * P_COption.runningSpeed);
-    //         P_Value.moveDirection = Vector3.zero;
-    //     }
-    //     // 발사 쿨타임 처리
-    //     if (_curFireCoolTime > 0f)
-    //     {
-    //         _curFireCoolTime -= Time.deltaTime;
-    //     }
-    // }
-
     public void Move(KeyCode keyCode)
     {
-        if (Role == ERole.Runner || !GameManager.Instance.IsGameStarted)
+        if (Role == ERole.Runner || GameManager.Instance.LobbyController != null)
         {
             _runner.Move(keyCode);
         }
@@ -86,10 +79,25 @@ public class Player : MonoBehaviour
 
     public void Rotate()
     {
-        if (Role == ERole.Runner || !GameManager.Instance.IsGameStarted)
+        if (Role == ERole.Runner || GameManager.Instance.LobbyController != null)
         {
             _runner.Rotate();
         }
+    }
+
+    public void SetReady(bool isReady)
+    {
+        //if (!P_Info._localPlayer) return;
+        PacketGameReady packet = new PacketGameReady();
+        packet.uid = UID;
+        packet.IsReady = isReady;
+        GameManager.Instance.Client.Send(packet);
+        IsReady = isReady;
+        //GameManager.Instance.UIPlayers.SetReadyUI(packet.uid, packet.IsReady);
+    }
+    public void ReadyUISetting(int uid, bool ready)
+    {
+        GameManager.Instance.LobbyController.SetReadyState(uid, ready);
     }
 
     public void SetPositionRotation(Vector3 position, float rotation)
@@ -107,14 +115,14 @@ public class Player : MonoBehaviour
         packet.ownerUID = UID;
         packet.position = transform.position + new Vector3(0f, 0.5f, 0f);
         packet.direction = transform.forward;
-        GameManager.Instance.client.Send(packet);
+        GameManager.Instance.Client.Send(packet);
 
         _curFireCoolTime = Define.FIRE_COOL_TIME;
     }
     public void CreateBullet(Vector3 position, Vector3 direction, int ownerUID, int bulletUID)
     {
         GameObject bulletResource = null;
-        if(Team == ETeam.Red)
+        if (Team == ETeam.Red)
         {
             bulletResource = Resources.Load("RedBullet") as GameObject;
         }
@@ -130,15 +138,22 @@ public class Player : MonoBehaviour
     }
     public void RecivePoint(int point)
     {
+        //if (!IsLocalPlayer) return;
         P_Value.point += point;
+        PacketTeamScoreUpdate packet = new PacketTeamScoreUpdate();
+        packet.uid = UID;
+        packet.score = P_Value.point;
+        Debug.Log($"player {packet.uid}, {packet.score}");
+
+        GameManager.Instance.Client.Send(packet);
     }
 
-    //todo: 역할 바꾸는 패킷 들어오면 이 함수 실행
+    // 역할 바꾸는 함수
     public void ChangeRole(ERole role)
     {
         //Debug.Log($"ChangeRole {role}");
         P_Info.ROLE = role;
-        if (P_Info.ROLE == ERole.Runner || !GameManager.Instance.IsGameStarted)
+        if (P_Info.ROLE == ERole.Runner || GameManager.Instance.LobbyController != null)
         {
             _gunner.enabled = false;
             _runner.enabled = true;

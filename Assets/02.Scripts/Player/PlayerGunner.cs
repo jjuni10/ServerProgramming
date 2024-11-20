@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,7 @@ using UnityEngine;
 public class PlayerGunner : MonoBehaviour
 {
     private Player _player;
+    private int originX;
     // 오른쪽 앞 대각선과 왼쪽 앞 대각선 벡터
     private Vector3 rightDiagonal;
     private Vector3 leftDiagonal;
@@ -20,46 +22,30 @@ public class PlayerGunner : MonoBehaviour
     }
     void Start()
     {
-        // if (P_Info.TEAM == ETeam.Red){
-        //     //transform.position = new Vector3(-70, 3, 0);
-        //     transform.Rotate(P_Com.cameraObj.transform.right);
-
-        //     rightDiagonal = new Vector3(1, 0, -1).normalized;
-        //     leftDiagonal = new Vector3(1, 0, 1).normalized;
-        // }
-        // else if (P_Info.TEAM == ETeam.Blue){
-        //     //transform.position = new Vector3(70, 3, 0);
-        //     transform.Rotate(P_Com.cameraObj.transform.right * -1);
-
-        //     rightDiagonal = new Vector3(-1, 0, 1).normalized;
-        //     leftDiagonal = new Vector3(-1, 0, -1).normalized;
-        // }
+        if (_player.Team == ETeam.Red)
+        {
+            leftDiagonal = new Vector3(1, 0, 1);
+            rightDiagonal = new Vector3(1, 0, -1);
+            originX = -70;
+        }
+        else if (_player.Team == ETeam.Blue)
+        {
+            leftDiagonal = new Vector3(-1, 0, -1);
+            rightDiagonal = new Vector3(-1, 0, 1);
+            originX = 70;
+        }
     }
     void Update()
     {   
         //Move();
         
         if (!_player.IsLocalPlayer) return;
-        if (this.transform.position.x < -70 && (RightSite || LeftSite))
+        if (Math.Abs(this.transform.position.x) > 70 && (RightSite || LeftSite))
         {
-            transform.position = new Vector3(-70, 3, 0);
+            transform.position = new Vector3(originX, transform.position.y, transform.position.z);
             RightSite = false;
             LeftSite = false;
         }
-    }
-
-    public void Init(int uid, string id, ETeam team, Vector3 position, ERole role)
-    {
-        _player._playerInfos.UID = uid; 
-        _player._playerInfos.ID = id; 
-        _player._playerInfos.TEAM = team;
-        _player._playerInfos.ROLE = role;
-        _player._playerComponents.cameraObj = Camera.main;
-        
-        // base.Init(uid, id, team, position);
-        
-        // _destPosition = position;
-        transform.position = position;
     }
 
     public void MoveInput(KeyCode keyCode)
@@ -86,8 +72,7 @@ public class PlayerGunner : MonoBehaviour
         }
         else
         {
-            _player._input
-            .verticalMovement = 0;
+            _player._input.verticalMovement = 0;
             _player._currentState.isRunning = false;
         }
 
@@ -96,9 +81,7 @@ public class PlayerGunner : MonoBehaviour
             _player._currentState.isDashing = true;
         }
 
-        _player._currentValue.moveAmount = Mathf.Clamp01(Mathf.Abs(_player._input
-        .verticalMovement) + Mathf.Abs(_player._input
-        .horizontalMovement));
+        _player._currentValue.moveAmount = Mathf.Clamp01(Mathf.Abs(_player._input.verticalMovement) + Mathf.Abs(_player._input.horizontalMovement));
     }
     public void Move(KeyCode keyCode)
     {
@@ -111,16 +94,12 @@ public class PlayerGunner : MonoBehaviour
             return;
         }
 
-        // leftDiagonal = new Vector3(1, 0, 1)
-        // rightDiagonal = new Vector3(1, 0, -1)
         if (LeftSite)
         {
-            if (_player._input
-            .verticalMovement != 0)
+            if (_player._input.verticalMovement != 0)
             {
                 // 오른쪽 대각선으로 이동
-                _player._currentValue.moveDirection = leftDiagonal * _player._input
-                .verticalMovement;
+                _player._currentValue.moveDirection = leftDiagonal * _player._input.verticalMovement;
             }
             else
             {
@@ -130,12 +109,10 @@ public class PlayerGunner : MonoBehaviour
         }
         else if (RightSite)
         {
-            if (_player._input
-            .verticalMovement != 0)
+            if (_player._input.verticalMovement != 0)
             {
                 // 오른쪽 대각선으로 이동
-                _player._currentValue.moveDirection = rightDiagonal * _player._input
-                .verticalMovement;
+                _player._currentValue.moveDirection = rightDiagonal * _player._input.verticalMovement;
             }
             else
             {

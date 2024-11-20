@@ -75,19 +75,40 @@ public class UserPeer : IPeer
                 break;
             case PacketGameReady packet:
                 {
-                    _gameReady = true;
+                    _gameReady = packet.IsReady;
+                    //packet.uid = _uid;
+                    //packet.IsReady = true;
+                    //GameManager.Instance.GameReady(packet);
+                    //GameManager.Instance.UIPlayers.SetReadyUI(packet.uid, packet.IsReady);
+                    //Debug.Log("UserPeer PacketGameReady packet UID: " + packet.uid);
+                    //GameManager.Instance.client.Send(packet);
                     _host.SendAll(packet);
                 }
                 break;
-            case PacketGameReadyOk packet:
-                {
-                    _host.CheckGameReady();
-                }
-                break;
+            //case PacketGameReadyOk packet:
+            //    {
+            //        _host.CheckGameReady();
+            //    }
+            //    break;
             case PacketPlayerPosition packet:
                 {
                     packet.uid = _uid;
                     _host.SendAll(packet, this);
+                }
+                break;
+            case PacketEntitySpawn packet:
+                {
+                    //_host.SendAll(packet);
+                }
+                break;
+            case PacketEntityPlayerCollision packet:
+                {
+                    _host.SendAll(packet);
+                }
+                break;
+            case PacketTeamScoreUpdate packet:
+                {
+                    _host.SendAll(packet);
                 }
                 break;
             case PacketPlayerFire packet:
@@ -106,6 +127,11 @@ public class UserPeer : IPeer
             case PacketBulletDestroy packet:
                 {
                     _host.SendAll(packet, this);
+                }
+                break;
+            case PacketEntityDestroy packet:
+                {
+                    _host.SendAll(packet);
                 }
                 break;
         }

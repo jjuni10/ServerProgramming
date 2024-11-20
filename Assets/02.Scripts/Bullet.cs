@@ -61,7 +61,7 @@ public class Bullet : MonoBehaviour
         PacketPlayerDamage packet = new PacketPlayerDamage();
         packet.attackUID = _ownerUID;
         packet.targetUID = player.UID;
-        GameManager.Instance.client.Send(packet);
+        GameManager.Instance.Client.Send(packet);
         RemoveBullet();
     }
 
@@ -73,7 +73,7 @@ public class Bullet : MonoBehaviour
         // 총알이 파괴되었음을 서버에 알림
         PacketBulletDestroy packetBulletDistroy = new PacketBulletDestroy();
         packetBulletDistroy.bulletUID = _bulletUID;
-        GameManager.Instance.client.Send(packetBulletDistroy);
+        GameManager.Instance.Client.Send(packetBulletDistroy);
 
         // 호스트에서 총알 제거
         GameManager.Instance.RemoveBullet(_bulletUID);

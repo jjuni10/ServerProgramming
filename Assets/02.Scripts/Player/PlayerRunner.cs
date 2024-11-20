@@ -8,21 +8,12 @@ public class PlayerRunner : MonoBehaviour
     float curVertVelocity;
     private float _dodgeCool = 0;
 
-
     void Awake() 
     {
         _player = this.GetComponent<Player>();
     }
     void Start()
     {
-        // if (_player._playerInfos.TEAM == ETeam.Red){
-        //     //transform.position = new Vector3(-10, 3, 0);
-        //     transform.Rotate(_player._playerComponents.cameraObj.transform.right);
-        // }
-        // else if (_player._playerInfos.TEAM == ETeam.Blue){
-        //     //transform.position = new Vector3(10, 3, 0);
-        //     transform.Rotate(_player._playerComponents.cameraObj.transform.right * -1);
-        // }
         _dodgeCool = 0;
     }
     void Update()
@@ -37,24 +28,8 @@ public class PlayerRunner : MonoBehaviour
         Dodge();
     }
 
-    public void Init(int uid, string id, ETeam team, Vector3 position, ERole role)
-    {
-        _player._playerInfos.UID = uid; 
-        _player._playerInfos.ID = id; 
-        _player._playerInfos.TEAM = team;
-        _player._playerInfos.ROLE = role;
-        _player._playerComponents.cameraObj = Camera.main;
-
-        // base.Init(uid, id, team, position);
-        
-        // _destPosition = position;
-        transform.position = position;
-    }
-
     public void MoveInput(KeyCode keyCode)
     {
-        Debug.Log("Runner MoveInput");
-        //move
         if (keyCode == KeyCode.W)//Input.GetKey(KeyCode.W))
         {
             _player._input.verticalMovement = 1;
@@ -107,9 +82,6 @@ public class PlayerRunner : MonoBehaviour
 
             _player._playerComponents.rigidbody.AddForce(_player._currentValue.moveDirection * _player._checkOption.dodgingForce, ForceMode.VelocityChange);
 
-            // 기존 수직 속도를 유지하도록 수직 속도 다시 설정
-            //_player._playerComponents.rigidbody.velocity = new Vector3(_player._playerComponents.rigidbody.velocity.x, curVertVelocity, _player._playerComponents.rigidbody.velocity.z);
-
             Invoke("dodgeOut", 0.14f);    //닷지 유지 시간 = 0.14초
         }
         else if (_player._currentState.isRunning)
@@ -147,8 +119,7 @@ public class PlayerRunner : MonoBehaviour
         targetDirect.y = 0;
         if (targetDirect == Vector3.zero)
         {
-            //vector3.zero는 0,0,0 이다.
-            //방향 전환이 없기에 캐릭터의 방향은 고냥 원래 방향.
+            //방향 전환이 없기에 캐릭터의 방향은 원래 방향.
             targetDirect = transform.forward;
         }
         Quaternion turnRot = Quaternion.LookRotation(targetDirect);
@@ -169,7 +140,7 @@ public class PlayerRunner : MonoBehaviour
             &&!_player._currentState.previousDodgeKeyPress && _player._currentState.currentDodgeKeyPress
             && _player._currentState._curState != EState.Dash)
         {
-            Debug.Log("Dodge");
+            //Debug.Log("Dodge");
             _player._currentState.isDodgeing = true;
             _dodgeCool = 0;
             _player._currentState._curState = EState.Dash;

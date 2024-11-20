@@ -104,6 +104,8 @@ public class PacketReqChangeRole : Packet
 public class PacketGameReady : Packet
 {
     [Key(10)]
+    public int uid;
+    [Key(11)]
     public bool IsReady;
 }
 
@@ -111,6 +113,7 @@ public class PacketGameReady : Packet
 public class PacketGameReadyOk : Packet
 {
 }
+
 
 #endregion
 
@@ -143,6 +146,11 @@ public class PacketGameStart : Packet
     [Key(11)]
     public GameStartInfo[] startInfos = new GameStartInfo[20];
 }
+
+[MessagePackObject]
+public class PacketGameOn : Packet
+{
+}
 #endregion
 
 #region 게임 플레이 중
@@ -162,10 +170,10 @@ public class PacketTimerUpdate : Packet
 public class PacketTeamScoreUpdate : Packet
 {
     [Key(10)]
-    public int redTeamScore;
+    public int uid;
 
     [Key(11)]
-    public int blueTeamScore;
+    public int score;
 }
 
 
@@ -224,6 +232,9 @@ public class PacketEntitySpawn : Packet
 public class PacketEntityDestroy : Packet
 {
     [Key(10)]
+    public EEntity type;
+
+    [Key(11)]
     public int entityUID;
 }
 
@@ -232,8 +243,11 @@ public class PacketEntityPlayerCollision : Packet
 {
     [Key(10)]
     public int playerUID;
-
+    
     [Key(11)]
+    public EEntity type;
+
+    [Key(12)]
     public int entityUID;
 }
 
