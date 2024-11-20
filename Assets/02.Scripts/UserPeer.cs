@@ -76,12 +76,6 @@ public class UserPeer : IPeer
             case PacketGameReady packet:
                 {
                     _gameReady = packet.IsReady;
-                    //packet.uid = _uid;
-                    //packet.IsReady = true;
-                    //GameManager.Instance.GameReady(packet);
-                    //GameManager.Instance.UIPlayers.SetReadyUI(packet.uid, packet.IsReady);
-                    //Debug.Log("UserPeer PacketGameReady packet UID: " + packet.uid);
-                    //GameManager.Instance.client.Send(packet);
                     _host.SendAll(packet);
                 }
                 break;
@@ -113,6 +107,7 @@ public class UserPeer : IPeer
                 break;
             case PacketPlayerFire packet:
                 {
+                    //Debug.Log("[bullet] UserPeer packet");
                     packet.ownerUID = _uid;
                     packet.bulletUID = _bulletUID;
                     _host.SendAll(packet);
@@ -121,6 +116,7 @@ public class UserPeer : IPeer
                 break;
             case PacketPlayerDamage packet:
                 {
+                    Debug.Log("[bullet] UserPeer PacketPlayerDamage packet");
                     _host.SendAll(packet);
                 }
                 break;

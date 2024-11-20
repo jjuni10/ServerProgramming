@@ -91,8 +91,6 @@ public class Client : MonoBehaviour, IPeer
                 break;
             case PacketGameStart packet:
                 {
-
-
                     GameManager.Instance.IsGameStarted = true;
                     GameManager.Instance.GameStart(packet);
                 }
@@ -113,6 +111,7 @@ public class Client : MonoBehaviour, IPeer
                 break;
             case PacketPlayerFire packet:
                 {
+                    //Debug.Log("[bullet] Client packet");
                     Player player = GameManager.Instance.GetPlayer(packet.ownerUID);
                     if (player == null)
                         return;
@@ -127,7 +126,12 @@ public class Client : MonoBehaviour, IPeer
                     if (attackPlayer == null || targetPlayer == null)
                         return;
 
-                    targetPlayer.RecivePoint(attackPlayer.LosePoint);
+                    Debug.Log("[bullet] Client PacketPlayerDamage packet");
+
+                    if (attackPlayer.Team == targetPlayer.Team) //같은 팀이면
+                        attackPlayer.RecivePoint(attackPlayer.LosePoint);   //실점
+                    else                                        //다른 팀이면
+                        attackPlayer.RecivePoint(attackPlayer.GetPoint);    //득점
                 }
                 break;
             case PacketEntityPlayerCollision packet:

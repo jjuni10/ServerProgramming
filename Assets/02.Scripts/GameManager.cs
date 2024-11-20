@@ -126,11 +126,6 @@ public class GameManager : MonoBehaviour
 
         _localPlayer.Rotate();
 
-        // 총알 발사
-        if (Input.GetMouseButtonDown(0))
-        {
-            _localPlayer.FireBullet();
-        }
 
         // Ready 취소
         if (Input.GetKey(KeyCode.LeftControl))
@@ -170,6 +165,20 @@ public class GameManager : MonoBehaviour
         {
             readyTime = 0;
             LobbyController.SetReadyProgress(UserUID, readyTime / Define.READY_TIME);
+        }
+
+        //*============================ GamePlay Scene===================
+
+        if (UIPlayers2 == null)
+        {
+            return;
+        }
+
+        // 총알 발사
+        if (Input.GetMouseButtonDown(0) && _localPlayer.Role == ERole.Gunner)
+        {
+            //Debug.Log("[bullet] Input Mouse");
+            _localPlayer.FireBullet();
         }
     }
 
@@ -248,6 +257,15 @@ public class GameManager : MonoBehaviour
             {
                 _localPlayer = player;
             }
+            if (packet.startInfos[i].team == ETeam.Red)
+            {
+                player.transform.rotation = Quaternion.Euler(new Vector3(0,90f,0));
+            }
+            else
+            {
+                
+                player.transform.rotation = Quaternion.Euler(new Vector3(0,-90f,0));
+            }
         }
 
         _startGame = true;
@@ -323,7 +341,7 @@ public class GameManager : MonoBehaviour
             packet.rotation = _localPlayer.transform.eulerAngles.y;
             Client.Send(packet);
 
-            Debug.Log("Position 패킷 보냄!");
+            //Debug.Log("Position 패킷 보냄!");
             yield return new WaitForSeconds(interval);
         }
     }

@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 5577367279663952106}
   - component: {fileID: 472573387227779622}
   - component: {fileID: 46614032830410104}
-  m_Layer: 3
+  m_Layer: 6
   m_Name: Player_Runner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -176,6 +176,7 @@ MonoBehaviour:
     UID: 0
     ID: 
     TEAM: 0
+    ROLE: 0
     _localPlayer: 0
   _playerComponents:
     animator: {fileID: 0}
@@ -194,6 +195,7 @@ MonoBehaviour:
     rotSpeed: 20
     runningSpeed: 15
     dashingSpeed: 25
+    dodgingForce: 4
   _currentState:
     _curState: 0
     isNotMoving: 0
@@ -210,6 +212,7 @@ MonoBehaviour:
     moveDirection: {x: 0, y: 0, z: 0}
     playerVelocity: {x: 0, y: 0, z: 0}
     finalSpeed: 0
+  IsReady: 0
   LosePoint: -1
   GetPoint: 1
 --- !u!114 &46614032830410104
@@ -224,46 +227,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e4893c92ad8c4e4684e01aeeec7cd98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerInfos:
-    UID: 0
-    ID: 
-    TEAM: 0
-    _localPlayer: 0
-  _playerComponents:
-    animator: {fileID: 0}
-    rigidbody: {fileID: 0}
-    capsuleCollider: {fileID: 0}
-    cameraObj: {fileID: 0}
-  _input:
-    verticalMovement: 0
-    horizontalMovement: 0
-    mouseY: 0
-    mouseX: 0
-  _checkOption:
-    groundLayerMask:
-      serializedVersion: 2
-      m_Bits: 4294967295
-    rotSpeed: 20
-    runningSpeed: 8
-    dashingSpeed: 11
-  _currentState:
-    _curState: 0
-    isNotMoving: 0
-    isRunning: 0
-    isDashing: 0
-    isDodgeing: 0
-    doNotRotate: 0
-    isStop: 0
-    previousDodgeKeyPress: 0
-    currentDodgeKeyPress: 0
-  _currentValue:
-    point: 0
-    moveAmount: 0
-    moveDirection: {x: 0, y: 0, z: 0}
-    playerVelocity: {x: 0, y: 0, z: 0}
-    finalSpeed: 0
-  LosePoint: -1
-  GetPoint: 1
 --- !u!1 &4590765783237303508
 GameObject:
   m_ObjectHideFlags: 0
@@ -276,7 +239,7 @@ GameObject:
   - component: {fileID: 7713427708992400939}
   - component: {fileID: 4981265091946789521}
   - component: {fileID: 2773064583122866585}
-  m_Layer: 3
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
