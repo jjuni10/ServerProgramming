@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     public LobbyController LobbyController;
     public SecondSceneUIController UIPlayers2;
     public ThirdSceneUIController UIPlayers3;
+    public PoolManager pool;
 
     private Client _client;
 
@@ -50,7 +51,6 @@ public class GameManager : MonoBehaviour
     public bool IsGameEnd { get; set; }
 
     public int PlayerCount => _playerDic.Count;
-
 
 
     private void Awake()
@@ -94,6 +94,7 @@ public class GameManager : MonoBehaviour
         else if (SceneManager.GetActiveScene().name == "GamePlay")
         {
             UIPlayers2 = FindObjectOfType<SecondSceneUIController>(true);
+            pool = FindObjectOfType<PoolManager>(true);
         }
         else if (SceneManager.GetActiveScene().name == "GameResult")
         {
@@ -321,12 +322,8 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public void UpdatePoint(int uid, int point)// EEntity type)
+    public void UpdatePoint(int uid, int point)
     {
-        // if (type == EEntity.Point)
-        //     UIPlayers2.SetPointUI(uid, false, 1);
-        // else
-        //     UIPlayers2.SetPointUI(uid, false, -1);
         UIPlayers2.SetPointUI(uid, point);
     }
 
@@ -374,24 +371,30 @@ public class GameManager : MonoBehaviour
         if (!_bulletDic.ContainsKey(uid))
             return;
 
-        Destroy(_bulletDic[uid].gameObject);
-        _bulletDic.Remove(uid);
+        //Destroy(_bulletDic[uid].gameObject);
+        _bulletDic[uid].gameObject.SetActive(false);
+
+        //_bulletDic.Remove(uid);
     }
     public void RemoveBomb(int uid)
     {
         if (!_bombs.ContainsKey(uid))
             return;
 
-        Destroy(_bombs[uid].gameObject);
-        _bombs.Remove(uid);
+        //Destroy(_bombs[uid].gameObject);
+        _bombs[uid].gameObject.SetActive(false);
+
+        //_bombs.Remove(uid);
     }
     public void RemoveCoin(int uid)
     {
         if (!_coins.ContainsKey(uid))
             return;
 
-        Destroy(_coins[uid].gameObject);
-        _coins.Remove(uid);
+        //Destroy(_coins[uid].gameObject);
+        _coins[uid].gameObject.SetActive(false);
+
+        //_coins.Remove(uid);
     }
     #endregion
 
@@ -401,16 +404,22 @@ public class GameManager : MonoBehaviour
         {
             case EEntity.Point:
                 {
-                    GameObject Coin = Instantiate(Resources.Load("Coin"), packet.position, Quaternion.identity) as GameObject;
-                    Coin.GetComponent<Coin>().Init(packet.entityUID);
-                    //_coins.Add(packet.entityUID, Coin.GetComponent<Coin>());
+                    //GameObject Coin = Instantiate(Resources.Load("Coin"), packet.position, Quaternion.identity) as GameObject;
+                    //Coin.GetComponent<Coin>().Init(packet.entityUID);
+                    Coin coin = pool.Get(0, packet.position).GetComponent<Coin>();
+                    coin.Init(packet.entityUID);
+                    coin.spawnPoint = packet.position;
+                    coin.gameObject.SetActive(true);
                 }
                 break;
             case EEntity.Bomb:
                 {
-                    GameObject Bomb = Instantiate(Resources.Load("Bomb"), packet.position, Quaternion.identity) as GameObject;
-                    Bomb.GetComponent<Bomb>().Init(packet.entityUID);
-                    //_bombs.Add(packet.entityUID, Bomb.GetComponent<Bomb>());
+                    //GameObject Bomb = Instantiate(Resources.Load("Bomb"), packet.position, Quaternion.identity) as GameObject;
+                    //Bomb.GetComponent<Bomb>().Init(packet.entityUID);
+                    Bomb bomb = pool.Get(1, packet.position).GetComponent<Bomb>();
+                    bomb.Init(packet.entityUID);
+                    bomb.spawnPoint = packet.position;
+                    bomb.gameObject.SetActive(true);
                 }
                 break;
             case EEntity.Bullet:

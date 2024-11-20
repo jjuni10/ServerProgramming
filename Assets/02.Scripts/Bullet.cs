@@ -2,10 +2,12 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    [SerializeField]
     private int _bulletUID;
     private int _ownerUID;
     private Rigidbody _rigidbody;
     public int BulletUID => _bulletUID;
+    public Vector3 spawnPoint;
 
     private void Awake()
     {
@@ -63,5 +65,10 @@ public class Bullet : MonoBehaviour
         _ownerUID = ownerUID;
 
         GameManager.Instance.AddBullet(this);
+    }
+    
+    void OnEnable() 
+    {
+        this.transform.position = spawnPoint;
     }
 }
