@@ -23,7 +23,6 @@ public class CharacterAnimatorController : MonoBehaviour
         {
             if (animator.GetBool("isRunning"))
             {
-                // Allow shooting while running
                 animator.SetBool("isShooting", true); animator.SetBool("isRunning", false);
             }
             
@@ -37,7 +36,6 @@ public class CharacterAnimatorController : MonoBehaviour
         // Die Animation
         if (Input.GetKeyDown(KeyCode.D))
         {
-            animator.SetBool("isDead", true);
             animator.SetBool("isRunning", false);
             animator.SetBool("isShooting", false);
         }
@@ -46,9 +44,7 @@ public class CharacterAnimatorController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.I))
         {
             animator.SetBool("isRunning", false);
-            animator.SetBool("isShooting", false);
-            animator.SetBool("isDead", false);
-            animator.SetBool("Idle", true);
+            animator.SetTrigger("Idle");
         }
     }
 }
