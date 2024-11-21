@@ -122,19 +122,23 @@ public class Player : MonoBehaviour
     public void CreateBullet(Vector3 position, Vector3 direction, int ownerUID, int bulletUID)
     {
         GameObject bulletResource = null;
+        Bullet bullet;
         if (Team == ETeam.Red)
         {
             bulletResource = Resources.Load("RedBullet") as GameObject;
+            bullet = GameManager.Instance.pool.Get(2, position).GetComponent<Bullet>();
         }
         else
         {
             bulletResource = Resources.Load("BlueBullet") as GameObject;
+            bullet = GameManager.Instance.pool.Get(3, position).GetComponent<Bullet>();
         }
 
-        GameObject bullet = Instantiate(bulletResource);
-        bullet.transform.position = position;
+        bullet.Init(ownerUID, bulletUID);
+        bullet.spawnPoint = position;
         bullet.transform.forward = direction.normalized;
-        bullet.GetComponent<Bullet>().Init(ownerUID, bulletUID);
+        bullet.gameObject.SetActive(true);
+        //Debug.Log("[bullet] CreateBullet()");
     }
     public void RecivePoint(int point)
     {

@@ -4,6 +4,7 @@ public class Bullet : MonoBehaviour
 {
     private int _bulletUID;
     private int _ownerUID;
+    public Vector3 spawnPoint;
     private Rigidbody _rigidbody;
     public int BulletUID => _bulletUID;
 
@@ -85,5 +86,9 @@ public class Bullet : MonoBehaviour
         _ownerUID = ownerUID;
 
         GameManager.Instance.AddBullet(this);
+    }
+    void OnEnable() 
+    {
+        this.transform.position = spawnPoint;
     }
 }
