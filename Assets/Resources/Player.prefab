@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 472573387227779622}
   - component: {fileID: 46614032830410104}
   - component: {fileID: 5502315834974284971}
-  m_Layer: 3
+  m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -213,6 +213,7 @@ MonoBehaviour:
     moveDirection: {x: 0, y: 0, z: 0}
     playerVelocity: {x: 0, y: 0, z: 0}
     finalSpeed: 0
+  IsReady: 0
   LosePoint: -1
   GetPoint: 1
 --- !u!114 &46614032830410104
@@ -253,7 +254,7 @@ GameObject:
   - component: {fileID: 7713427708992400939}
   - component: {fileID: 4981265091946789521}
   - component: {fileID: 2773064583122866585}
-  m_Layer: 3
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}

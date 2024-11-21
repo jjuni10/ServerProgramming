@@ -62,6 +62,7 @@ public class Player : MonoBehaviour
             // 위치 보정
             transform.position = Vector3.Lerp(transform.position, _destPosition, Time.deltaTime * P_COption.runningSpeed);
         }
+        _curFireCoolTime += Time.deltaTime;
     }
 
     public void Move(KeyCode keyCode)
@@ -97,6 +98,7 @@ public class Player : MonoBehaviour
     }
     public void ReadyUISetting(int uid, bool ready)
     {
+        _curFireCoolTime = 0;
         GameManager.Instance.LobbyController.SetReadyState(uid, ready);
     }
 
@@ -107,17 +109,16 @@ public class Player : MonoBehaviour
     }
     public void FireBullet()
     {
-        if (_curFireCoolTime > 0f)
+        if (_curFireCoolTime < Define.FIRE_COOL_TIME)
         {
             return;
         }
         PacketPlayerFire packet = new PacketPlayerFire();
         packet.ownerUID = UID;
-        packet.position = transform.position + new Vector3(0f, 0.5f, 0f);
+        packet.position = transform.position + new Vector3(0f, 1.5f, 0f);
         packet.direction = transform.forward;
         GameManager.Instance.Client.Send(packet);
-
-        _curFireCoolTime = Define.FIRE_COOL_TIME;
+        _curFireCoolTime = 0;
     }
     public void CreateBullet(Vector3 position, Vector3 direction, int ownerUID, int bulletUID)
     {
@@ -161,11 +162,24 @@ public class Player : MonoBehaviour
         {
             _gunner.enabled = false;
             _runner.enabled = true;
+            ChangeLayerRecursively(this.gameObject, 6); //Runner
         }
         else if (P_Info.ROLE == ERole.Gunner)
         {
             _runner.enabled = false;
             _gunner.enabled = true;
+            ChangeLayerRecursively(this.gameObject, 7); //Gunner
+        }
+    }
+
+    // 자식 객체도 레이어 변경
+    private void ChangeLayerRecursively(GameObject obj, int layer)
+    {
+        obj.layer = layer;
+
+        foreach(Transform child in obj.transform)
+        {
+            ChangeLayerRecursively(child.gameObject, layer);
         }
     }
 }
