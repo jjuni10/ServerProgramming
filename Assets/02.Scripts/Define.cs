@@ -21,12 +21,12 @@ public enum EEntity
 
 public class Define
 {
-    public static float START_POSITION_OFFSET = 5f;
-    public static float START_DISTANCE_OFFSET = 10f;
-    public static float FIRE_COOL_TIME = 0.3f;
-    public static float GAME_GUNNER_POSITION_OFFSET = 70f;
-    public static float GAME_RUNNER_POSITION_OFFSET = 10f;
-    public static float READY_TIME = 1.5f;
+    public static float START_POSITION_OFFSET;
+    public static float START_DISTANCE_OFFSET;
+    public static float FIRE_COOL_TIME;
+    public static float GAME_GUNNER_POSITION_OFFSET;
+    public static float GAME_RUNNER_POSITION_OFFSET;
+    public static float READY_TIME;
 
     // PlayerBasic 구조체 정의
     public struct PlayerBasicData
