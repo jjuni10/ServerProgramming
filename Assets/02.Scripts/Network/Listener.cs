@@ -7,6 +7,7 @@ class Listener
 {
     private SocketAsyncEventArgs _acceptArgs;
     private Socket _listenSocket;
+    private bool isListening;
 
     public event Action<Socket> onClientConnected;
 
@@ -19,6 +20,7 @@ class Listener
         {
             _listenSocket.Bind(endpoint);
             _listenSocket.Listen(backlog);
+            isListening = true;
 
             _acceptArgs = new SocketAsyncEventArgs();
             _acceptArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnAcceptCompleted);
@@ -35,11 +37,14 @@ class Listener
 
     public void Stop()
     {
+        isListening = false;
         _listenSocket.Close();
     }
 
     private void StartAccept()
     {
+        if (!isListening) return;
+
         _acceptArgs.AcceptSocket = null;
         bool pending = false;
         try
