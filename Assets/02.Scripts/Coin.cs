@@ -4,11 +4,8 @@ using UnityEngine;
 
 public class Coin : MonoBehaviour
 {
-    [SerializeField]
     private int _coinUID;
     public int CoinUID => _coinUID;
-
-    public Vector3 spawnPoint;
 
     public void OnTriggerEnter(Collider other)
     {
@@ -28,8 +25,7 @@ public class Coin : MonoBehaviour
         // 플레이어가 아닌 다른 객체에 충돌하면 총알을 제거함
         if (player == null)
         {
-            //Debug.Log($"[item] coin player == null");
-            //RemoveCoin();
+            RemoveCoin();
             return;
         }
 
@@ -62,10 +58,5 @@ public class Coin : MonoBehaviour
         _coinUID = coinUID;
 
         GameManager.Instance.AddCoin(this);
-    }
-
-    void OnEnable() 
-    {
-        this.transform.position = spawnPoint;
     }
 }

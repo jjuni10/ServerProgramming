@@ -2,12 +2,10 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    [SerializeField]
     private int _bulletUID;
     private int _ownerUID;
     private Rigidbody _rigidbody;
     public int BulletUID => _bulletUID;
-    public Vector3 spawnPoint;
 
     private void Awake()
     {
@@ -22,13 +20,18 @@ public class Bullet : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        //Debug.Log($"[bullet] Bullet OnTriggerEnter() {other.name}");
         if (!GameManager.Instance.IsHost)
         {
             return;
         }
 
-        Player player = other.GetComponent<Player>();
+        // 다른 총알과 충돌 시 처리하지 않음
+        if (other.CompareTag("Bullet"))
+        {
+            return;
+        }
+
+        PlayerCharacter player = other.GetComponent<PlayerCharacter>();
         
         // 플레이어가 아닌 다른 객체에 충돌하면 총알을 제거함
         if (player == null)
@@ -36,7 +39,24 @@ public class Bullet : MonoBehaviour
             RemoveBullet();
             return;
         }
+
+        // 이미 죽은 플레이어에 충돌하면 처리하지 않음
+        if (!player.IsAlive)
+            return;
+
+        Player owner = GameManager.Instance.GetPlayer(_ownerUID);
+        // 총알을 발사한 플레이어 자신에게 충돌하면 처리하지 않음
+        if (_ownerUID == player.UID)
+        {
+            return;
+        }
         
+        // 같은 팀 플레이어에게 충돌하면 처리하지 않음
+        if (player.Team == owner.Team)
+        {
+            return;
+        }
+
         // 상대 플레이어에게 데미지를 전송
         PacketPlayerDamage packet = new PacketPlayerDamage();
         packet.attackUID = _ownerUID;
@@ -65,10 +85,5 @@ public class Bullet : MonoBehaviour
         _ownerUID = ownerUID;
 
         GameManager.Instance.AddBullet(this);
-    }
-    
-    void OnEnable() 
-    {
-        this.transform.position = spawnPoint;
     }
 }

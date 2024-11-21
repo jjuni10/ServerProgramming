@@ -76,13 +76,9 @@ public class PlayerGunner : MonoBehaviour
             _player._currentState.isRunning = false;
         }
 
-        if (Input.GetKey(KeyCode.LeftShift))
+        if (keyCode == KeyCode.LeftShift)//Input.GetKey(KeyCode.LeftShift))
         {
             _player._currentState.isDashing = true;
-        }
-        else
-        {
-            _player._currentState.isDashing = false;
         }
 
         _player._currentValue.moveAmount = Mathf.Clamp01(Mathf.Abs(_player._input.verticalMovement) + Mathf.Abs(_player._input.horizontalMovement));

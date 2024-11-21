@@ -5,20 +5,18 @@ TagManager:
   serializedVersion: 2
   tags:
   - Bullet
-  - Coin
-  - Bomb
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Wall
+  - RunnerPlayer
   - Water
   - UI
-  - RunnerPlayer
+  - Wall
   - GunnerPlayer
-  - Bullet
-  - Frame
-  - Item
+  - 
+  - 
+  - 
   - 
   - 
   - 

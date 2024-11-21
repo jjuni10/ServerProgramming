@@ -62,7 +62,6 @@ public class Player : MonoBehaviour
             // 위치 보정
             transform.position = Vector3.Lerp(transform.position, _destPosition, Time.deltaTime * P_COption.runningSpeed);
         }
-        _curFireCoolTime += Time.deltaTime;
     }
 
     public void Move(KeyCode keyCode)
@@ -98,7 +97,6 @@ public class Player : MonoBehaviour
     }
     public void ReadyUISetting(int uid, bool ready)
     {
-        _curFireCoolTime = 0;
         GameManager.Instance.LobbyController.SetReadyState(uid, ready);
     }
 
@@ -109,42 +107,34 @@ public class Player : MonoBehaviour
     }
     public void FireBullet()
     {
-        if (_curFireCoolTime < Define.FIRE_COOL_TIME)
+        if (_curFireCoolTime > 0f)
         {
-            //Debug.Log($"[bullet] _curFireCoolTime {_curFireCoolTime}");
-            //_curFireCoolTime += Time.deltaTime;
             return;
         }
-        //Debug.Log("[bullet] FireBullet()");
         PacketPlayerFire packet = new PacketPlayerFire();
         packet.ownerUID = UID;
-        packet.position = transform.position + new Vector3(0f, 1.5f, 0f);
+        packet.position = transform.position + new Vector3(0f, 0.5f, 0f);
         packet.direction = transform.forward;
         GameManager.Instance.Client.Send(packet);
-        _curFireCoolTime = 0;
 
-         //Define.FIRE_COOL_TIME;
+        _curFireCoolTime = Define.FIRE_COOL_TIME;
     }
     public void CreateBullet(Vector3 position, Vector3 direction, int ownerUID, int bulletUID)
     {
         GameObject bulletResource = null;
-        Bullet bullet;
         if (Team == ETeam.Red)
         {
             bulletResource = Resources.Load("RedBullet") as GameObject;
-            bullet = GameManager.Instance.pool.Get(2, position).GetComponent<Bullet>();
         }
         else
         {
             bulletResource = Resources.Load("BlueBullet") as GameObject;
-            bullet = GameManager.Instance.pool.Get(3, position).GetComponent<Bullet>();
         }
 
-        bullet.Init(ownerUID, bulletUID);
-        bullet.spawnPoint = position;
+        GameObject bullet = Instantiate(bulletResource);
+        bullet.transform.position = position;
         bullet.transform.forward = direction.normalized;
-        bullet.gameObject.SetActive(true);
-        //Debug.Log("[bullet] CreateBullet()");
+        bullet.GetComponent<Bullet>().Init(ownerUID, bulletUID);
     }
     public void RecivePoint(int point)
     {
@@ -153,7 +143,7 @@ public class Player : MonoBehaviour
         PacketTeamScoreUpdate packet = new PacketTeamScoreUpdate();
         packet.uid = UID;
         packet.score = P_Value.point;
-        //Debug.Log($"player {packet.uid}, {packet.score}");
+        Debug.Log($"player {packet.uid}, {packet.score}");
 
         GameManager.Instance.Client.Send(packet);
     }
@@ -167,24 +157,11 @@ public class Player : MonoBehaviour
         {
             _gunner.enabled = false;
             _runner.enabled = true;
-            ChangeLayerRecursively(this.gameObject, 6); //Runner
         }
         else if (P_Info.ROLE == ERole.Gunner)
         {
             _runner.enabled = false;
             _gunner.enabled = true;
-            ChangeLayerRecursively(this.gameObject, 7); //Gunner
-        }
-    }
-
-    // 자식 객체도 레이어 변경
-    private void ChangeLayerRecursively(GameObject obj, int layer)
-    {
-        obj.layer = layer;
-
-        foreach(Transform child in obj.transform)
-        {
-            ChangeLayerRecursively(child.gameObject, layer);
         }
     }
 }
