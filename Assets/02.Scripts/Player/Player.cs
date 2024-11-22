@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -25,6 +27,8 @@ public class Player : MonoBehaviour
     public GameObject RedRunner;
     public GameObject BlueGunner;
     public GameObject BlueRunner;
+
+    public TextMesh nickname;
 
     public bool IsReady = false;
     public int LosePoint = -1;
@@ -51,6 +55,7 @@ public class Player : MonoBehaviour
         P_Info.ID = id;
         P_Info.TEAM = team;
         P_Info.ROLE = role;
+        nickname.text = id;
         if (GameManager.Instance.UserUID == UID)
             _playerInfos._localPlayer = true;
         P_Com.cameraObj = Camera.main;
@@ -67,16 +72,22 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        //Vector3.Distance(transform.position,_destPosition);
         if (!IsLocalPlayer)
         {
             // 위치 보정
             transform.position = Vector3.Lerp(transform.position, _destPosition, Time.deltaTime * P_COption.runningSpeed);
+            if (Vector3.Distance(transform.position,_destPosition) <= 0.1f)
+                P_Com.animator.SetBool("isRunning", false);
+            else 
+                P_Com.animator.SetBool("isRunning", true);
         }
         _curFireCoolTime += Time.deltaTime;
     }
 
     public void Move(KeyCode keyCode)
     {
+        P_Com.animator.SetBool("isRunning", true);
         if (Role == ERole.Runner || GameManager.Instance.LobbyController != null)
         {
             _runner.Move(keyCode);

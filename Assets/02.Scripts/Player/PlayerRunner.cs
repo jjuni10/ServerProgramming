@@ -14,19 +14,19 @@ public class PlayerRunner : MonoBehaviour
     }
     void Start()
     {
-        _dodgeCool = 0;
+        _dodgeCool = 3;
     }
     void Update()
     {   
         if (!_player.IsLocalPlayer) return;
         //Move();
         Rotate();
-    }
-    void FixedUpdate() 
-    {
-        if (!_player.IsLocalPlayer) return;
         Dodge();
     }
+    // void FixedUpdate() 
+    // {
+    //     if (!_player.IsLocalPlayer) return;
+    // }
 
     public void MoveInput(KeyCode keyCode)
     {
@@ -76,13 +76,14 @@ public class PlayerRunner : MonoBehaviour
 
         if (_player._currentState.isDodgeing)
         {
-            _player._playerComponents.animator.Play("Dodge", 0);
+            //_player._playerComponents.animator.Play("Dodge");
+            _player._playerComponents.animator.SetTrigger("isDodge");
 
             _player._currentValue.moveDirection.y = 0f;
 
             _player._playerComponents.rigidbody.AddForce(_player._currentValue.moveDirection * _player._checkOption.dodgingForce, ForceMode.VelocityChange);
 
-            Invoke("dodgeOut", 0.14f);    //닷지 유지 시간 = 0.14초
+            Invoke("dodgeOut", 0.14f); 
         }
         else if (_player._currentState.isRunning)
         {
@@ -131,19 +132,23 @@ public class PlayerRunner : MonoBehaviour
     {
         _player._currentState.currentDodgeKeyPress = (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
 
-        if (_dodgeCool < 3f && ReturnDodgeAnim()
-            && _player._currentState.previousDodgeKeyPress && _player._currentState.currentDodgeKeyPress)
+        if (_dodgeCool < 3f &&
+             _player._currentState.previousDodgeKeyPress && _player._currentState.currentDodgeKeyPress)
         {
             return;
         }
-        else if (_dodgeCool >= 3f && !ReturnDodgeAnim()
-            &&!_player._currentState.previousDodgeKeyPress && _player._currentState.currentDodgeKeyPress
+        else if (_dodgeCool >= 3f &&
+            !_player._currentState.previousDodgeKeyPress && _player._currentState.currentDodgeKeyPress
             && _player._currentState._curState != EState.Dash)
         {
             //Debug.Log("Dodge");
             _player._currentState.isDodgeing = true;
             _dodgeCool = 0;
             _player._currentState._curState = EState.Dash;
+
+            //! packet 보내기
+
+
             curVertVelocity = _player._playerComponents.rigidbody.velocity.y;
         }
 
@@ -151,12 +156,4 @@ public class PlayerRunner : MonoBehaviour
         // 프레임마다 키 입력 저장
         _player._currentState.previousDodgeKeyPress = _player._currentState.currentDodgeKeyPress;
     }    
-    private bool ReturnDodgeAnim()
-    {
-        if (_player._playerComponents.animator.GetCurrentAnimatorStateInfo(0).IsName("Dodge"))
-        {
-            return true;
-        }
-        else return false;
-    }
 }
