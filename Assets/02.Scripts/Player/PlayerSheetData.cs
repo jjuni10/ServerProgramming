@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerSheetData
+public class PlayerSheetData : MonoBehaviour
 {
     public void Init()
     {

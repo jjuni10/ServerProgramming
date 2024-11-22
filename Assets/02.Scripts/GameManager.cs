@@ -72,6 +72,7 @@ public class GameManager : MonoBehaviour
     {
         Client = GetComponent<Client>();
         Host = GetComponent<Host>();
+        sheetData.GetComponent<PlayerSheetData>();
 
         SceneSetting();
         SceneManager.sceneLoaded += GameSceneLoaded;
