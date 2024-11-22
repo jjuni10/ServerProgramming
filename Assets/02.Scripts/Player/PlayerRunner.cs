@@ -77,7 +77,6 @@ public class PlayerRunner : MonoBehaviour
         if (_player._currentState.isDodgeing)
         {
             //_player._playerComponents.animator.Play("Dodge");
-            _player._playerComponents.animator.SetTrigger("isDodge");
 
             _player._currentValue.moveDirection.y = 0f;
 
@@ -132,12 +131,12 @@ public class PlayerRunner : MonoBehaviour
     {
         _player._currentState.currentDodgeKeyPress = (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
 
-        if (_dodgeCool < 3f &&
+        if (//_dodgeCool < 3f &&
              _player._currentState.previousDodgeKeyPress && _player._currentState.currentDodgeKeyPress)
         {
             return;
         }
-        else if (_dodgeCool >= 3f &&
+        else if (//_dodgeCool >= 3f &&
             !_player._currentState.previousDodgeKeyPress && _player._currentState.currentDodgeKeyPress
             && _player._currentState._curState != EState.Dash)
         {
@@ -145,6 +144,7 @@ public class PlayerRunner : MonoBehaviour
             _player._currentState.isDodgeing = true;
             _dodgeCool = 0;
             _player._currentState._curState = EState.Dash;
+            _player._playerComponents.animator.SetTrigger("isDodge");
 
             //! packet 보내기
             PacketDashStart packet = new PacketDashStart();
