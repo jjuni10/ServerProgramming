@@ -170,6 +170,7 @@ public class GoogleSheetsManager : MonoBehaviour
                             ScaleZ = float.Parse(row["scaleZ"]),
                             CreateCoolTime = float.Parse(row["createCoolTime"]),
                             GetPoint = int.Parse(row["getPoint"]),
+                            MaxVal = int.Parse(row["maxVal"]),
                         };
                         Define.Items[itemId] = itemData;
                     }

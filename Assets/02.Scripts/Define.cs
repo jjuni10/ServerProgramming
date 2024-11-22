@@ -28,7 +28,7 @@ public class Define
     public static float GAME_RUNNER_POSITION_OFFSET = 10f;
     public static float READY_TIME = 1.5f;
 
-    // PlayerBasic ±¸Á¶Ã¼ Á¤ÀÇ
+    // PlayerBasic ï¿½ï¿½ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½
     public struct PlayerBasicData
     {
         public float StartPosX;
@@ -44,7 +44,7 @@ public class Define
         public bool RoleStats;
     }
 
-    // Gunner µ¥ÀÌÅÍ ±¸Á¶Ã¼
+    // Gunner ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ã¼
     public struct GunnerData
     {
         public float StartPosX;
@@ -64,7 +64,7 @@ public class Define
         public bool TeamStats;
     }
 
-    // Runner µ¥ÀÌÅÍ ±¸Á¶Ã¼
+    // Runner ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ã¼
     public struct RunnerData
     {
         public float StartPosX;
@@ -85,7 +85,7 @@ public class Define
     }
 
 
-    // WinCheck µ¥ÀÌÅÍ ±¸Á¶Ã¼
+    // WinCheck ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ã¼
     public struct WinCheckData
     {
         public float StartPosX;
@@ -97,7 +97,7 @@ public class Define
         public float PlayerPosY;
     }
 
-    // Item µ¥ÀÌÅÍ ±¸Á¶Ã¼
+    // Item ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ã¼
     public struct ItemData
     {
         public float PosX;
@@ -108,9 +108,10 @@ public class Define
         public float ScaleZ;
         public float CreateCoolTime;
         public int GetPoint;
+        public int MaxVal;
     }
 
-    // Bullet µ¥ÀÌÅÍ ±¸Á¶Ã¼
+    // Bullet ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ã¼
     public struct BulletData
     {
         public float ScaleX;
@@ -120,7 +121,7 @@ public class Define
         public int GetPoint;
     }
 
-    // ½ÃÆ® µ¥ÀÌÅÍ¸¦ ÀúÀåÇÒ µñ¼Å³Ê¸®
+    // ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å³Ê¸ï¿½
     public static Dictionary<string, PlayerBasicData> Players = new Dictionary<string, PlayerBasicData>();
     public static Dictionary<string, GunnerData> Gunners = new Dictionary<string, GunnerData>();
     public static Dictionary<string, RunnerData> Runners = new Dictionary<string, RunnerData>();

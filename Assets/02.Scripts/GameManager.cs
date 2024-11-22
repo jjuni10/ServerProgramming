@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     public ThirdSceneUIController UIPlayers3;
 
     public PoolManager pool;
+    public PlayerSheetData sheetData;
 
     private Client _client;
 
@@ -74,6 +75,8 @@ public class GameManager : MonoBehaviour
 
         SceneSetting();
         SceneManager.sceneLoaded += GameSceneLoaded;
+
+        sheetData.Init();
     }
 
     private void Update()

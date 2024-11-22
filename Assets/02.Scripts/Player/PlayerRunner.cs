@@ -131,12 +131,12 @@ public class PlayerRunner : MonoBehaviour
     {
         _player._currentState.currentDodgeKeyPress = (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
 
-        if (//_dodgeCool < 3f &&
+        if (_dodgeCool < 3f &&
              _player._currentState.previousDodgeKeyPress && _player._currentState.currentDodgeKeyPress)
         {
             return;
         }
-        else if (//_dodgeCool >= 3f &&
+        else if (_dodgeCool >= 3f &&
             !_player._currentState.previousDodgeKeyPress && _player._currentState.currentDodgeKeyPress
             && _player._currentState._curState != EState.Dash)
         {

@@ -76,6 +76,26 @@ public class LobbyController : MonoBehaviour
 
     public Vector3 GetSpawnPoint(int uid)
     {
+        switch (uid)
+        {
+            case 1:
+            {
+                return GameManager.Instance.sheetData.Red1BasicStartPos;
+            }
+            case 3:
+            {
+                return GameManager.Instance.sheetData.Red2BasicStartPos;
+            }
+            case 2:
+            {
+                return GameManager.Instance.sheetData.Blue1BasicStartPos;
+            }
+            case 4:
+            {
+                return GameManager.Instance.sheetData.Blue2BasicStartPos;
+            }
+            default: break;
+        }
         return LobbySpawnPoints.GetChild(uid).position;
     }
 }

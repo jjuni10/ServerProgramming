@@ -107,8 +107,8 @@ public class Host : MonoBehaviour
         }
         GameManager.Instance.IsGameStarted = true;
 
-        Vector3 gunnerPosition = new Vector3(Define.GAME_GUNNER_POSITION_OFFSET, 3, 0);
-        Vector3 runnerPosition = new Vector3(Define.GAME_RUNNER_POSITION_OFFSET, 3, 0);
+        //Vector3 gunnerPosition = new Vector3(Define.GAME_GUNNER_POSITION_OFFSET, 3, 0);
+        //Vector3 runnerPosition = new Vector3(Define.GAME_RUNNER_POSITION_OFFSET, 3, 0);
 
         // 게임 시작 정보를 전송한다.
         PacketGameStart packet = new PacketGameStart();
@@ -124,11 +124,11 @@ public class Host : MonoBehaviour
             {
                 if (_userList[i].Team == ETeam.Red)
                 {
-                    packet.startInfos[i].position = new Vector3(gunnerPosition.x * -1, gunnerPosition.y, gunnerPosition.z);
+                    packet.startInfos[i].position = GameManager.Instance.sheetData.RedGunnerStartPos;//new Vector3(gunnerPosition.x * -1, gunnerPosition.y, gunnerPosition.z);
                 }
                 else
                 {
-                    packet.startInfos[i].position = new Vector3(gunnerPosition.x, gunnerPosition.y, gunnerPosition.z);
+                    packet.startInfos[i].position = GameManager.Instance.sheetData.BlueGunnerStartPos;//new Vector3(gunnerPosition.x, gunnerPosition.y, gunnerPosition.z);
                 }
                 //packet.startInfos[i].position = gunnerPosition;
             }
@@ -136,11 +136,11 @@ public class Host : MonoBehaviour
             {
                 if (_userList[i].Team == ETeam.Red)
                 {
-                    packet.startInfos[i].position = new Vector3(runnerPosition.x * -1, runnerPosition.y, runnerPosition.z);
+                    packet.startInfos[i].position = GameManager.Instance.sheetData.RedRunnerStartPos;//new Vector3(runnerPosition.x * -1, runnerPosition.y, runnerPosition.z);
                 }
                 else
                 {
-                    packet.startInfos[i].position = new Vector3(runnerPosition.x, runnerPosition.y, runnerPosition.z);
+                    packet.startInfos[i].position = GameManager.Instance.sheetData.BlueRunnerStartPos;//new Vector3(runnerPosition.x, runnerPosition.y, runnerPosition.z);
                 }
                 //packet.startInfos[i].position = runnerPosition;
             }
