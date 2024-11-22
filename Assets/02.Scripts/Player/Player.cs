@@ -21,6 +21,11 @@ public class Player : MonoBehaviour
     private PlayerGunner _gunner;
     private PlayerRunner _runner;
 
+    public GameObject RedGunner;
+    public GameObject RedRunner;
+    public GameObject BlueGunner;
+    public GameObject BlueRunner;
+
     public bool IsReady = false;
     public int LosePoint = -1;
     public int GetPoint = 1;
@@ -170,6 +175,7 @@ public class Player : MonoBehaviour
             _gunner.enabled = true;
             ChangeLayerRecursively(this.gameObject, 7); //Gunner
         }
+        ChangeModeling();
     }
 
     // 자식 객체도 레이어 변경
@@ -180,6 +186,50 @@ public class Player : MonoBehaviour
         foreach(Transform child in obj.transform)
         {
             ChangeLayerRecursively(child.gameObject, layer);
+        }
+    }
+    
+    // modeling change
+    public void ChangeModeling()
+    {
+        if (P_Info.TEAM == ETeam.Red)
+        {
+            if (P_Info.ROLE == ERole.Runner)
+            {
+                RedGunner.SetActive(false);
+                RedRunner.SetActive(true);
+                BlueGunner.SetActive(false);
+                BlueRunner.SetActive(false);
+                P_Com.animator = RedRunner.GetComponent<Animator>();
+            }
+            else if (P_Info.ROLE == ERole.Gunner)
+            {
+                RedGunner.SetActive(true);  
+                RedRunner.SetActive(false);
+                BlueGunner.SetActive(false);
+                BlueRunner.SetActive(false);
+                P_Com.animator = RedGunner.GetComponent<Animator>();
+            }
+        }
+        else    // blue
+        {
+            if(P_Info.ROLE == ERole.Runner)
+            {
+                RedGunner.SetActive(false);
+                RedRunner.SetActive(false);
+                BlueGunner.SetActive(false);
+                BlueRunner.SetActive(true);
+                P_Com.animator = BlueRunner.GetComponent<Animator>();
+            }
+            else if (P_Info.ROLE == ERole.Gunner)
+            {
+                RedGunner.SetActive(false);
+                RedRunner.SetActive(false);
+                BlueGunner.SetActive(true);
+                BlueRunner.SetActive(false);
+                P_Com.animator = BlueGunner.GetComponent<Animator>();
+            }
+
         }
     }
 }
