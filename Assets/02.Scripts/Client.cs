@@ -106,6 +106,15 @@ public class Client : MonoBehaviour, IPeer
                     player.SetPositionRotation(packet.position, packet.rotation);
                 }
                 break;
+            case PacketDashStart packet:
+                {
+                    Player player = GameManager.Instance.GetPlayer(packet.uid);
+                    if (player == null)
+                        return;
+
+                    player.NotLocalDodge();
+                }
+                break;
             case PacketEntitySpawn packet:
                 {
                     GameManager.Instance.AddEntity(packet);

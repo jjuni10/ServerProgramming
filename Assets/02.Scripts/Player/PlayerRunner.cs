@@ -147,7 +147,9 @@ public class PlayerRunner : MonoBehaviour
             _player._currentState._curState = EState.Dash;
 
             //! packet 보내기
-
+            PacketDashStart packet = new PacketDashStart();
+            packet.uid = _player.UID;
+            GameManager.Instance.Client.Send(packet);
 
             curVertVelocity = _player._playerComponents.rigidbody.velocity.y;
         }
