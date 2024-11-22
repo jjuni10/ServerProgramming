@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -20,6 +22,13 @@ public class Player : MonoBehaviour
 
     private PlayerGunner _gunner;
     private PlayerRunner _runner;
+
+    public GameObject RedGunner;
+    public GameObject RedRunner;
+    public GameObject BlueGunner;
+    public GameObject BlueRunner;
+
+    public TextMesh nickname;
 
     public bool IsReady = false;
     public int LosePoint = -1;
@@ -41,6 +50,7 @@ public class Player : MonoBehaviour
         P_Info.ID = id;
         P_Info.TEAM = team;
         P_Info.ROLE = role;
+        nickname.text = id;
         if (GameManager.Instance.UserUID == UID)
             _playerInfos._localPlayer = true;
         P_Com.cameraObj = Camera.main;
@@ -57,16 +67,22 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        //Vector3.Distance(transform.position,_destPosition);
         if (!IsLocalPlayer)
         {
             // 위치 보정
             transform.position = Vector3.Lerp(transform.position, _destPosition, Time.deltaTime * P_COption.runningSpeed);
+            if (Vector3.Distance(transform.position,_destPosition) <= 0.1f)
+                P_Com.animator.SetBool("isRunning", false);
+            else 
+                P_Com.animator.SetBool("isRunning", true);
         }
         _curFireCoolTime += Time.deltaTime;
     }
 
     public void Move(KeyCode keyCode)
     {
+        P_Com.animator.SetBool("isRunning", true);
         if (Role == ERole.Runner || GameManager.Instance.LobbyController != null)
         {
             _runner.Move(keyCode);
@@ -170,6 +186,7 @@ public class Player : MonoBehaviour
             _gunner.enabled = true;
             ChangeLayerRecursively(this.gameObject, 7); //Gunner
         }
+        ChangeModeling();
     }
 
     // 자식 객체도 레이어 변경
@@ -180,6 +197,50 @@ public class Player : MonoBehaviour
         foreach(Transform child in obj.transform)
         {
             ChangeLayerRecursively(child.gameObject, layer);
+        }
+    }
+    
+    // modeling change
+    public void ChangeModeling()
+    {
+        if (P_Info.TEAM == ETeam.Red)
+        {
+            if (P_Info.ROLE == ERole.Runner)
+            {
+                RedGunner.SetActive(false);
+                RedRunner.SetActive(true);
+                BlueGunner.SetActive(false);
+                BlueRunner.SetActive(false);
+                P_Com.animator = RedRunner.GetComponent<Animator>();
+            }
+            else if (P_Info.ROLE == ERole.Gunner)
+            {
+                RedGunner.SetActive(true);  
+                RedRunner.SetActive(false);
+                BlueGunner.SetActive(false);
+                BlueRunner.SetActive(false);
+                P_Com.animator = RedGunner.GetComponent<Animator>();
+            }
+        }
+        else    // blue
+        {
+            if(P_Info.ROLE == ERole.Runner)
+            {
+                RedGunner.SetActive(false);
+                RedRunner.SetActive(false);
+                BlueGunner.SetActive(false);
+                BlueRunner.SetActive(true);
+                P_Com.animator = BlueRunner.GetComponent<Animator>();
+            }
+            else if (P_Info.ROLE == ERole.Gunner)
+            {
+                RedGunner.SetActive(false);
+                RedRunner.SetActive(false);
+                BlueGunner.SetActive(true);
+                BlueRunner.SetActive(false);
+                P_Com.animator = BlueGunner.GetComponent<Animator>();
+            }
+
         }
     }
 }

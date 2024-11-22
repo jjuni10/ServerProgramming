@@ -114,18 +114,19 @@ public class GameManager : MonoBehaviour
         {
             _localPlayer.Move(KeyCode.W);
         }
-        if (Input.GetKey(KeyCode.S))
+        else if (Input.GetKey(KeyCode.S))
         {
             _localPlayer.Move(KeyCode.S);
         }
-        if (Input.GetKey(KeyCode.A))
+        else if (Input.GetKey(KeyCode.A))
         {
             _localPlayer.Move(KeyCode.A);
         }
-        if (Input.GetKey(KeyCode.D))
+        else if (Input.GetKey(KeyCode.D))
         {
             _localPlayer.Move(KeyCode.D);
         }
+        else _localPlayer._playerComponents.animator.SetBool("isRunning", false);
 
         _localPlayer.Rotate();
 
