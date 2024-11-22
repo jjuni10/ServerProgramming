@@ -6555,6 +6555,7 @@ GameObject:
   - component: {fileID: 3569349739382934618}
   - component: {fileID: 3342354690377029463}
   - component: {fileID: 1707865208494469035}
+  - component: {fileID: 4189905586508430283}
   m_Layer: 0
   m_Name: Name
   m_TagString: Untagged
@@ -6570,13 +6571,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6140808460858956384}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.3309999, z: 0}
   m_LocalScale: {x: 0.050000004, y: 0.050000004, z: 0.050000004}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 242483156834543521}
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &3342354690377029463
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -6641,6 +6642,18 @@ TextMesh:
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
+--- !u!114 &4189905586508430283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6140808460858956384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5376a20d9e4a2e458e83934a856565d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6178251969806803312
 GameObject:
   m_ObjectHideFlags: 0
