@@ -102,6 +102,13 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void NotLocalDodge()
+    { 
+        if (IsLocalPlayer) return;
+
+        P_Com.animator.SetTrigger("isDodge");
+    }
+
     public void SetReady(bool isReady)
     {
         //if (!P_Info._localPlayer) return;
