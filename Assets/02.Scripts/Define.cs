@@ -108,6 +108,7 @@ public class Define
         public float ScaleZ;
         public float CreateCoolTime;
         public int GetPoint;
+        public int MaxVal;
     }
 
     // Bullet 데이터 구조체
