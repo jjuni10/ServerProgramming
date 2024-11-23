@@ -741,8 +741,7 @@ namespace MessagePack.Formatters
                 return;
             }
 
-            global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
-            writer.WriteArrayHeader(12);
+            writer.WriteArrayHeader(11);
             writer.WriteNil();
             writer.WriteNil();
             writer.WriteNil();
