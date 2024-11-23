@@ -179,6 +179,11 @@ public class Client : MonoBehaviour, IPeer
                 }
                 break;
         }
+
+        if (receivedPacket is not PacketPlayerPosition)
+        {
+            Debug.LogFormat("패킷 받음! Type:{0}", receivedPacket.GetType().Name);
+        }
     }
 
     private IEnumerator WaitAndStartGame(PacketGameStart packet)
