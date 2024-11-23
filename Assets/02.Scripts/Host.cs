@@ -21,6 +21,11 @@ public class Host : MonoBehaviour
         GameManager.Instance.Client.StartClient("127.0.0.1");
     }
 
+    private void OnDestroy()
+    {
+        _server.End();
+    }
+
     private void OnClientConnected(UserToken token)
     {
         Debug.Log("클라이언트 접속");

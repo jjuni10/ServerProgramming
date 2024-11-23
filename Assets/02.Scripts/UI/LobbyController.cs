@@ -15,31 +15,71 @@ public class LobbyController : MonoBehaviour
         public TMP_Text StateText;
     }
 
+    [Header("Ready")]
     public PlayerReadyUIGroup[] ReadyGroups;
+
+    [Header("Start")]
+    public Button StartButton;
+
+    [Header("Spawn Points")]
     public Transform LobbySpawnPoints;
 
-    private List<bool> readyPlayers = new List<bool>();
+    [Header("Role Button Highlight")]
+    public Color RoleButtonHighlightColor;
+    public Image GunnerButtonImage;
+    public Image RunnerButtonImage;
 
     void Start()
     {
-        readyPlayers.Clear();
+        StartButton.onClick.AddListener(() => GameManager.Instance.Host.ReadyCheckGameStart());
+    }
+
+    public void OnLocalPlayerJoin()
+    {
+        if (GameManager.Instance.IsHost)
+        {
+            StartButton.gameObject.SetActive(true);
+            StartButton.interactable = false;
+        }
+        else
+        {
+            StartButton.gameObject.SetActive(false);
+        }
     }
 
     public void SetRole(int uid, ERole role)
     {
         PlayerReadyUIGroup uiGroup = ReadyGroups[uid];
-        switch (role)
+        Image roleButtonImage = null;
+
+        if (role == ERole.Runner)
         {
-            case ERole.Gunner:
-                uiGroup.RoleText.text = "G";
-                break;
-            case ERole.Runner:
-                uiGroup.RoleText.text = "R";
-                break;
-            default:
-                break;
+            uiGroup.RoleText.text = "R";
+        }
+        else
+        {
+            uiGroup.RoleText.text = "G";
+        }
+
+        if (uid == GameManager.Instance.UserUID)
+        {
+            if (role == ERole.Runner)
+            {
+                roleButtonImage = RunnerButtonImage;
+            }
+            else
+            {
+                roleButtonImage = GunnerButtonImage;
+            }
+        }
+
+        if (roleButtonImage != null)
+        {
+            GunnerButtonImage.color = RunnerButtonImage.color = Color.white;
+            roleButtonImage.color = RoleButtonHighlightColor;
         }
     }
+
     public void SetReadyState(int uid, bool isReady)
     {
         //Debug.Log($"SetReadyUI({uid})");
@@ -50,23 +90,18 @@ public class LobbyController : MonoBehaviour
         if (isReady)
         {
             uiGroup.StateText.text += "준비 완료";
-        }
-        else
-        {
-            uiGroup.StateText.text += "준비중..";
-        }
-
-        if (isReady)
-        {
-            readyPlayers.Add(true);
             uiGroup.ProgressImage.fillAmount = 1;
         }
         else
         {
-            if (readyPlayers.Count > 0)
-                readyPlayers.RemoveAt(readyPlayers.Count - 1);
+            uiGroup.StateText.text += "준비중..";
             uiGroup.ProgressImage.fillAmount = 0;
         }
+
+        bool canStart = GameManager.Instance.PlayerCount >= 2 
+            && GameManager.Instance.IsAllPlayerReady();
+
+        StartButton.interactable = canStart;
     }
 
     public void SetReadyProgress(int uid, float progress)

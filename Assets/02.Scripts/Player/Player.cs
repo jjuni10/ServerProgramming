@@ -171,7 +171,7 @@ public class Player : MonoBehaviour
         PacketTeamScoreUpdate packet = new PacketTeamScoreUpdate();
         packet.uid = UID;
         packet.score = P_Value.point;
-        //Debug.Log($"player {packet.uid}, {packet.score}");
+        Debug.Log($"player {packet.uid}, {packet.score}");
 
         GameManager.Instance.Client.Send(packet);
     }

@@ -86,6 +86,7 @@ public class Client : MonoBehaviour, IPeer
                     if (player == null)
                         return;
 
+                    player.IsReady = packet.IsReady;
                     player.ReadyUISetting(packet.uid, packet.IsReady);
                 }
                 break;
@@ -140,6 +141,23 @@ public class Client : MonoBehaviour, IPeer
                         attackPlayer.RecivePoint(attackPlayer.LosePoint);   //실점
                     else                                        //다른 팀이면
                         attackPlayer.RecivePoint(attackPlayer.GetPoint);    //득점
+                }
+                break;
+            case PacketEntityPlayerCollision packet:
+                {
+                    Player player = GameManager.Instance.GetPlayer(packet.playerUID);
+                    if (player == null)
+                        return;
+
+                    if (packet.type == EEntity.Point)
+                        player.RecivePoint(player.GetPoint);
+                    else
+                        player.RecivePoint(player.LosePoint);
+                }
+                break;
+            case PacketTeamScoreUpdate packet:
+                {
+                    GameManager.Instance.UpdatePoint(packet.uid, packet.score);
                 }
                 break;
             case PacketEntityPlayerCollision packet:

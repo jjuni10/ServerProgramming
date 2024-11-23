@@ -3720,7 +3720,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: 
+  m_Text: 127.0.0.1
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -4065,7 +4065,7 @@ GameObject:
   - component: {fileID: 6853417984465281428}
   - component: {fileID: 6061592473630907196}
   m_Layer: 5
-  m_Name: ButtonStart
+  m_Name: ButtonStart_Old
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4338,7 +4338,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 4735935126973729236}
   m_OnClick:
     m_PersistentCalls:
@@ -5986,7 +5986,11 @@ MonoBehaviour:
   - ProgressImage: {fileID: 1959178637}
     RoleText: {fileID: 89661948}
     StateText: {fileID: 261409425}
+  StartButton: {fileID: 1306237357492407789}
   LobbySpawnPoints: {fileID: 1384218948}
+  RoleButtonHighlightColor: {r: 0, g: 0, b: 0, a: 0}
+  GunnerButtonImage: {fileID: 0}
+  RunnerButtonImage: {fileID: 0}
 --- !u!114 &6853417984465281428
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6531,7 +6535,6 @@ MonoBehaviour:
   buttonGunner: {fileID: 4083116781942726060}
   buttonRunner: {fileID: 8287909768150672684}
   buttonReady: {fileID: 4153021242013343090}
-  buttonStart: {fileID: 1306237357492407789}
 --- !u!224 &8363897454639577783
 RectTransform:
   m_ObjectHideFlags: 0
