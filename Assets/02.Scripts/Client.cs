@@ -160,23 +160,6 @@ public class Client : MonoBehaviour, IPeer
                     GameManager.Instance.UpdatePoint(packet.uid, packet.score);
                 }
                 break;
-            case PacketEntityPlayerCollision packet:
-                {
-                    Player player = GameManager.Instance.GetPlayer(packet.playerUID);
-                    if (player == null)
-                        return;
-
-                    if (packet.type == EEntity.Point)
-                        player.RecivePoint(player.GetPoint);
-                    else
-                        player.RecivePoint(player.LosePoint);
-                }
-                break;
-            case PacketTeamScoreUpdate packet:
-                {
-                    GameManager.Instance.UpdatePoint(packet.uid, packet.score);
-                }
-                break;
             case PacketBulletDestroy packet:
                 {
                     GameManager.Instance.RemoveBullet(packet.bulletUID);
