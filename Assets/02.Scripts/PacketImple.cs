@@ -83,7 +83,7 @@ public class PacketAnsUserList : Packet
     public int userNum;
 
     [Key(11)]
-    public UserInfo[] userInfos = new UserInfo[20];
+    public UserInfo[] userInfos = new UserInfo[4];
 }
 
 [MessagePackObject]
@@ -144,7 +144,7 @@ public class PacketGameStart : Packet
     public int userNum;
 
     [Key(11)]
-    public GameStartInfo[] startInfos = new GameStartInfo[20];
+    public GameStartInfo[] startInfos = new GameStartInfo[4];
 }
 
 [MessagePackObject]
