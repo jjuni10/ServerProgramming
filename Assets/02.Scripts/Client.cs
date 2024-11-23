@@ -34,8 +34,15 @@ public class Client : MonoBehaviour, IPeer
 
     public void ProcessMessage(short protocolID, byte[] buffer)
     {
-        Packet receivedPacket = MessagePackSerializer.Deserialize<Packet>(buffer);
-        queue.Enqueue(receivedPacket);
+        try
+        {
+            Packet receivedPacket = MessagePackSerializer.Deserialize<Packet>(buffer);
+            queue.Enqueue(receivedPacket);
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogException(ex);
+        }
     }
 
     private void ProcessPacket(Packet receivedPacket)
