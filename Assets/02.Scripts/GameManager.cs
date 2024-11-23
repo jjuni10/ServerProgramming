@@ -76,8 +76,6 @@ public class GameManager : MonoBehaviour
 
         SceneSetting();
         SceneManager.sceneLoaded += GameSceneLoaded;
-
-        sheetData.Init();
     }
 
     private void Update()

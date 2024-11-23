@@ -10,6 +10,9 @@ public class PlayerSheetData : MonoBehaviour
         GunnerStartPosition();
         RunnerStartPosition();
         WinCheckStartPosition();
+        PlayerValue();
+        ItemValue();
+        BulletValue();
     }
     
     //*===================================================================================================================================
@@ -68,16 +71,30 @@ public class PlayerSheetData : MonoBehaviour
 
     //*===================================================================================================================================
     #region Player Value
-    public float BasicMoveSpeed = Define.Players["Player1"].MoveSpeed;
-    public float BasicReadyPressTime = Define.Players["Player1"].ReadyPressTime;
+    public float BasicMoveSpeed;
+    public float BasicReadyPressTime;
 
-    public float GunnerMoveSpeed = Define.Gunners["Red_Gunner"].MoveSpeed;
-    public float GunnerDashSpeed = Define.Gunners["Red_Gunner"].DashSpeed;
-    public float GunnerFireCoolTime = Define.Gunners["Red_Gunner"].FiringCoolTime;
+    public float GunnerMoveSpeed;
+    public float GunnerDashSpeed;
+    public float GunnerFireCoolTime;
 
-    public float RunnerMoveSpeed = Define.Runners["Red_Runner"].MoveSpeed;
-    public float RunnerDashForce = Define.Runners["Red_Runner"].DashForce;
-    public float RunnerDashCoolTime = Define.Runners["Red_Runner"].DashCoolTime;
+    public float RunnerMoveSpeed;
+    public float RunnerDashForce;
+    public float RunnerDashCoolTime;
+    public void PlayerValue()
+    {
+        BasicMoveSpeed = Define.Players["Player1"].MoveSpeed;
+        BasicReadyPressTime = Define.Players["Player1"].ReadyPressTime;
+
+        GunnerMoveSpeed = Define.Gunners["Red_Gunner"].MoveSpeed;
+        GunnerDashSpeed = Define.Gunners["Red_Gunner"].DashSpeed;
+        GunnerFireCoolTime = Define.Gunners["Red_Gunner"].FiringCoolTime;
+
+        RunnerMoveSpeed = Define.Runners["Red_Runner"].MoveSpeed;
+        RunnerDashForce = Define.Runners["Red_Runner"].DashForce;
+        RunnerDashCoolTime = Define.Runners["Red_Runner"].DashCoolTime;
+    }
+    
     #endregion
 
 
@@ -97,8 +114,14 @@ public class PlayerSheetData : MonoBehaviour
             maxVal = Value;
         }
     }
-    public ItemInfo Boom = new ItemInfo((int)Define.Items["Boom"].CreateCoolTime, Define.Items["Boom"].GetPoint, Define.Items["Boom"].MaxVal);
-    public ItemInfo Coin = new ItemInfo((int)Define.Items["Coin"].CreateCoolTime, Define.Items["Coin"].GetPoint, Define.Items["Coin"].MaxVal);
+    
+    public ItemInfo Boom;
+    public ItemInfo Coin;
+    public void ItemValue()
+    {
+        Boom = new ItemInfo((int)Define.Items["Boom"].CreateCoolTime, Define.Items["Boom"].GetPoint, Define.Items["Boom"].MaxVal);
+        Coin = new ItemInfo((int)Define.Items["Coin"].CreateCoolTime, Define.Items["Coin"].GetPoint, Define.Items["Coin"].MaxVal);
+    }
     #endregion
 
 
@@ -106,8 +129,15 @@ public class PlayerSheetData : MonoBehaviour
 
     //*===================================================================================================================================
     #region Bullet
-    public Vector3 BulletScale = new Vector3(Define.Bullets["Bullet"].ScaleX, Define.Bullets["Bullet"].ScaleY, Define.Bullets["Bullet"].ScaleZ);
-    public float BulletSpeed = Define.Bullets["Bullet"].BulletSpeed;
-    public int BulletGetPoint = Define.Bullets["Bullet"].GetPoint;
+    public Vector3 BulletScale;
+    public float BulletSpeed;
+    public int BulletGetPoint;
+    public void BulletValue()
+    {
+        BulletScale = new Vector3(Define.Bullets["Bullet"].ScaleX, Define.Bullets["Bullet"].ScaleY, Define.Bullets["Bullet"].ScaleZ);
+        BulletSpeed = Define.Bullets["Bullet"].BulletSpeed;
+        BulletGetPoint = Define.Bullets["Bullet"].GetPoint;
+    }
+    
     #endregion
 }
