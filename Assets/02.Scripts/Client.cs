@@ -106,6 +106,15 @@ public class Client : MonoBehaviour, IPeer
                     player.SetPositionRotation(packet.position, packet.rotation);
                 }
                 break;
+            case PacketDashStart packet:
+                {
+                    Player player = GameManager.Instance.GetPlayer(packet.uid);
+                    if (player == null)
+                        return;
+
+                    player.NotLocalDodge();
+                }
+                break;
             case PacketEntitySpawn packet:
                 {
                     GameManager.Instance.AddEntity(packet);
@@ -127,7 +136,10 @@ public class Client : MonoBehaviour, IPeer
                     if (attackPlayer == null || targetPlayer == null)
                         return;
 
-                    targetPlayer.RecivePoint(attackPlayer.LosePoint);
+                    if (attackPlayer.Team == targetPlayer.Team) //같은 팀이면
+                        attackPlayer.RecivePoint(attackPlayer.LosePoint);   //실점
+                    else                                        //다른 팀이면
+                        attackPlayer.RecivePoint(attackPlayer.GetPoint);    //득점
                 }
                 break;
             case PacketEntityPlayerCollision packet:

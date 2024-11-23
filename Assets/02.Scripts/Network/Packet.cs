@@ -21,7 +21,8 @@ using MessagePack;
 [Union(18, typeof(PacketEntityPlayerCollision))]
 [Union(19, typeof(PacketPlayerDamage))]
 [Union(20, typeof(PacketBulletDestroy))]
-[Union(21, typeof(PacketGameEnd))]
+[Union(21, typeof(PacketDashStart))]
+[Union(22, typeof(PacketGameEnd))]
 
 [MessagePackObject]
 public abstract partial class Packet

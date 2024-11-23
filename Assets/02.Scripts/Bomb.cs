@@ -6,6 +6,7 @@ public class Bomb : MonoBehaviour
 {
     private int _bombUID;
     public int BombUID => _bombUID;
+    public Vector3 spawnPoint;
 
     public void OnTriggerEnter(Collider other)
     {
@@ -25,7 +26,7 @@ public class Bomb : MonoBehaviour
         // 플레이어가 아닌 다른 객체에 충돌하면 총알을 제거함
         if (player == null)
         {
-            RemoveBomb();
+            //RemoveBomb();
             return;
         }
 
@@ -58,5 +59,9 @@ public class Bomb : MonoBehaviour
         _bombUID = bombUID;
 
         GameManager.Instance.AddBomb(this);
+    }
+    void OnEnable() 
+    {
+        this.transform.position = spawnPoint;
     }
 }

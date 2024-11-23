@@ -267,6 +267,13 @@ public class PacketBulletDestroy : Packet
     [Key(10)]
     public int bulletUID;
 }
+
+[MessagePackObject]
+public class PacketDashStart : Packet
+{
+    [Key(10)]
+    public int uid;
+}
 #endregion
 
 #region 게임 끝

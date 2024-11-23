@@ -96,6 +96,11 @@ public class UserPeer : IPeer
                     _host.SendAll(packet, this);
                 }
                 break;
+            case PacketDashStart packet:
+                {
+                    _host.SendAll(packet);
+                }
+                break;
             case PacketEntitySpawn packet:
                 {
                     //_host.SendAll(packet);
