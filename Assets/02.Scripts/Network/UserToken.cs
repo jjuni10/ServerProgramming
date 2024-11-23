@@ -150,7 +150,14 @@ public class UserToken
 
     public void Send(Packet packet)
     {
-        Send(MessagePackSerializer.Serialize(packet));
+        try
+        {
+            Send(MessagePackSerializer.Serialize(packet));
+        }
+        catch (Exception ex)
+        {
+            Debug.LogException(ex);
+        }
     }
 
     void StartSend()

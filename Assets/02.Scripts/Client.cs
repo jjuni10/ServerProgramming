@@ -1,4 +1,5 @@
 using MessagePack;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using UnityEngine;
@@ -92,10 +93,7 @@ public class Client : MonoBehaviour, IPeer
                 break;
             case PacketGameStart packet:
                 {
-
-
-                    GameManager.Instance.IsGameStarted = true;
-                    GameManager.Instance.GameStart(packet);
+                    StartCoroutine(WaitAndStartGame(packet));
                 }
                 break;
             case PacketPlayerPosition packet:
@@ -181,6 +179,14 @@ public class Client : MonoBehaviour, IPeer
                 }
                 break;
         }
+    }
+
+    private IEnumerator WaitAndStartGame(PacketGameStart packet)
+    {
+        yield return new WaitForSeconds(1.0f);
+
+        GameManager.Instance.IsGameStarted = true;
+        GameManager.Instance.GameStart(packet);
     }
 
     void Update()

@@ -120,6 +120,7 @@ public class Host : MonoBehaviour
         packet.userNum = _userList.Count;
         for (int i = 0; i < _userList.Count; i++)
         {
+            Debug.Log("Ready한 유저: " + _userList[i]);
             packet.startInfos[i] = new GameStartInfo();
             packet.startInfos[i].uid = _userList[i].UID;
             packet.startInfos[i].id = _userList[i].ID;
