@@ -98,14 +98,7 @@ public class UserToken
             return;
 
         short protocolID = BitConverter.ToInt16(buffer, 2);
-        try
-        {
-            _peer.ProcessMessage(protocolID, buffer);
-        }
-        catch (Exception ex)
-        {
-            MainThread.Instance.Add(() => Debug.LogError(ex.ToString()));
-        }
+        _peer.ProcessMessage(protocolID, buffer);
     }
 
     public void Close()

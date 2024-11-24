@@ -83,6 +83,8 @@ public class PacketAnsUserInfo : Packet
 public class PacketAnsUserList : Packet
 {
     public int userNum;
+    
+    [MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = 20)]
     public UserInfo[] userInfos = new UserInfo[20];
     
     public PacketAnsUserList():base((short)EProtocolID.PacketAnsUserList){}

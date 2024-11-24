@@ -53,6 +53,7 @@ public class UserPeer : IPeer
             case EProtocolID.PacketAnsUserInfo:
                 {
                     PacketAnsUserInfo packet = new PacketAnsUserInfo();
+                    packet.ToPacket(buffer);
                     _id = packet.id;
                     _isHost = packet.host;
                     Debug.Log("CS_ANS_USERINFO " + packet.id + " " + _isHost);
@@ -63,6 +64,7 @@ public class UserPeer : IPeer
             case EProtocolID.PacketReqChangeTeam:
                 {
                     PacketReqChangeTeam packet= new PacketReqChangeTeam();
+                    packet.ToPacket(buffer);
                     _team = packet.team;
                     _host.SendUserList();
                 }
@@ -70,6 +72,7 @@ public class UserPeer : IPeer
             case EProtocolID.PacketReqChangeRole:
                 {
                     PacketReqChangeRole packet = new PacketReqChangeRole();
+                    packet.ToPacket(buffer);
                     _role = packet.role;
                     _host.SendUserList();
                 }
@@ -77,6 +80,7 @@ public class UserPeer : IPeer
             case EProtocolID.PacketGameReady:
                 {
                     PacketGameReady packet = new PacketGameReady();
+                    packet.ToPacket(buffer);
                     _gameReady = packet.IsReady;
                     _host.SendAll(packet);
                 }
@@ -84,6 +88,7 @@ public class UserPeer : IPeer
             case EProtocolID.PacketPlayerPosition:
                 {
                     PacketPlayerPosition packet = new PacketPlayerPosition();
+                    packet.ToPacket(buffer);
                     packet.uid = _uid;
                     _host.SendAll(packet, this);
                 }
@@ -91,6 +96,7 @@ public class UserPeer : IPeer
             case EProtocolID.PacketDashStart:
                 {
                     PacketDashStart packet = new PacketDashStart();
+                    packet.ToPacket(buffer);
                     _host.SendAll(packet);
                 }
                 break;
@@ -101,18 +107,21 @@ public class UserPeer : IPeer
             case EProtocolID.PacketEntityPlayerCollision:
                 {
                     PacketEntityPlayerCollision packet = new PacketEntityPlayerCollision();
+                    packet.ToPacket(buffer);
                     _host.SendAll(packet);
                 }
                 break;
             case EProtocolID.PacketTeamScoreUpdate:
                 {
                     PacketTeamScoreUpdate packet = new PacketTeamScoreUpdate();
+                    packet.ToPacket(buffer);
                     _host.SendAll(packet);
                 }
                 break;
             case EProtocolID.PacketPlayerFire:
                 {
                     PacketPlayerFire packet = new PacketPlayerFire();
+                    packet.ToPacket(buffer);
                     packet.ownerUID = _uid;
                     packet.bulletUID = _bulletUID;
                     _host.SendAll(packet);
@@ -122,18 +131,21 @@ public class UserPeer : IPeer
             case EProtocolID.PacketPlayerDamage:
                 {
                     PacketPlayerDamage packet = new PacketPlayerDamage();
+                    packet.ToPacket(buffer);
                     _host.SendAll(packet);
                 }
                 break;
             case EProtocolID.PacketBulletDestroy:
                 {
                     PacketBulletDestroy packet = new PacketBulletDestroy();
+                    packet.ToPacket(buffer);
                     _host.SendAll(packet, this);
                 }
                 break;
             case EProtocolID.PacketEntityDestroy:
                 {
                     PacketEntityDestroy packet = new PacketEntityDestroy();
+                    packet.ToPacket(buffer);
                     _host.SendAll(packet);
                 }
                 break;
