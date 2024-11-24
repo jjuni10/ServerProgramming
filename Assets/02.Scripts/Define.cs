@@ -128,15 +128,4 @@ public class Define
     public static Dictionary<string, WinCheckData> WinChecks = new Dictionary<string, WinCheckData>();
     public static Dictionary<string, ItemData> Items = new Dictionary<string, ItemData>();
     public static Dictionary<string, BulletData> Bullets = new Dictionary<string, BulletData>();
-
-
-
-
-
-    // public static float START_POSITION_OFFSET;
-    // public static float START_DISTANCE_OFFSET;
-    // public static float FIRE_COOL_TIME;
-    // public static float GAME_GUNNER_POSITION_OFFSET;
-    // public static float GAME_RUNNER_POSITION_OFFSET;
-    // public static float READY_TIME;
 }

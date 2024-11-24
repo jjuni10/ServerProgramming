@@ -59,10 +59,10 @@ public class PlayerSheetData : MonoBehaviour
     public Vector3 Blue2WinCheckStartPos;
     public void WinCheckStartPosition()
     {
-        Red1BasicStartPos = new Vector3(Define.WinChecks["Player1"].StartPosX, Define.WinChecks["Player1"].StartPosY, Define.WinChecks["Player1"].StartPosZ);
-        Red2BasicStartPos = new Vector3(Define.WinChecks["Player2"].StartPosX, Define.WinChecks["Player2"].StartPosY, Define.WinChecks["Player2"].StartPosZ);
-        Blue1BasicStartPos = new Vector3(Define.WinChecks["Player3"].StartPosX, Define.WinChecks["Player3"].StartPosY, Define.WinChecks["Player3"].StartPosZ);
-        Blue2BasicStartPos = new Vector3(Define.WinChecks["Player4"].StartPosX, Define.WinChecks["Player4"].StartPosY, Define.WinChecks["Player4"].StartPosZ);
+        Red1WinCheckStartPos = new Vector3(Define.WinChecks["Player1"].StartPosX, Define.WinChecks["Player1"].StartPosY, Define.WinChecks["Player1"].StartPosZ);
+        Red2WinCheckStartPos = new Vector3(Define.WinChecks["Player2"].StartPosX, Define.WinChecks["Player2"].StartPosY, Define.WinChecks["Player2"].StartPosZ);
+        Blue1WinCheckStartPos = new Vector3(Define.WinChecks["Player3"].StartPosX, Define.WinChecks["Player3"].StartPosY, Define.WinChecks["Player3"].StartPosZ);
+        Blue2WinCheckStartPos = new Vector3(Define.WinChecks["Player4"].StartPosX, Define.WinChecks["Player4"].StartPosY, Define.WinChecks["Player4"].StartPosZ);
     }
     #endregion
 
