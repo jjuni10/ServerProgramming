@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour
 
     public int PlayerCount => _playerDic.Count;
 
-
+    public PlayerSheetData playerSheetData;
 
     private void Awake()
     {
@@ -73,6 +73,8 @@ public class GameManager : MonoBehaviour
         Client = GetComponent<Client>();
         Host = GetComponent<Host>();
         sheetData.GetComponent<PlayerSheetData>();
+
+        playerSheetData = FindObjectOfType<PlayerSheetData>();
 
         SceneSetting();
         SceneManager.sceneLoaded += GameSceneLoaded;
@@ -404,6 +406,19 @@ public class GameManager : MonoBehaviour
         //_coins.Remove(uid);
     }
     #endregion
+
+    public int GetEntityCount(EEntity entity)
+    {
+        switch (entity)
+        {
+            case EEntity.Point:
+                return _coins.Count;
+            case EEntity.Bomb:
+                return _bombs.Count;
+            default:
+                return 0;
+        }
+    }
 
     public void AddEntity(PacketEntitySpawn packet)
     {

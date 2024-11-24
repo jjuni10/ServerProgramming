@@ -104,9 +104,9 @@ public class PlayerSheetData : MonoBehaviour
     #region Item(Boom, Coin)
     public struct ItemInfo
     {
-        int createCoolTime;
-        int getPoint;
-        int maxVal;
+        public int createCoolTime;
+        public int getPoint;
+        public int maxVal;
         public ItemInfo(int time, int point, int Value)
         {
             createCoolTime = time;
