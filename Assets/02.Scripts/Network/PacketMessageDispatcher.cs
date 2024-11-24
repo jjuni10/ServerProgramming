@@ -1,5 +1,4 @@
 using System.Collections.Concurrent;
-using System.ComponentModel;
 using UnityEngine;
 
 public class PacketMessageDispatcher : MonoBehaviour, IMessage
@@ -25,12 +24,17 @@ public class PacketMessageDispatcher : MonoBehaviour, IMessage
         if (_instance == null)
         {
             _instance = this;
-            _messageQueue = new ConcurrentQueue<PacketMessage>();
+            Init();
         }
         else
         {
             Destroy(this);
         }
+    }
+
+    public void Init()
+    {
+        _messageQueue = new ConcurrentQueue<PacketMessage>();
     }
 
 

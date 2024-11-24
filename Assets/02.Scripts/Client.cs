@@ -15,6 +15,8 @@ public class Client : MonoBehaviour, IPeer
 
     public void StartClient(string ip)
     {
+        MainThread.Instance.Init();
+        PacketMessageDispatcher.Instance.Init();
         _client.onConnected += OnConnected;
         _client.Start(ip);
 

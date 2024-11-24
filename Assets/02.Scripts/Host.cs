@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
-using System.Text;
 
 public class Host : MonoBehaviour
 {
@@ -13,6 +12,8 @@ public class Host : MonoBehaviour
 
     public void StartHost()
     {
+        MainThread.Instance.Init();
+        PacketMessageDispatcher.Instance.Init();
         _server.onClientConnected += OnClientConnected;
         _server.Start(10);
         StartCoroutine(Entity_Co());

@@ -1,22 +1,5 @@
-// SC : 서버->클라, CS : 클라->서버, REL : 중계형
 using UnityEngine;
 using MessagePack;
-
-/*public enum EProtocolID
-{
-    SC_REQ_USERINFO,
-    CS_ANS_USERINFO,
-    SC_ANS_USERLIST,
-    CS_REQ_CHANGE_TEAM,
-    REL_GAME_READY,
-    CS_GAME_READY_OK,
-    SC_GAME_START,
-    REL_PLAYER_POSITION,
-    REL_PLAYER_FIRE,
-    REL_PLAYER_DAMAG,
-    REL_BULLET_DISTROY,
-    SC_GAME_END,
-}*/
 
 #region 게임 시작 전
 [MessagePackObject]
