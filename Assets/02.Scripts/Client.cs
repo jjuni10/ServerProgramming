@@ -12,9 +12,6 @@ public class Client : MonoBehaviour, IPeer
     private UserToken _userToken;
     private UIMain _ui;
 
-    private ConcurrentQueue<Packet> queue = new ConcurrentQueue<Packet>();
-
-
     public void StartClient(string ip)
     {
         _client.Connected += OnConnected;
@@ -32,26 +29,13 @@ public class Client : MonoBehaviour, IPeer
     {
         if (connected)
         {
-            Debug.Log("서버에 연결 완료");
+            Debug.Log("[Ciient] 서버에 연결 완료");
             _userToken = token;
             _userToken.SetPeer(this);
         }
     }
 
-    public void ProcessMessage(byte[] buffer, int length)
-    {
-        try
-        {
-            Packet receivedPacket = MessagePackSerializer.Deserialize<Packet>(buffer);
-            queue.Enqueue(receivedPacket);
-        }
-        catch (System.Exception ex)
-        {
-            Debug.LogException(ex);
-        }
-    }
-
-    private void ProcessPacket(Packet receivedPacket)
+    public void OnReceive(Packet receivedPacket)
     {
         switch (receivedPacket)
         {
@@ -195,7 +179,7 @@ public class Client : MonoBehaviour, IPeer
 
         if (receivedPacket is not PacketPlayerPosition)
         {
-            Debug.LogFormat("패킷 받음! Type:{0}", receivedPacket.GetType().Name);
+            Debug.LogFormat("[Client] 패킷 받음! Type:{0}", receivedPacket.GetType().Name);
         }
     }
 
@@ -207,16 +191,6 @@ public class Client : MonoBehaviour, IPeer
         GameManager.Instance.GameStart(packet);
     }
 
-    void Update()
-    {
-        while (queue.Count > 0)
-        {
-            if (queue.TryDequeue(out Packet packet))
-            {
-                ProcessPacket(packet);
-            }
-        }
-    }
     public void Remove()
     {
     }

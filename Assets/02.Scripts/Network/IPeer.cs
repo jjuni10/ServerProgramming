@@ -1,6 +1,6 @@
 public interface IPeer
 {
-    void ProcessMessage(byte[] buffer, int length);
+    void OnReceive(Packet packet);
     void Remove();
     void Send(Packet packet);
 }

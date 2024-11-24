@@ -19,7 +19,7 @@ public class NetServer
         _listener.ClientConnected += OnClientConnected;
         _listener.Start(NetDefine.PORT, backlog);
 
-        Debug.Log("서버 시작");
+        Debug.Log("[NetServer] 서버 시작");
         _run = true;
     }
 
@@ -33,7 +33,7 @@ public class NetServer
         _listener.Stop();
         _listener.ClientConnected -= OnClientConnected;
 
-        Debug.Log("서버 종료");
+        Debug.Log("[NetServer] 서버 종료");
         _run = false;
     }
 

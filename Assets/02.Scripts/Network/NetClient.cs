@@ -27,7 +27,7 @@ public class NetClient
     {
         _serverIP = ip;
         Task.Run(ConnectAsync);
-        Debug.Log("클라이언트 연결 시도");
+        Debug.Log("[NetClient] 클라이언트 연결 시도");
     }
 
     private async Task ConnectAsync()

@@ -52,9 +52,8 @@ public class UserPeer : IPeer
         _userToken.Close();
     }
 
-    public void ProcessMessage(byte[] buffer, int length)
+    public void OnReceive(Packet receivedPacket)
     {
-        Packet receivedPacket = MessagePackSerializer.Deserialize<Packet>(buffer);
         switch (receivedPacket)
         {
             case PacketAnsUserInfo packet:

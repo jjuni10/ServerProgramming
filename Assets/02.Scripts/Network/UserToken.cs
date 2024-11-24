@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.IO;
 using System.Collections.Concurrent;
+using System.Buffers;
 
 public class UserToken
 {
@@ -22,11 +23,12 @@ public class UserToken
     private EState _curState = EState.Idle;
 
     private IPeer _peer;
-    private ConcurrentQueue<byte[]> _sendQueue = new ConcurrentQueue<byte[]>();
+
+    private BlockingCollection<ArraySegment<byte>> _sendQueue = new BlockingCollection<ArraySegment<byte>>();
 
     private CancellationTokenSource cts;
     private byte[] _buffer;
-    private MemoryStream _memoryStream;
+    private MemoryStream _sendStream;
 
     public Socket Socket => _socket;
 
@@ -39,7 +41,7 @@ public class UserToken
     {
         _socket = socket;
 
-        _memoryStream = new MemoryStream();
+        _sendStream = new MemoryStream(NetDefine.BUFFER_SIZE);
         _buffer = new byte[NetDefine.BUFFER_SIZE];
     }
 
@@ -63,10 +65,10 @@ public class UserToken
 
     private async Task ReceiveLoopAsync()
     {
+        byte[] lengthBuffer = new byte[2];
+
         while (true)
         {
-            Debug.Log("ReceiveLoopAsync.while");
-
             if (cts.IsCancellationRequested)
             {
                 Debug.Log("[ReceiveLoopAsync] Cancellation Requested.");
@@ -75,10 +77,27 @@ public class UserToken
 
             try
             {
-                int numReceive = await _socket.ReceiveAsync(new ArraySegment<byte>(_buffer), SocketFlags.None);
+                // 1. 패킷 사이즈 읽기
+                int totalRead = 0;
+                while (totalRead < 2)
+                {
+                    var segment = new ArraySegment<byte>(lengthBuffer, totalRead, lengthBuffer.Length - totalRead);
+                    totalRead += await _socket.ReceiveAsync(segment, SocketFlags.None);
+                }
 
-                byte[] messageBuffer = _buffer.AsSpan().Slice(0, numReceive).ToArray();             
-                PacketMessageDispatcher.Instance.OnMessage(this, messageBuffer);
+                int messageLength = BitConverter.ToUInt16(lengthBuffer);
+
+                // 2. 패킷 사이즈만큼 필요한 바이트 읽어오기
+                totalRead = 0;
+                while (totalRead < messageLength)
+                {
+                    var segment = new ArraySegment<byte>(_buffer, totalRead, messageLength - totalRead);
+                    totalRead += await _socket.ReceiveAsync(segment, SocketFlags.None);
+                }
+
+                var packetSegment = new ArraySegment<byte>(_buffer, 0, messageLength);
+                Packet packet = MessagePackSerializer.Deserialize<Packet>(packetSegment, out _);
+                PacketMessageDispatcher.Instance.OnMessage(this, packet);
             }
             catch (SocketException)
             {
@@ -87,23 +106,21 @@ public class UserToken
             }
             catch (Exception ex)
             {
-                MainThread.Instance.Add(() => Debug.LogError(ex.ToString()));
+                Debug.LogError(ex.ToString());
             }
         }
         Debug.Log("[ReceiveLoopAsync] Break");
     }
-   
-    public void OnMessage(byte[] messageBuffer)
+
+    public void OnMessage(Packet packet)
     {
-        _peer.ProcessMessage(messageBuffer, messageBuffer.Length);
+        _peer.OnReceive(packet);
     }
 
     private async Task SendLoopAsync()
     {
         while (true)
         {
-            Debug.Log("SendLoopAsync.while");
-
             if (cts.IsCancellationRequested)
             {
                 Debug.Log("[SendLoopAsync] Cancellation Requested.");
@@ -111,13 +128,9 @@ public class UserToken
             }
             try
             {
-                while (_sendQueue.Count > 0)
-                {
-                    if (_sendQueue.TryDequeue(out byte[] buffer))
-                    {
-                        await _socket.SendAsync(buffer, SocketFlags.None);
-                    }
-                }
+                ArraySegment<byte> segment = _sendQueue.Take();
+                await _socket.SendAsync(segment, SocketFlags.None);
+                ArrayPool<byte>.Shared.Return(segment.Array);
 
                 if (_curState == EState.ReserveClosing)
                 {
@@ -131,12 +144,9 @@ public class UserToken
                 Debug.LogError("send error!! close socket. " + ex.Message);
                 break;
             }
-            finally
-            {
-                await Task.Delay(1);
-            }
         }
 
+        _sendQueue.Dispose();
         Debug.Log("[SendLoopAsync] Break");
     }
 
@@ -149,7 +159,6 @@ public class UserToken
         }
 
         _curState = EState.Closed;
-        _sendQueue.Clear();
         _socket.Close();
 
         cts.Cancel();
@@ -166,14 +175,38 @@ public class UserToken
 
     public void Send(byte[] data)
     {
-        _sendQueue.Enqueue(data);
+        if (_curState == EState.Connected)
+        {
+            _sendQueue.Add(data);
+        }
     }
 
     public void Send(Packet packet)
     {
+        if (_curState != EState.Connected)
+        {
+            return;
+        }
+
         try
         {
-            Send(MessagePackSerializer.Serialize(packet));
+            const int HeaderSize = 2;
+            _sendStream.SetLength(0);
+            _sendStream.WriteByte(0);
+            _sendStream.WriteByte(0);
+
+            MessagePackSerializer.Serialize(_sendStream, packet);
+            int totalSize = (int)_sendStream.Length;
+            int packetSize = totalSize - HeaderSize;
+
+            byte[] sendStreamBuffer = _sendStream.GetBuffer();
+            BitConverter.TryWriteBytes(sendStreamBuffer.AsSpan(), (ushort)packetSize);
+
+            byte[] sendBuffer = ArrayPool<byte>.Shared.Rent(totalSize);
+            _sendStream.Seek(0, SeekOrigin.Begin);
+            _sendStream.Read(sendBuffer, 0, totalSize);
+
+            _sendQueue.Add(new ArraySegment<byte>(sendBuffer, 0, totalSize));
         }
         catch (Exception ex)
         {
