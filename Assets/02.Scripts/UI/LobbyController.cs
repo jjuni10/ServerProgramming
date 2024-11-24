@@ -76,7 +76,8 @@ public class LobbyController : MonoBehaviour
 
     public Vector3 GetSpawnPoint(int uid)
     {
-        switch (uid)
+        if (GameManager.Instance.sheetData == null) GameManager.Instance.sheetData.Init();
+        switch (uid + 1)
         {
             case 1:
             {

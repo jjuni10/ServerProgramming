@@ -132,7 +132,7 @@ public class Player : MonoBehaviour
     }
     public void FireBullet()
     {
-        if (_curFireCoolTime < Define.FIRE_COOL_TIME)
+        if (_curFireCoolTime < GameManager.Instance.playerSheetData.GunnerFireCoolTime)
         {
             return;
         }
