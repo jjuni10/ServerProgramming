@@ -1,17 +1,10 @@
-using MessagePack;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class Client : MonoBehaviour, IPeer
 {
     private NetClient _client = new NetClient();
     private UserToken _userToken;
     private UIMain _ui;
-
-    private ConcurrentQueue<Packet> queue = new ConcurrentQueue<Packet>();
-
 
     public void StartClient(string ip)
     {
@@ -35,16 +28,11 @@ public class Client : MonoBehaviour, IPeer
 
     public void ProcessMessage(short protocolID, byte[] buffer)
     {
-        Packet receivedPacket = MessagePackSerializer.Deserialize<Packet>(buffer);
-        queue.Enqueue(receivedPacket);
-    }
-
-    private void ProcessPacket(Packet receivedPacket)
-    {
-        switch (receivedPacket)
+        switch ((EProtocolID)protocolID)
         {
-            case PacketReqUserInfo packet:
+            case EProtocolID.PacketReqUserInfo:
                 {
+                    PacketReqUserInfo packet = new PacketReqUserInfo();
                     GameManager.Instance.UserUID = packet.uid;
 
                     PacketAnsUserInfo sendPacket = new PacketAnsUserInfo();
@@ -53,8 +41,9 @@ public class Client : MonoBehaviour, IPeer
                     Send(sendPacket);
                 }
                 break;
-            case PacketAnsUserList packet:
+            case EProtocolID.PacketAnsUserList:
                 {
+                    PacketAnsUserList packet = new PacketAnsUserList();
                     string strRed = string.Empty;
                     string strBlue = string.Empty;
 
@@ -82,8 +71,9 @@ public class Client : MonoBehaviour, IPeer
                     GameManager.Instance.OnPlayerListUpdated(packet);
                 }
                 break;
-            case PacketGameReady packet:
+            case EProtocolID.PacketGameReady:
                 {
+                    PacketGameReady packet = new PacketGameReady();
                     Player player = GameManager.Instance.GetPlayer(packet.uid);
                     if (player == null)
                         return;
@@ -91,16 +81,16 @@ public class Client : MonoBehaviour, IPeer
                     player.ReadyUISetting(packet.uid, packet.IsReady);
                 }
                 break;
-            case PacketGameStart packet:
+            case EProtocolID.PacketGameStart:
                 {
-
-
+                    PacketGameStart packet = new PacketGameStart();
                     GameManager.Instance.IsGameStarted = true;
                     GameManager.Instance.GameStart(packet);
                 }
                 break;
-            case PacketPlayerPosition packet:
+            case EProtocolID.PacketPlayerPosition:
                 {
+                    PacketPlayerPosition packet = new PacketPlayerPosition();
                     Player player = GameManager.Instance.GetPlayer(packet.uid);
                     if (player == null)
                         return;
@@ -108,8 +98,9 @@ public class Client : MonoBehaviour, IPeer
                     player.SetPositionRotation(packet.position, packet.rotation);
                 }
                 break;
-            case PacketDashStart packet:
+            case EProtocolID.PacketDashStart:
                 {
+                    PacketDashStart packet = new PacketDashStart();
                     Player player = GameManager.Instance.GetPlayer(packet.uid);
                     if (player == null)
                         return;
@@ -117,13 +108,15 @@ public class Client : MonoBehaviour, IPeer
                     player.NotLocalDodge();
                 }
                 break;
-            case PacketEntitySpawn packet:
+            case EProtocolID.PacketEntitySpawn:
                 {
+                    PacketEntitySpawn packet = new PacketEntitySpawn();
                     GameManager.Instance.AddEntity(packet);
                 }
                 break;
-            case PacketPlayerFire packet:
+            case EProtocolID.PacketPlayerFire:
                 {
+                    PacketPlayerFire packet = new PacketPlayerFire();
                     Player player = GameManager.Instance.GetPlayer(packet.ownerUID);
                     if (player == null)
                         return;
@@ -131,8 +124,9 @@ public class Client : MonoBehaviour, IPeer
                     player.CreateBullet(packet.position, packet.direction, packet.ownerUID, packet.bulletUID);
                 }
                 break;
-            case PacketPlayerDamage packet:
+            case EProtocolID.PacketPlayerDamage:
                 {
+                    PacketPlayerDamage packet = new PacketPlayerDamage();
                     Player attackPlayer = GameManager.Instance.GetPlayer(packet.attackUID);
                     Player targetPlayer = GameManager.Instance.GetPlayer(packet.targetUID);
                     if (attackPlayer == null || targetPlayer == null)
@@ -144,8 +138,9 @@ public class Client : MonoBehaviour, IPeer
                         attackPlayer.RecivePoint(attackPlayer.GetPoint);    //득점
                 }
                 break;
-            case PacketEntityPlayerCollision packet:
+            case EProtocolID.PacketEntityPlayerCollision:
                 {
+                    PacketEntityPlayerCollision packet = new PacketEntityPlayerCollision();
                     Player player = GameManager.Instance.GetPlayer(packet.playerUID);
                     if (player == null)
                         return;
@@ -156,42 +151,35 @@ public class Client : MonoBehaviour, IPeer
                         player.RecivePoint(player.LosePoint);
                 }
                 break;
-            case PacketTeamScoreUpdate packet:
+            case EProtocolID.PacketTeamScoreUpdate:
                 {
+                    PacketTeamScoreUpdate packet = new PacketTeamScoreUpdate();
                     GameManager.Instance.UpdatePoint(packet.uid, packet.score);
                 }
                 break;
-            case PacketBulletDestroy packet:
+            case EProtocolID.PacketBulletDestroy:
                 {
+                    PacketBulletDestroy packet = new PacketBulletDestroy();
                     GameManager.Instance.RemoveBullet(packet.bulletUID);
                 }
                 break;
-            case PacketEntityDestroy packet:
+            case EProtocolID.PacketEntityDestroy:
                 {
+                    PacketEntityDestroy packet = new PacketEntityDestroy();
                     if (packet.type == EEntity.Point)
                         GameManager.Instance.RemoveCoin(packet.entityUID);
                     else
                         GameManager.Instance.RemoveBomb(packet.entityUID);
                 }
                 break;
-            case PacketGameEnd packet:
+            case EProtocolID.PacketGameEnd:
                 {
+                    PacketGameEnd packet = new PacketGameEnd();
                     GameManager.Instance.IsGameEnd = true;
                     GameManager.Instance.WinTeam = packet.winTeam;
                     Debug.Log($"승리팀은 {packet.winTeam}");
                 }
                 break;
-        }
-    }
-
-    void Update()
-    {
-        while (queue.Count > 0)
-        {
-            if (queue.TryDequeue(out Packet packet))
-            {
-                ProcessPacket(packet);
-            }
         }
     }
     public void Remove()

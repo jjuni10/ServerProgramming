@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System;
-using MessagePack;
 
 public class UserToken
 {
@@ -150,7 +149,7 @@ public class UserToken
 
     public void Send(Packet packet)
     {
-        Send(MessagePackSerializer.Serialize(packet));
+        Send(packet.ToByte());
     }
 
     void StartSend()

@@ -56,9 +56,5 @@ public class MessageResolver
             _curPosition -= size;
             Array.Copy(_messageBuffer, size, _messageBuffer, 0, _curPosition);
         }
-
-        //byte[] clone = new byte[transferred];
-        //Array.Copy(buffer, offset, clone, 0, transferred);
-        //onComplete?.Invoke(clone);
     }
 }
