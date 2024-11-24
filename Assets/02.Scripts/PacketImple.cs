@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Runtime.InteropServices;
 public enum EProtocolID
 {
-    UserInfo,
     PacketUserJoin,
     PacketUserLeave,
     PacketReqUserInfo,
@@ -32,14 +31,14 @@ public enum EProtocolID
 
 #region 게임 시작 전
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
-public class UserInfo : Packet
+public struct UserInfo
 {
     public int uid;
+    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 10)]
     public string id;
     public ETeam team;
     public bool host;
     public ERole role;
-    public UserInfo():base((short)EProtocolID.UserInfo){}
 }
 
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -71,6 +70,7 @@ public class PacketReqUserInfo : Packet
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public class PacketAnsUserInfo : Packet
 {
+    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 10)]
     public string id;
     public bool host;
     
@@ -84,7 +84,7 @@ public class PacketAnsUserList : Packet
 {
     public int userNum;
     
-    [MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = 20)]
+    [MarshalAs(UnmanagedType.ByValArray, SizeConst = 20)]
     public UserInfo[] userInfos = new UserInfo[20];
     
     public PacketAnsUserList():base((short)EProtocolID.PacketAnsUserList){}
@@ -131,10 +131,10 @@ public class PacketGameReadyOk : Packet
 #region 게임 시작
 
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
-public class GameStartInfo : Packet
+public struct GameStartInfo
 {
     public int uid;
-
+    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 10)]
     public string id;
 
     public ETeam team;
@@ -142,8 +142,6 @@ public class GameStartInfo : Packet
     public Vector3 position;
 
     public ERole role;
-    
-    public GameStartInfo():base((short)EProtocolID.GameStartInfo){}
 }
 
 
@@ -151,6 +149,7 @@ public class GameStartInfo : Packet
 public class PacketGameStart : Packet
 {
     public int userNum;
+    [MarshalAs(UnmanagedType.ByValArray, SizeConst = 20)]
     public GameStartInfo[] startInfos = new GameStartInfo[20];
     
     public PacketGameStart():base((short)EProtocolID.PacketGameStart){}
@@ -160,7 +159,6 @@ public class PacketGameStart : Packet
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public class PacketGameOn : Packet
 {
-    
     public PacketGameOn():base((short)EProtocolID.PacketGameOn){}
 }
 #endregion
@@ -170,7 +168,6 @@ public class PacketGameOn : Packet
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public class PacketFeverStart : Packet
 {
-    
     public PacketFeverStart():base((short)EProtocolID.PacketFeverStart){}
 }
 
