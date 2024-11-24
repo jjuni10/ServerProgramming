@@ -21,14 +21,28 @@ public class Host : MonoBehaviour
         GameManager.Instance.Client.StartClient("127.0.0.1");
     }
 
+#if UNITY_EDITOR
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.End))
+        {
+            _server.End();
+        }
+    }
+#endif
+
     private void OnDestroy()
     {
+        foreach (var userPeer in _userList)
+        {
+            userPeer.Close();
+        }
         _server.End();
     }
 
     private void OnClientConnected(UserToken token)
     {
-        Debug.Log("클라이언트 접속");
+        Debug.Log("[Host] 클라이언트 접속");
 
         // 게임이 시작되었거나 유저가 4명 이상이라면 접속을 거부한다.
         if (GameManager.Instance.IsGameStarted || _userList.Count >= 4)

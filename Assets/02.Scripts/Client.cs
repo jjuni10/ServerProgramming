@@ -1,4 +1,5 @@
 using MessagePack;
+using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -16,10 +17,15 @@ public class Client : MonoBehaviour, IPeer
 
     public void StartClient(string ip)
     {
-        _client.onConnected += OnConnected;
-        _client.Start(ip);
+        _client.Connected += OnConnected;
+        _client.Connect(ip);
 
         _ui = FindObjectOfType<UIMain>();
+    }
+
+    void OnDestroy()
+    {
+        _client.Close();
     }
 
     private void OnConnected(bool connected, UserToken token)
@@ -32,7 +38,7 @@ public class Client : MonoBehaviour, IPeer
         }
     }
 
-    public void ProcessMessage(short protocolID, byte[] buffer)
+    public void ProcessMessage(byte[] buffer, int length)
     {
         try
         {

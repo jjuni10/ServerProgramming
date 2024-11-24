@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using System;
 using MessagePack;
+using System.Threading.Tasks;
+using System.Threading;
+using System.IO;
+using System.Collections.Concurrent;
 
 public class UserToken
 {
@@ -17,34 +21,26 @@ public class UserToken
     private Socket _socket;
     private EState _curState = EState.Idle;
 
-    private SocketAsyncEventArgs _receiveEventArgs;
-    private SocketAsyncEventArgs _sendEventArgs;
-    private MessageResolver _messageResolver = new MessageResolver(NetDefine.BUFFER_SIZE * 3);
     private IPeer _peer;
-    private List<byte[]> _sendingList = new List<byte[]>();
-    private IMessage _dispatcher;
+    private ConcurrentQueue<byte[]> _sendQueue = new ConcurrentQueue<byte[]>();
+
+    private CancellationTokenSource cts;
+    private byte[] _buffer;
+    private MemoryStream _memoryStream;
 
     public Socket Socket => _socket;
-    public SocketAsyncEventArgs ReceiveEventArgs => _receiveEventArgs;
-    public SocketAsyncEventArgs SendEventArgs => _sendEventArgs;
+
     public bool IsConnected => _curState == EState.Connected;
     public IPeer Peer => _peer;
 
     public event Action<UserToken> onSessionClosed;
 
-    public UserToken(Socket socket, IMessage dispatcher)
+    public UserToken(Socket socket)
     {
         _socket = socket;
-        _dispatcher = dispatcher;
 
-        _receiveEventArgs = new SocketAsyncEventArgs();
-        _receiveEventArgs.UserToken = this;
-        _receiveEventArgs.Completed += OnReceiveCompleted;
-        _receiveEventArgs.SetBuffer(new byte[NetDefine.BUFFER_SIZE], 0, NetDefine.BUFFER_SIZE);
-
-        _sendEventArgs = new SocketAsyncEventArgs();
-        _sendEventArgs.UserToken = this;
-        _sendEventArgs.Completed += OnSendComplteted;
+        _memoryStream = new MemoryStream();
+        _buffer = new byte[NetDefine.BUFFER_SIZE];
     }
 
     public void OnConnected()
@@ -57,57 +53,93 @@ public class UserToken
         _peer = peer;
     }
 
-    public void StartReceive()
-    {
-        bool pending = false;
-        try
-        {
-            pending = _socket.ReceiveAsync(_receiveEventArgs);
-        }
-        catch
-        {
-        }
 
-        if (!pending)
-        {
-            OnReceiveCompleted(null, _receiveEventArgs);
-        }
+    public void StartReceiveAndSend()
+    {
+        cts = new CancellationTokenSource();
+        Task.Run(ReceiveLoopAsync, cts.Token);
+        Task.Run(SendLoopAsync, cts.Token);
     }
 
-    private void OnReceiveCompleted(object sender, SocketAsyncEventArgs e)
+    private async Task ReceiveLoopAsync()
     {
-        if (e.LastOperation == SocketAsyncOperation.Receive)
+        while (true)
         {
-            _messageResolver.OnReceive(e.Buffer, e.Offset, e.BytesTransferred, OnMessageComplete);
-        }
-        else
-        {
-            _socket.Close();
-        }
+            Debug.Log("ReceiveLoopAsync.while");
 
-        StartReceive();
+            if (cts.IsCancellationRequested)
+            {
+                Debug.Log("[ReceiveLoopAsync] Cancellation Requested.");
+                break;
+            }
+
+            try
+            {
+                int numReceive = await _socket.ReceiveAsync(new ArraySegment<byte>(_buffer), SocketFlags.None);
+
+                byte[] messageBuffer = _buffer.AsSpan().Slice(0, numReceive).ToArray();             
+                PacketMessageDispatcher.Instance.OnMessage(this, messageBuffer);
+            }
+            catch (SocketException)
+            {
+                Close();
+                break;
+            }
+            catch (Exception ex)
+            {
+                MainThread.Instance.Add(() => Debug.LogError(ex.ToString()));
+            }
+        }
+        Debug.Log("[ReceiveLoopAsync] Break");
+    }
+   
+    public void OnMessage(byte[] messageBuffer)
+    {
+        _peer.ProcessMessage(messageBuffer, messageBuffer.Length);
     }
 
-    private void OnMessageComplete(byte[] buffer)
+    private async Task SendLoopAsync()
     {
-        _dispatcher.OnMessage(this, buffer);
+        while (true)
+        {
+            Debug.Log("SendLoopAsync.while");
+
+            if (cts.IsCancellationRequested)
+            {
+                Debug.Log("[SendLoopAsync] Cancellation Requested.");
+                break;
+            }
+            try
+            {
+                while (_sendQueue.Count > 0)
+                {
+                    if (_sendQueue.TryDequeue(out byte[] buffer))
+                    {
+                        await _socket.SendAsync(buffer, SocketFlags.None);
+                    }
+                }
+
+                if (_curState == EState.ReserveClosing)
+                {
+                    _socket.Shutdown(SocketShutdown.Send);
+                    break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Close();
+                Debug.LogError("send error!! close socket. " + ex.Message);
+                break;
+            }
+            finally
+            {
+                await Task.Delay(1);
+            }
+        }
+
+        Debug.Log("[SendLoopAsync] Break");
     }
 
-    public void OnMessage(byte[] buffer)
-    {
-        if (_peer == null)
-            return;
-
-        short protocolID = BitConverter.ToInt16(buffer, 2);
-        try
-        {
-            _peer.ProcessMessage(protocolID, buffer);
-        }
-        catch (Exception ex)
-        {
-            MainThread.Instance.Add(() => Debug.LogError(ex.ToString()));
-        }
-    }
 
     public void Close()
     {
@@ -117,35 +149,24 @@ public class UserToken
         }
 
         _curState = EState.Closed;
+        _sendQueue.Clear();
         _socket.Close();
 
-        _socket = null;
-
-        _sendingList.Clear();
+        cts.Cancel();
+        cts.Dispose();
 
         MainThread.Instance.Add(() =>
         {
             onSessionClosed?.Invoke(this);
         });
-       
-        _peer.Remove();
 
-        Debug.Log("Close");
+        _peer.Remove();
+        Debug.Log("[UserToken] Close");
     }
 
     public void Send(byte[] data)
     {
-        lock (_sendingList)
-        {
-            _sendingList.Add(data);
-
-            if (_sendingList.Count > 1)
-            {
-                return;
-            }
-
-            StartSend();
-        }
+        _sendQueue.Enqueue(data);
     }
 
     public void Send(Packet packet)
@@ -160,58 +181,11 @@ public class UserToken
         }
     }
 
-    void StartSend()
-    {
-        try
-        {
-            _sendEventArgs.SetBuffer(_sendingList[0], 0, _sendingList[0].Length);
-
-            bool pending = _socket.SendAsync(_sendEventArgs);
-            if (!pending)
-            {
-                OnSendComplteted(null, _sendEventArgs);
-            }
-        }
-        catch (Exception e)
-        {
-            if (_socket == null)
-            {
-                Close();
-                return;
-            }
-
-            Debug.LogError("send error!! close socket. " + e.Message);
-        }
-    }
-
-    public void OnSendComplteted(object sender, SocketAsyncEventArgs e)
-    {
-        if (e.BytesTransferred <= 0 || e.SocketError != SocketError.Success)
-        {
-            return;
-        }
-
-        lock (_sendingList)
-        {
-            _sendingList.RemoveAt(0);
-            if (_sendingList.Count > 0)
-            {
-                StartSend();
-                return;
-            }
-
-            if (_curState == EState.ReserveClosing)
-            {
-                _socket.Shutdown(SocketShutdown.Send);
-            }
-        }
-    }
-
     public void Disconnect()
     {
         try
         {
-            if (_sendingList.Count <= 0)
+            if (_sendQueue.Count <= 0)
             {
                 _socket.Shutdown(SocketShutdown.Send);
                 return;
