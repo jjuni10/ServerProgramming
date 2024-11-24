@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections.Generic;
 using System.Net.Sockets;
 using System;
 using MessagePack;
@@ -109,6 +108,8 @@ public class UserToken
                 Debug.LogError(ex.ToString());
             }
         }
+
+        _socket.Close();
         Debug.Log("[ReceiveLoopAsync] Break");
     }
 
@@ -130,6 +131,8 @@ public class UserToken
             {
                 ArraySegment<byte> segment = _sendQueue.Take();
                 await _socket.SendAsync(segment, SocketFlags.None);
+
+                // (중요!) ArrayPool에서 빌린 byte[] 배열을 반납해야함
                 ArrayPool<byte>.Shared.Return(segment.Array);
 
                 if (_curState == EState.ReserveClosing)
@@ -159,7 +162,6 @@ public class UserToken
         }
 
         _curState = EState.Closed;
-        _socket.Close();
 
         cts.Cancel();
         cts.Dispose();
@@ -190,22 +192,30 @@ public class UserToken
 
         try
         {
+            // 스트림의 위치, 길이를 모두 0으로 하고
+            // 길이 필드를 임시로 작성 (값을 0으로)
             const int HeaderSize = 2;
             _sendStream.SetLength(0);
             _sendStream.WriteByte(0);
             _sendStream.WriteByte(0);
 
+            // 패킷을 스트림에 직렬화 및 패킷 길이 계산
             MessagePackSerializer.Serialize(_sendStream, packet);
             int totalSize = (int)_sendStream.Length;
             int packetSize = totalSize - HeaderSize;
 
+            // 스트림의 처음 2바이트를 패킷 길이를 바이트로 변환한 결과로 덮어씌움
             byte[] sendStreamBuffer = _sendStream.GetBuffer();
             BitConverter.TryWriteBytes(sendStreamBuffer.AsSpan(), (ushort)packetSize);
 
+            // ArrayPool에서 전체크기 (길이+패킷)만큼 해당하는 byte[] 배열을 빌려와서
+            // 스트림의 내용을 배열에 복사
             byte[] sendBuffer = ArrayPool<byte>.Shared.Rent(totalSize);
             _sendStream.Seek(0, SeekOrigin.Begin);
             _sendStream.Read(sendBuffer, 0, totalSize);
 
+            // 큐에 보낼 패킷에 해당하는 부분만 추가
+            // (MemoryStream의 buffer 크기가 도중 늘어날 수 있음)
             _sendQueue.Add(new ArraySegment<byte>(sendBuffer, 0, totalSize));
         }
         catch (Exception ex)
