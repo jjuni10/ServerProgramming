@@ -33,6 +33,7 @@ public class UserToken
 
     public bool IsConnected => _curState == EState.Connected;
     public IPeer Peer => _peer;
+    private string peerTag = string.Empty;
 
     public event Action<UserToken> onSessionClosed;
 
@@ -42,6 +43,7 @@ public class UserToken
 
         _sendStream = new MemoryStream(NetDefine.BUFFER_SIZE);
         _buffer = new byte[NetDefine.BUFFER_SIZE];
+        Debug.Log("UserToken 생성 / socket: " + _socket.GetHashCode());
     }
 
     public void OnConnected()
@@ -52,30 +54,40 @@ public class UserToken
     public void SetPeer(IPeer peer)
     {
         _peer = peer;
+        peerTag = peer.GetType().Name + "#" + peer.GetHashCode();
     }
 
 
     public void StartReceiveAndSend()
     {
         cts = new CancellationTokenSource();
-        Task.Run(ReceiveLoopAsync, cts.Token);
-        Task.Run(SendLoopAsync, cts.Token);
+        Task.Run(ReceiveLoopAsync);
+        Task.Run(SendLoopAsync);
     }
 
     private async Task ReceiveLoopAsync()
     {
+        var cancellationToken = cts.Token;
         byte[] lengthBuffer = new byte[2];
-
         while (true)
         {
-            if (cts.IsCancellationRequested)
-            {
-                Debug.Log("[ReceiveLoopAsync] Cancellation Requested.");
-                break;
-            }
-
             try
             {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    Debug.Log("[ReceiveLoopAsync] Cancellation Requested. " + peerTag);
+                    break;
+                }
+
+                /*
+                 * .NET Standard 2.1 기준 Socket.ReceiveAsync에는 CancellationToken이 적용되지 않는 것으로 보임
+                 * 따라서 Socket.Close()할 때 ReceiveAsync에서 발생하는 ObjectDisposedException을 캐치해서
+                 * Socket.ReceiveAsync 작업을 취소시키는 것으로 우회함
+                 * 
+                 * 관련 링크
+                 * https://discussions.unity.com/t/unable-to-cancel-socket-receiveasync-with-cancellationtokensource-in-unity-unity-version-2022-3-26/947022/4
+                 */
+
                 // 1. 패킷 사이즈 읽기
                 int totalRead = 0;
                 while (totalRead < 2)
@@ -98,19 +110,20 @@ public class UserToken
                 Packet packet = MessagePackSerializer.Deserialize<Packet>(packetSegment, out _);
                 PacketMessageDispatcher.Instance.OnMessage(this, packet);
             }
-            catch (SocketException)
+            catch (SocketException e)
             {
+                Debug.LogWarning(peerTag + " " + e.ToString());
                 Close();
-                break;
             }
+            catch (ObjectDisposedException) { }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 Debug.LogError(ex.ToString());
             }
         }
 
-        _socket.Close();
-        Debug.Log("[ReceiveLoopAsync] Break");
+        Debug.Log("[ReceiveLoopAsync] Terminated " + peerTag);
     }
 
     public void OnMessage(Packet packet)
@@ -120,17 +133,19 @@ public class UserToken
 
     private async Task SendLoopAsync()
     {
+        var cancellationToken = cts.Token;
         while (true)
         {
-            if (cts.IsCancellationRequested)
-            {
-                Debug.Log("[SendLoopAsync] Cancellation Requested.");
-                break;
-            }
             try
             {
-                ArraySegment<byte> segment = _sendQueue.Take();
-                await _socket.SendAsync(segment, SocketFlags.None);
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    Debug.Log("[SendLoopAsync] Cancellation Requested. " + peerTag);
+                    break;
+                }
+
+                ArraySegment<byte> segment = _sendQueue.Take(cancellationToken);
+                await _socket.SendAsync(segment, SocketFlags.None, cancellationToken);
 
                 // (중요!) ArrayPool에서 빌린 byte[] 배열을 반납해야함
                 ArrayPool<byte>.Shared.Return(segment.Array);
@@ -141,16 +156,17 @@ public class UserToken
                     break;
                 }
             }
+            catch (ObjectDisposedException) { }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 Close();
-                Debug.LogError("send error!! close socket. " + ex.Message);
-                break;
+                Debug.LogError("send error!! close socket. " + ex.ToString());
             }
         }
 
         _sendQueue.Dispose();
-        Debug.Log("[SendLoopAsync] Break");
+        Debug.Log("[SendLoopAsync] Terminated " + peerTag);
     }
 
 
@@ -163,8 +179,8 @@ public class UserToken
 
         _curState = EState.Closed;
 
+        _socket.Close();
         cts.Cancel();
-        cts.Dispose();
 
         MainThread.Instance.Add(() =>
         {
@@ -208,14 +224,12 @@ public class UserToken
             byte[] sendStreamBuffer = _sendStream.GetBuffer();
             BitConverter.TryWriteBytes(sendStreamBuffer.AsSpan(), (ushort)packetSize);
 
-            // ArrayPool에서 전체크기 (길이+패킷)만큼 해당하는 byte[] 배열을 빌려와서
-            // 스트림의 내용을 배열에 복사
+            // ArrayPool에서 전체크기 (길이+패킷)만큼 해당하는 byte[] 배열을 빌려와서 스트림의 내용을 배열에 복사
             byte[] sendBuffer = ArrayPool<byte>.Shared.Rent(totalSize);
             _sendStream.Seek(0, SeekOrigin.Begin);
             _sendStream.Read(sendBuffer, 0, totalSize);
 
-            // 큐에 보낼 패킷에 해당하는 부분만 추가
-            // (MemoryStream의 buffer 크기가 도중 늘어날 수 있음)
+            // 큐에 보낼 패킷에 해당하는 부분만 추가 (MemoryStream의 buffer 크기가 도중 늘어날 수 있음)
             _sendQueue.Add(new ArraySegment<byte>(sendBuffer, 0, totalSize));
         }
         catch (Exception ex)

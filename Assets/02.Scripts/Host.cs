@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 using System.Text;
+using System.Threading;
 
 public class Host : MonoBehaviour
 {
@@ -26,6 +27,10 @@ public class Host : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.End))
         {
+            foreach (var userPeer in _userList)
+            {
+                userPeer.Close();
+            }
             _server.End();
         }
     }
@@ -38,6 +43,8 @@ public class Host : MonoBehaviour
             userPeer.Close();
         }
         _server.End();
+
+        Thread.Sleep(200);
     }
 
     private void OnClientConnected(UserToken token)
