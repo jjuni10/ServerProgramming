@@ -211,6 +211,7 @@ public class UserToken
             // 스트림의 위치, 길이를 모두 0으로 하고
             // 길이 필드를 임시로 작성 (값을 0으로)
             const int HeaderSize = 2;
+
             _sendStream.SetLength(0);
             _sendStream.WriteByte(0);
             _sendStream.WriteByte(0);
@@ -226,8 +227,7 @@ public class UserToken
 
             // ArrayPool에서 전체크기 (길이+패킷)만큼 해당하는 byte[] 배열을 빌려와서 스트림의 내용을 배열에 복사
             byte[] sendBuffer = ArrayPool<byte>.Shared.Rent(totalSize);
-            _sendStream.Seek(0, SeekOrigin.Begin);
-            _sendStream.Read(sendBuffer, 0, totalSize);
+            Array.Copy(sendStreamBuffer, sendBuffer, totalSize);
 
             // 큐에 보낼 패킷에 해당하는 부분만 추가 (MemoryStream의 buffer 크기가 도중 늘어날 수 있음)
             _sendQueue.Add(new ArraySegment<byte>(sendBuffer, 0, totalSize));

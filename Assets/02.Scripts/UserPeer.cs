@@ -1,4 +1,5 @@
 using MessagePack;
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -141,6 +142,12 @@ public class UserPeer : IPeer
             case PacketEntityDestroy packet:
                 {
                     _host.SendAll(packet);
+                }
+                break;
+            case PacketLatencyTest packet:
+                {
+                    TimeSpan diff = (DateTime.Now - new DateTime(packet.DateTimeTicks));
+                    Debug.LogFormat("Latency: {0}ms", diff.TotalMilliseconds);
                 }
                 break;
         }

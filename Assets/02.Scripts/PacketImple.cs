@@ -274,6 +274,13 @@ public class PacketDashStart : Packet
     [Key(10)]
     public int uid;
 }
+
+[MessagePackObject]
+public class PacketLatencyTest : Packet
+{
+    [Key(10)]
+    public long DateTimeTicks;
+}
 #endregion
 
 #region 게임 끝

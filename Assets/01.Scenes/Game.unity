@@ -5988,9 +5988,9 @@ MonoBehaviour:
     StateText: {fileID: 261409425}
   StartButton: {fileID: 1306237357492407789}
   LobbySpawnPoints: {fileID: 1384218948}
-  RoleButtonHighlightColor: {r: 0, g: 0, b: 0, a: 0}
-  GunnerButtonImage: {fileID: 0}
-  RunnerButtonImage: {fileID: 0}
+  RoleButtonHighlightColor: {r: 1, g: 0.83684003, b: 0, a: 1}
+  GunnerButtonImage: {fileID: 7405332323108887463}
+  RunnerButtonImage: {fileID: 3433799490293120934}
 --- !u!114 &6853417984465281428
 MonoBehaviour:
   m_ObjectHideFlags: 0

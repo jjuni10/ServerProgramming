@@ -47,7 +47,7 @@ namespace MessagePack.Resolvers
 
         static GeneratedResolverGetFormatterHelper()
         {
-            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(31)
+            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(32)
             {
                 { typeof(global::GameStartInfo[]), 0 },
                 { typeof(global::UserInfo[]), 1 },
@@ -69,17 +69,18 @@ namespace MessagePack.Resolvers
                 { typeof(global::PacketGameReady), 17 },
                 { typeof(global::PacketGameReadyOk), 18 },
                 { typeof(global::PacketGameStart), 19 },
-                { typeof(global::PacketPlayerDamage), 20 },
-                { typeof(global::PacketPlayerFire), 21 },
-                { typeof(global::PacketPlayerPosition), 22 },
-                { typeof(global::PacketReqChangeRole), 23 },
-                { typeof(global::PacketReqChangeTeam), 24 },
-                { typeof(global::PacketReqUserInfo), 25 },
-                { typeof(global::PacketTeamScoreUpdate), 26 },
-                { typeof(global::PacketTimerUpdate), 27 },
-                { typeof(global::PacketUserJoin), 28 },
-                { typeof(global::PacketUserLeave), 29 },
-                { typeof(global::UserInfo), 30 },
+                { typeof(global::PacketLatencyTest), 20 },
+                { typeof(global::PacketPlayerDamage), 21 },
+                { typeof(global::PacketPlayerFire), 22 },
+                { typeof(global::PacketPlayerPosition), 23 },
+                { typeof(global::PacketReqChangeRole), 24 },
+                { typeof(global::PacketReqChangeTeam), 25 },
+                { typeof(global::PacketReqUserInfo), 26 },
+                { typeof(global::PacketTeamScoreUpdate), 27 },
+                { typeof(global::PacketTimerUpdate), 28 },
+                { typeof(global::PacketUserJoin), 29 },
+                { typeof(global::PacketUserLeave), 30 },
+                { typeof(global::UserInfo), 31 },
             };
         }
 
@@ -113,17 +114,18 @@ namespace MessagePack.Resolvers
                 case 17: return new MessagePack.Formatters.PacketGameReadyFormatter();
                 case 18: return new MessagePack.Formatters.PacketGameReadyOkFormatter();
                 case 19: return new MessagePack.Formatters.PacketGameStartFormatter();
-                case 20: return new MessagePack.Formatters.PacketPlayerDamageFormatter();
-                case 21: return new MessagePack.Formatters.PacketPlayerFireFormatter();
-                case 22: return new MessagePack.Formatters.PacketPlayerPositionFormatter();
-                case 23: return new MessagePack.Formatters.PacketReqChangeRoleFormatter();
-                case 24: return new MessagePack.Formatters.PacketReqChangeTeamFormatter();
-                case 25: return new MessagePack.Formatters.PacketReqUserInfoFormatter();
-                case 26: return new MessagePack.Formatters.PacketTeamScoreUpdateFormatter();
-                case 27: return new MessagePack.Formatters.PacketTimerUpdateFormatter();
-                case 28: return new MessagePack.Formatters.PacketUserJoinFormatter();
-                case 29: return new MessagePack.Formatters.PacketUserLeaveFormatter();
-                case 30: return new MessagePack.Formatters.UserInfoFormatter();
+                case 20: return new MessagePack.Formatters.PacketLatencyTestFormatter();
+                case 21: return new MessagePack.Formatters.PacketPlayerDamageFormatter();
+                case 22: return new MessagePack.Formatters.PacketPlayerFireFormatter();
+                case 23: return new MessagePack.Formatters.PacketPlayerPositionFormatter();
+                case 24: return new MessagePack.Formatters.PacketReqChangeRoleFormatter();
+                case 25: return new MessagePack.Formatters.PacketReqChangeTeamFormatter();
+                case 26: return new MessagePack.Formatters.PacketReqUserInfoFormatter();
+                case 27: return new MessagePack.Formatters.PacketTeamScoreUpdateFormatter();
+                case 28: return new MessagePack.Formatters.PacketTimerUpdateFormatter();
+                case 29: return new MessagePack.Formatters.PacketUserJoinFormatter();
+                case 30: return new MessagePack.Formatters.PacketUserLeaveFormatter();
+                case 31: return new MessagePack.Formatters.UserInfoFormatter();
                 default: return null;
             }
         }
@@ -226,7 +228,7 @@ namespace MessagePack.Formatters
 
         public PacketFormatter()
         {
-            this.typeToKeyAndJumpMap = new global::System.Collections.Generic.Dictionary<global::System.RuntimeTypeHandle, global::System.Collections.Generic.KeyValuePair<int, int>>(23, global::MessagePack.Internal.RuntimeTypeHandleEqualityComparer.Default)
+            this.typeToKeyAndJumpMap = new global::System.Collections.Generic.Dictionary<global::System.RuntimeTypeHandle, global::System.Collections.Generic.KeyValuePair<int, int>>(24, global::MessagePack.Internal.RuntimeTypeHandleEqualityComparer.Default)
             {
                 { typeof(global::PacketUserJoin).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(0, 0) },
                 { typeof(global::PacketUserLeave).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(1, 1) },
@@ -250,9 +252,10 @@ namespace MessagePack.Formatters
                 { typeof(global::PacketPlayerDamage).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(19, 19) },
                 { typeof(global::PacketBulletDestroy).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(20, 20) },
                 { typeof(global::PacketDashStart).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(21, 21) },
-                { typeof(global::PacketGameEnd).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(22, 22) },
+                { typeof(global::PacketLatencyTest).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(22, 22) },
+                { typeof(global::PacketGameEnd).TypeHandle, new global::System.Collections.Generic.KeyValuePair<int, int>(23, 23) },
             };
-            this.keyToJumpMap = new global::System.Collections.Generic.Dictionary<int, int>(23)
+            this.keyToJumpMap = new global::System.Collections.Generic.Dictionary<int, int>(24)
             {
                 { 0, 0 },
                 { 1, 1 },
@@ -277,6 +280,7 @@ namespace MessagePack.Formatters
                 { 20, 20 },
                 { 21, 21 },
                 { 22, 22 },
+                { 23, 23 },
             };
         }
 
@@ -356,6 +360,9 @@ namespace MessagePack.Formatters
                         global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketDashStart>(options.Resolver).Serialize(ref writer, (global::PacketDashStart)value, options);
                         break;
                     case 22:
+                        global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketLatencyTest>(options.Resolver).Serialize(ref writer, (global::PacketLatencyTest)value, options);
+                        break;
+                    case 23:
                         global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketGameEnd>(options.Resolver).Serialize(ref writer, (global::PacketGameEnd)value, options);
                         break;
                     default:
@@ -458,6 +465,9 @@ namespace MessagePack.Formatters
                     result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketDashStart>(options.Resolver).Deserialize(ref reader, options);
                     break;
                 case 22:
+                    result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketLatencyTest>(options.Resolver).Deserialize(ref reader, options);
+                    break;
+                case 23:
                     result = (global::Packet)global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PacketGameEnd>(options.Resolver).Deserialize(ref reader, options);
                     break;
                 default:
@@ -1232,6 +1242,60 @@ namespace MessagePack.Formatters
                         break;
                     case 11:
                         ____result.startInfos = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::GameStartInfo[]>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    default:
+                        reader.Skip();
+                        break;
+                }
+            }
+
+            reader.Depth--;
+            return ____result;
+        }
+    }
+
+    public sealed class PacketLatencyTestFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::PacketLatencyTest>
+    {
+
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::PacketLatencyTest value, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (value == null)
+            {
+                writer.WriteNil();
+                return;
+            }
+
+            writer.WriteArrayHeader(11);
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.WriteNil();
+            writer.Write(value.DateTimeTicks);
+        }
+
+        public global::PacketLatencyTest Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (reader.TryReadNil())
+            {
+                return null;
+            }
+
+            options.Security.DepthStep(ref reader);
+            var length = reader.ReadArrayHeader();
+            var ____result = new global::PacketLatencyTest();
+
+            for (int i = 0; i < length; i++)
+            {
+                switch (i)
+                {
+                    case 10:
+                        ____result.DateTimeTicks = reader.ReadInt64();
                         break;
                     default:
                         reader.Skip();

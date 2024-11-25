@@ -352,7 +352,8 @@ public class GameManager : MonoBehaviour
             Client.Send(packet);
 
             //Debug.Log("Position 패킷 보냄!");
-            yield return new WaitForSeconds(interval);
+            //yield return new WaitForSeconds(interval);
+            yield return null;
         }
     }
 

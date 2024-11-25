@@ -25,6 +25,19 @@ public class Client : MonoBehaviour, IPeer
         _client.Close();
     }
 
+#if UNITY_EDITOR
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            PacketLatencyTest packet = new PacketLatencyTest();
+            packet.DateTimeTicks = DateTime.Now.Ticks;
+
+            Send(packet);
+        }
+    }
+#endif
+
     private void OnConnected(bool connected, UserToken token)
     {
         if (connected)
