@@ -8,6 +8,7 @@ public class ThirdSceneUIController : MonoBehaviour
 {
     public GameObject RedWinText;
     public GameObject BlueWinText;
+    public GameObject NoneWinText;
 
     private ETeam winTeam;
     void Start()
@@ -22,9 +23,13 @@ public class ThirdSceneUIController : MonoBehaviour
         {
             RedWinText.SetActive(true);
         }
-        else
+        else if (winTeam == ETeam.Blue)
         {
             BlueWinText.SetActive(true);
+        }
+        else
+        {
+            NoneWinText.SetActive(true);
         }
     }
 }

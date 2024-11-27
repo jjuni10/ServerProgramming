@@ -88,6 +88,7 @@ public class SecondSceneUIController : MonoBehaviour
                 {
                     yield return null;
                 }
+                yield return new WaitForSeconds(3f);
                 //Debug.Log("[GameEnd] UI end");
 
                 PacketGameEnd packet = new PacketGameEnd();

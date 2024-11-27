@@ -903,6 +903,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 787361171631222173, guid: 50fd034e84bedab4b96fc16b1ed48d19, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1520578503892521536, guid: 50fd034e84bedab4b96fc16b1ed48d19, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -983,9 +987,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2333229702127323865, guid: 50fd034e84bedab4b96fc16b1ed48d19, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8243706718104738671, guid: 50fd034e84bedab4b96fc16b1ed48d19, type: 3}
       propertyPath: m_Name
-      value: ThirdSceneUI (1)
+      value: ThirdSceneUI
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
