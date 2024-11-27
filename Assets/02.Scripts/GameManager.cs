@@ -351,6 +351,7 @@ public class GameManager : MonoBehaviour
             {
                 _localPlayer = player;
             }
+            SetPlayersPoint();
         }
     }
 
@@ -539,5 +540,13 @@ public class GameManager : MonoBehaviour
     {
         //if (SceneManager.GetActiveScene().name == "Game")
         SceneManager.LoadScene("GamePlay");
+    }
+
+    public void SetPlayersPoint()
+    {
+        foreach (KeyValuePair<int,Player> p in _playerDic)
+        {
+            p.Value.SetPlayerPoint();
+        }
     }
 }

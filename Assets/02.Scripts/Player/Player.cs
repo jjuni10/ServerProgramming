@@ -250,4 +250,9 @@ public class Player : MonoBehaviour
 
         }
     }
+
+    public void SetPlayerPoint()
+    {
+        nickname.text = "<" + ID + ">\n" + P_Value.point + "Point";
+    }
 }
