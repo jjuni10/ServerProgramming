@@ -1,54 +1,91 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
-using System.Threading.Tasks;
 using UnityEngine;
 
 public class Listener
 {
+    private SocketAsyncEventArgs _eventArgs;
+    private Socket _listenSocket;
+
     public event Action<Socket> ClientConnected;
 
-    private Socket listenSocket;
-    private CancellationTokenSource cts;
+    private bool _isListening = false;
+    private object lockObj = new object();
 
-    public void Start(int port, int backlog)
+    public bool Start(int port, int backlog)
     {
-        cts = new CancellationTokenSource();
-        listenSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        _listenSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
         IPEndPoint endPoint = new IPEndPoint(IPAddress.Any, port);
-        listenSocket.Bind(endPoint);
-        listenSocket.Listen(backlog);
 
-        Task.Run(AcceptLoopAsync);
+        try
+        {
+            _listenSocket.Bind(endPoint);
+            _listenSocket.Listen(backlog);
+            _isListening = true;
+
+            _eventArgs = new SocketAsyncEventArgs();
+            _eventArgs.Completed += OnAcceptCompleted;
+            StartAccept();
+
+            Debug.Log("[Listener] Start");
+        }
+        catch (Exception e)
+        {
+            Debug.LogErrorFormat("[Listener] Start Error: {0}", e.Message);
+            _listenSocket.Close();
+            return false;
+        }
+
+        return true;
     }
 
     public void Stop()
     {
-        cts.Cancel();
-        cts.Dispose();
-        listenSocket.Close();
+        _listenSocket.Close();
+
+        lock (lockObj)
+        {
+            _isListening = false;
+        }
     }
 
-    private async Task AcceptLoopAsync()
+    private void StartAccept()
     {
-        while (!cts.IsCancellationRequested)
+        _eventArgs.AcceptSocket = null;
+        bool pending = false;
+        try
         {
-            Debug.Log("[Listener] 새 클라이언트를 기다리는 중..");
-            try
-            {
-                Socket newClient = await listenSocket.AcceptAsync();
-                ClientConnected?.Invoke(newClient);
-            }
-            catch (OperationCanceledException) { }
-            catch (ObjectDisposedException) { }
-            catch (Exception ex)
-            {
-                Debug.LogException(ex);
-            }
+            pending = _listenSocket.AcceptAsync(_eventArgs);
+        }
+        catch { }
+
+        if (!pending)
+        {
+            OnAcceptCompleted(null, _eventArgs);
+        }
+    }
+
+    private void OnAcceptCompleted(object sender, SocketAsyncEventArgs e)
+    {
+        if (e.SocketError == SocketError.Success)
+        {
+            Debug.Log("[Listener] Accept Success");
+            ClientConnected?.Invoke(e.AcceptSocket);
+        }
+        else
+        {
+            Debug.Log("[Listener] Accept Fail");
         }
 
-        MainThread.Instance.Add(() => Debug.Log("<b>Listener Task가 중단됨</b>"));
+        lock (lockObj)
+        {
+            if (!_isListening)
+            {
+                return;
+            }
+        }
+        StartAccept();
     }
 }

@@ -40,9 +40,9 @@ public class NetServer
     private void OnClientConnected(Socket socket)
     {
         UserToken userToken = new UserToken(socket);
-        userToken.onSessionClosed += OnSessionClosed;
+        userToken.SessionClosed += OnSessionClosed;
         userToken.OnConnected();
-        userToken.StartReceiveAndSend();
+        userToken.StartReceive();
 
         MainThread.Instance.Add(() =>
         {

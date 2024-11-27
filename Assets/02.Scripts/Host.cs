@@ -74,7 +74,7 @@ public class Host : MonoBehaviour
         }
 
         _userList.Add(user);
-        token.onSessionClosed += OnClosed;
+        token.SessionClosed += OnClosed;
 
         PacketReqUserInfo packet = new PacketReqUserInfo();
         packet.uid = _curUID;
