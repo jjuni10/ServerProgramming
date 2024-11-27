@@ -35,9 +35,10 @@ public class GameManager : MonoBehaviour
     private bool _startGame;                                // 게임이 시작되었는지 여부
     private float _playTime = 0f;
     private PacketGameStart _gameStartPacket;
+    private PacketGameEnd _scorePacket;
 
     //! 나중에 입력 받아서 플레이타임 결정하기
-    public float InputPlayTime = 270f;
+    private float InputPlayTime = 180f;
 
     private float readyTime;
 
@@ -53,6 +54,7 @@ public class GameManager : MonoBehaviour
     public bool IsGameEnd { get; set; }
 
     public int PlayerCount => _playerDic.Count;
+    public float PlayTime => InputPlayTime;
 
     public PlayerSheetData playerSheetData;
 
@@ -111,7 +113,7 @@ public class GameManager : MonoBehaviour
 
     private void UpdateInput()
     {
-        if (_localPlayer == null)
+        if (_localPlayer == null || UIPlayers3 != null)
             return;
 
         if (Input.GetKey(KeyCode.W))
@@ -238,6 +240,13 @@ public class GameManager : MonoBehaviour
 
         _gameStartPacket = packet;
     }
+    public void GameEnd(PacketGameEnd packet)
+    {
+        //Debug.Log("[GameEnd] GameEnd()");
+        SceneManager.LoadScene("GameResult");
+
+        _scorePacket = packet;
+    }
 
     private void OnGamePlaySceneLoaded(PacketGameStart packet)
     {
@@ -286,6 +295,63 @@ public class GameManager : MonoBehaviour
             }
         }
         StartCoroutine(SendPlayerPosition());
+    }
+
+    private void OnGameResultSceneLoaded(PacketGameStart packet, PacketGameEnd scorePacket)
+    {
+        _playerDic.Clear();
+        Vector3 position;
+        for (int i = 0; i < packet.userNum; i++)
+        {
+            // Resources 폴더에서 캐릭터를 불러온다.
+            var resource = Resources.Load("Player");
+            // 캐릭터를 인스턴스화 한다.
+            var inst = Instantiate(resource) as GameObject;
+            // GameObject에 있는 Player 컴포넌트를 가져온다.
+            var player = inst.GetComponent<Player>();
+            player.name = $"Player {packet.startInfos[i].uid}";
+
+            switch (packet.startInfos[i].uid + 1)
+            {
+                case 1:
+                {
+                    position = sheetData.Red1WinCheckStartPos;
+                    //Debug.Log($"[GameEnd] case 1 position: {position}");
+                }
+                break;
+                case 3:
+                {
+                    position = sheetData.Red2WinCheckStartPos;
+                    //Debug.Log($"[GameEnd] case 2 position: {position}");
+                }
+                break;
+                case 2:
+                {
+                    position = sheetData.Blue1WinCheckStartPos;
+                    //Debug.Log($"[GameEnd] case 3 position: {position}");
+                }
+                break;
+                case 4:
+                {
+                    position = sheetData.Blue2WinCheckStartPos;
+                    //Debug.Log($"[GameEnd] case 4 position: {position}");
+                }
+                break;
+                default:
+                    position = packet.startInfos[i].position;
+                    //Debug.Log($"[GameEnd] position: {position}");
+                break;
+            }
+
+            player.Init(packet.startInfos[i].uid, packet.startInfos[i].id, packet.startInfos[i].team, position, packet.startInfos[i].role);
+            _playerDic.Add(packet.startInfos[i].uid, player);
+            //Debug.Log("GameStart() _playerDic.Add()");
+
+            if (UserUID == packet.startInfos[i].uid)
+            {
+                _localPlayer = player;
+            }
+        }
     }
 
     public void OnPlayerListUpdated(PacketAnsUserList packet)
@@ -458,10 +524,15 @@ public class GameManager : MonoBehaviour
     private void GameSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         SceneSetting();
+        //Debug.Log($"[GameEnd] scene.name: {scene.name}");
 
         if (scene.name == "GamePlay")
         {
             OnGamePlaySceneLoaded(_gameStartPacket);
+        }
+        if (scene.name == "GameResult")
+        {
+            OnGameResultSceneLoaded(_gameStartPacket,_scorePacket);
         }
     }
     public void GameSceneNext()
