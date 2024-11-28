@@ -26,7 +26,7 @@ public class UserToken
 
     private Socket _socket;
     private State _curState = State.Idle;
-    private ReceiveState _recvState = ReceiveState.RecvHeader;
+    private bool _isReceivingHeader = false;
 
     private IPeer _peer;
 
@@ -76,7 +76,7 @@ public class UserToken
     public void OnConnected()
     {
         _curState = State.Connected;
-        _recvState = ReceiveState.RecvHeader;
+        _isReceivingHeader = true;
         _curPosition = 0;
     }
 
@@ -122,55 +122,62 @@ public class UserToken
     // 소켓에서 받아온 패킷 데이터를 처리한다
     private void ResolveMessage(byte[] buffer, int offset, int numTransferred)
     {
-        switch (_recvState)
+        while (true)
         {
-            case ReceiveState.RecvHeader:
+            int newOffset = 0;
+            if (_isReceivingHeader)
+            {
+                Array.Copy(buffer, offset, _dataBuffer, _curPosition, numTransferred);
+                _curPosition += numTransferred;
+
+                if (_curPosition >= NetDefine.HEADER_SIZE)
                 {
-                    Array.Copy(buffer, offset, _dataBuffer, _curPosition, numTransferred);
-                    _curPosition += numTransferred;
-
-                    if (_curPosition >= NetDefine.HEADER_SIZE)
-                    {
-                        // 헤더를 모두 다 받아온경우 메시지를 받는 상태로 전환한다. (-> RecvMessage)
-                        _packetSize = BitConverter.ToUInt16(_dataBuffer, 0);
-                        _curPosition -= NetDefine.HEADER_SIZE;
-                        _recvState = ReceiveState.RecvMessage;
-
-                        if (_curPosition > 0)
-                        {
-                            // 만약 바이트가 더 남아있다면 메시지를 버퍼에서 바로 읽는다.
-                            int remaining = _curPosition;
-                            _curPosition = 0;
-                            ResolveMessage(_dataBuffer, NetDefine.HEADER_SIZE, remaining);
-                        }
-                    }
+                    // 헤더를 모두 다 받아온경우 메시지를 받는 상태로 전환한다. (-> RecvMessage)
+                    _packetSize = BitConverter.ToUInt16(_dataBuffer, 0);
+                    _curPosition -= NetDefine.HEADER_SIZE;
+                    _isReceivingHeader = false;
+                    newOffset = NetDefine.HEADER_SIZE;
                 }
-                break;
-            case ReceiveState.RecvMessage:
+            }
+            else
+            {
+                Array.Copy(buffer, offset, _dataBuffer, _curPosition, numTransferred);
+                _curPosition += numTransferred;
+                if (_curPosition >= _packetSize)
                 {
-                    Array.Copy(buffer, offset, _dataBuffer, _curPosition, numTransferred);
-                    _curPosition += numTransferred;
-                    if (_curPosition >= _packetSize)
-                    {
-                        // 메시지를 모두 다 받아온경우 헤더를 받는 상태로 전환한다. (-> RecvHeader)
-                        var segment = new ArraySegment<byte>(_dataBuffer, 0, _packetSize);
-                        OnMessageCompleted(segment);
+                    // 메시지를 모두 다 받아온경우 헤더를 받는 상태로 전환한다. (-> RecvHeader)
+                    var segment = new ArraySegment<byte>(_dataBuffer, 0, _packetSize);
+                    OnMessageCompleted(segment);
 
-                        _curPosition -= _packetSize;
-                        _recvState = ReceiveState.RecvHeader;
-                        if (_curPosition > 0)
-                        {
-                            // 만약 바이트가 더 남아있다면 헤더를 버퍼에서 바로 읽는다.
-                            int remaining = _curPosition;
-                            _curPosition = 0;
-                            Debug.LogWarning("분할!");
-                            ResolveMessage(_dataBuffer, _packetSize, remaining);
-                        }
-                    }
+                    _curPosition -= _packetSize;
+                    _isReceivingHeader = true;
+                    newOffset = _packetSize;
                 }
+            }
+
+            if (_curPosition > 0)
+            {
+                // 만약 바이트가 더 남아있다면 메시지를 버퍼에서 바로 읽는다.
+                int remaining = _curPosition;
+                _curPosition = 0;
+
+                if (newOffset != NetDefine.HEADER_SIZE)
+                {
+                    Debug.LogWarning("합쳐져서 들어옴!");
+                }
+
+                // ResolveMessage(_dataBuffer, newOffset, remaining);
+                buffer = _dataBuffer;
+                offset = newOffset;
+                numTransferred = remaining;
+            }
+            else
+            {
                 break;
+            }
         }
     }
+
 
     private void OnMessageCompleted(ArraySegment<byte> segment)
     {
