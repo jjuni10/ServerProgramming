@@ -122,6 +122,7 @@ public class UserToken
     // 소켓에서 받아온 패킷 데이터를 처리한다
     private void ResolveMessage(byte[] buffer, int offset, int numTransferred)
     {
+        int combinedCount = 0;
         while (true)
         {
             int newOffset = 0;
@@ -163,7 +164,7 @@ public class UserToken
 
                 if (newOffset != NetDefine.HEADER_SIZE)
                 {
-                    Debug.LogWarning("합쳐져서 들어옴!");
+                    combinedCount++;
                 }
 
                 // ResolveMessage(_dataBuffer, newOffset, remaining);
@@ -175,6 +176,11 @@ public class UserToken
             {
                 break;
             }
+        }
+
+        if (combinedCount > 0)
+        {
+            Debug.LogWarning($"{combinedCount}회 합쳐져서 들어옴!");
         }
     }
 
