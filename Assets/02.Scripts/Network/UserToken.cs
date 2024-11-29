@@ -115,7 +115,6 @@ public class UserToken
 
         ResolveMessage(e.Buffer, e.Offset, e.BytesTransferred);
         StartReceive();
-
     }
 
 
@@ -125,7 +124,9 @@ public class UserToken
         int combinedCount = 0;
         while (true)
         {
+            bool shouldReceiveMore = false;
             int newOffset = 0;
+
             if (_isReceivingHeader)
             {
                 Array.Copy(buffer, offset, _dataBuffer, _curPosition, numTransferred);
@@ -137,7 +138,12 @@ public class UserToken
                     _packetSize = BitConverter.ToUInt16(_dataBuffer, 0);
                     _curPosition -= NetDefine.HEADER_SIZE;
                     _isReceivingHeader = false;
-                    newOffset = NetDefine.HEADER_SIZE;
+                    if (_curPosition > 0)
+                    {
+                        // 만약 바이트가 더 남아있다면 메시지를 버퍼에서 바로 읽는다.
+                        shouldReceiveMore = true;
+                        newOffset = NetDefine.HEADER_SIZE;
+                    }
                 }
             }
             else
@@ -152,22 +158,21 @@ public class UserToken
 
                     _curPosition -= _packetSize;
                     _isReceivingHeader = true;
-                    newOffset = _packetSize;
+                    if (_curPosition > 0)
+                    {
+                        // 만약 바이트가 더 남아있다면 메시지를 버퍼에서 바로 읽는다.
+                        shouldReceiveMore = true;
+                        combinedCount++;
+                        newOffset = _packetSize;
+                    }
                 }
             }
 
-            if (_curPosition > 0)
+            if (shouldReceiveMore)
             {
-                // 만약 바이트가 더 남아있다면 메시지를 버퍼에서 바로 읽는다.
                 int remaining = _curPosition;
                 _curPosition = 0;
 
-                if (newOffset != NetDefine.HEADER_SIZE)
-                {
-                    combinedCount++;
-                }
-
-                // ResolveMessage(_dataBuffer, newOffset, remaining);
                 buffer = _dataBuffer;
                 offset = newOffset;
                 numTransferred = remaining;
@@ -177,13 +182,11 @@ public class UserToken
                 break;
             }
         }
-
         if (combinedCount > 0)
         {
             Debug.LogWarning($"{combinedCount}회 합쳐져서 들어옴!");
         }
     }
-
 
     private void OnMessageCompleted(ArraySegment<byte> segment)
     {
