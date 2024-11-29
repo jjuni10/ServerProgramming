@@ -56,7 +56,10 @@ public class GameManager : MonoBehaviour
     public int PlayerCount => _playerDic.Count;
     public float PlayTime => InputPlayTime;
 
+    public Canvas canvas;
+
     public PlayerSheetData playerSheetData;
+    public int[] points = new int[4];
 
     private void Awake()
     {
@@ -76,6 +79,7 @@ public class GameManager : MonoBehaviour
         Host = GetComponent<Host>();
         sheetData.GetComponent<PlayerSheetData>();
 
+        canvas = FindObjectOfType<Canvas>();
         playerSheetData = FindObjectOfType<PlayerSheetData>();
 
         SceneSetting();
@@ -109,6 +113,8 @@ public class GameManager : MonoBehaviour
             UIPlayers3 = FindObjectOfType<ThirdSceneUIController>(true);
             //if (UIPlayers3 != null) UIPlayers3.gameObject.SetActive(false);
         }
+        
+        canvas = FindObjectOfType<Canvas>();
     }
 
     private void UpdateInput()
@@ -301,6 +307,7 @@ public class GameManager : MonoBehaviour
     {
         _playerDic.Clear();
         Vector3 position;
+        int resultPoint = 0;
         for (int i = 0; i < packet.userNum; i++)
         {
             // Resources 폴더에서 캐릭터를 불러온다.
@@ -316,24 +323,28 @@ public class GameManager : MonoBehaviour
                 case 1:
                 {
                     position = sheetData.Red1WinCheckStartPos;
+                    resultPoint = scorePacket.redTeamScores[0];
                     //Debug.Log($"[GameEnd] case 1 position: {position}");
                 }
                 break;
                 case 3:
                 {
                     position = sheetData.Red2WinCheckStartPos;
+                    resultPoint = scorePacket.redTeamScores[1];
                     //Debug.Log($"[GameEnd] case 2 position: {position}");
                 }
                 break;
                 case 2:
                 {
                     position = sheetData.Blue1WinCheckStartPos;
+                    resultPoint = scorePacket.blueTeamScores[0];
                     //Debug.Log($"[GameEnd] case 3 position: {position}");
                 }
                 break;
                 case 4:
                 {
                     position = sheetData.Blue2WinCheckStartPos;
+                    resultPoint = scorePacket.blueTeamScores[1];
                     //Debug.Log($"[GameEnd] case 4 position: {position}");
                 }
                 break;
@@ -342,8 +353,9 @@ public class GameManager : MonoBehaviour
                     //Debug.Log($"[GameEnd] position: {position}");
                 break;
             }
+            points[packet.startInfos[i].uid] = resultPoint;
 
-            player.Init(packet.startInfos[i].uid, packet.startInfos[i].id, packet.startInfos[i].team, position, packet.startInfos[i].role);
+            player.Init(packet.startInfos[i].uid, packet.startInfos[i].id, packet.startInfos[i].team, position, packet.startInfos[i].role, points[packet.startInfos[i].uid]);
             _playerDic.Add(packet.startInfos[i].uid, player);
             //Debug.Log("GameStart() _playerDic.Add()");
 
@@ -351,7 +363,7 @@ public class GameManager : MonoBehaviour
             {
                 _localPlayer = player;
             }
-            SetPlayersPoint();
+        SetPlayersPoint();
         }
     }
 

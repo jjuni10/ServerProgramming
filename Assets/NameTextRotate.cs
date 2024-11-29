@@ -15,6 +15,7 @@ public class NameTextRotate : MonoBehaviour
     {
         //Ray ray = Camera.main.ScreenPointToRay(ScreenCenter);
         //this.transform.rotation = Quaternion.Euler(ray.direction);
-        transform.forward = Camera.main.transform.forward;
+        
+        //transform.forward = Camera.main.transform.forward;
     }
 }

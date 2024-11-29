@@ -22,7 +22,7 @@ public class ThirdSceneUIController : MonoBehaviour
     void Start()
     {
         winTeam = GameManager.Instance.WinTeam;
-        SetPointHeight();
+        //SetPointHeight();
         SetWinTeamUI();
     }
 
@@ -30,7 +30,7 @@ public class ThirdSceneUIController : MonoBehaviour
     {
         rateValue = (GetPoint(true) - GetPoint(false)) / HeightOffset;
 
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < GameManager.Instance.PlayerCount; i++)
         {
             player[i] = GameManager.Instance.GetPlayer(i);
 
@@ -39,6 +39,7 @@ public class ThirdSceneUIController : MonoBehaviour
             platform[i].transform.localScale += new Vector3(0, pointHeight, 0);
             platform[i].transform.position += new Vector3(0, pointHeight/2, 0);
             player[i].transform.position += new Vector3(0, pointHeight, 0);
+            player[i].SetPlayerPoint();
         }
     }
 

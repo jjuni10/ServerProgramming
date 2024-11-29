@@ -28,7 +28,8 @@ public class Player : MonoBehaviour
     public GameObject BlueGunner;
     public GameObject BlueRunner;
 
-    public TextMesh nickname;
+    public TMP_Text nickname;
+    public GameObject name_;
 
     public bool IsReady = false;
     public int LosePoint = -1;
@@ -41,7 +42,7 @@ public class Player : MonoBehaviour
     protected Vector3 _destPosition;          // 비로컬 캐릭터의 목표 위치 (서버에서 받는 위치)
     private float _curFireCoolTime;         // 현재 공격 쿨타임
 
-    public void Init(int uid, string id, ETeam team, Vector3 position, ERole role)
+    public void Init(int uid, string id, ETeam team, Vector3 position, ERole role, int point = 0)
     {
         P_Com.animator = this.GetComponent<Animator>();
         P_Com.rigidbody = this.GetComponent<Rigidbody>();
@@ -50,6 +51,19 @@ public class Player : MonoBehaviour
         P_Info.ID = id;
         P_Info.TEAM = team;
         P_Info.ROLE = role;
+        P_Value.point = point;
+
+        if (nickname == null) 
+        {
+            // Resources 폴더에서 불러온다.
+            var resource = Resources.Load("nickname");
+            // 인스턴스화 한다.
+            var inst = Instantiate(resource) as GameObject;
+            // GameObject에 있는 컴포넌트를 가져온다.
+            nickname = inst.GetComponent<TMP_Text>();
+            nickname.transform.parent = GameManager.Instance.canvas.transform;
+            nickname.name = $"nickname {id}";
+        }
         nickname.text = id;
         if (GameManager.Instance.UserUID == UID)
             _playerInfos._localPlayer = true;
@@ -77,6 +91,7 @@ public class Player : MonoBehaviour
             else 
                 P_Com.animator.SetBool("isRunning", true);
         }
+        nickname.transform.position = SetNicknamePos();
         _curFireCoolTime += Time.deltaTime;
     }
 
@@ -254,5 +269,11 @@ public class Player : MonoBehaviour
     public void SetPlayerPoint()
     {
         nickname.text = "<" + ID + ">\n" + P_Value.point + "Point";
+    }
+    public Vector3 SetNicknamePos()
+    {
+        Vector3 screenPoint = Camera.main.WorldToScreenPoint(name_.transform.position);
+        //nickname.transform.position = screenPoint + new Vector3(0, 2, 0);
+        return screenPoint;// + new Vector3(0, 270, 0);
     }
 }

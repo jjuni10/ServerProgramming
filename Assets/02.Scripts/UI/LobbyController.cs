@@ -11,7 +11,7 @@ public class LobbyController : MonoBehaviour
     public class PlayerReadyUIGroup
     {
         public Image ProgressImage;
-        public Text RoleText;
+        public TMP_Text RoleText;
         public TMP_Text StateText;
     }
 

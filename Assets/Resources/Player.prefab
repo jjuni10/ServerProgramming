@@ -3454,7 +3454,8 @@ MonoBehaviour:
   RedRunner: {fileID: 3341026085386602658}
   BlueGunner: {fileID: 2023184984448941747}
   BlueRunner: {fileID: 6122321841539808991}
-  nickname: {fileID: 1707865208494469035}
+  nickname: {fileID: 0}
+  name_: {fileID: 6140808460858956384}
   IsReady: 0
   LosePoint: -1
   GetPoint: 1
@@ -6548,7 +6549,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3569349739382934618
 Transform:
   m_ObjectHideFlags: 0
