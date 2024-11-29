@@ -28,17 +28,22 @@ public class ThirdSceneUIController : MonoBehaviour
 
     public void SetPointHeight()
     {
-        rateValue = (GetPoint(true) - GetPoint(false)) / HeightOffset;
+        float maxPoint = GetPoint(true);
+        rateValue = 20 / maxPoint;
 
         for (int i = 0; i < GameManager.Instance.PlayerCount; i++)
         {
             player[i] = GameManager.Instance.GetPlayer(i);
 
             pointHeight = player[i]._currentValue.point * rateValue;
+            //Debug.Log($"[PointTest] pointHeight: {pointHeight}");
 
             platform[i].transform.localScale += new Vector3(0, pointHeight, 0);
             platform[i].transform.position += new Vector3(0, pointHeight/2, 0);
             player[i].transform.position += new Vector3(0, pointHeight, 0);
+            
+            //Debug.Log($"[PointTest] GameManager.Instance.points[i]: {GameManager.Instance.points[i]}");
+            player[i]._currentValue.point = GameManager.Instance.points[i];
             player[i].SetPlayerPoint();
         }
     }
@@ -61,23 +66,35 @@ public class ThirdSceneUIController : MonoBehaviour
 
     public float GetPoint(bool isBig)
     {
-        int result;
+        int result_Max = GameManager.Instance.points[0];
+        int result_Min = GameManager.Instance.points[0];
+        // foreach (var item in GameManager.Instance.points)
+        // {
+        //     if (result_Max < item) result_Max = item;
+        //     else if (item < result_Min) result_Min = item;
+        // }
+        for (int i = 0; i < GameManager.Instance.PlayerCount; i++)
+        {
+            if (result_Max < GameManager.Instance.points[i]) result_Max = GameManager.Instance.points[i];
+            else if (GameManager.Instance.points[i] < result_Min) result_Min = GameManager.Instance.points[i];
+        }
         if (isBig)
         {
-            result = 0;
-            foreach (var item in GameManager.Instance.points)
-            {
-                if (result > item) result = item;
-            }
+            return result_Max;
         }
         else
         {
-            result = 100;
-            foreach (var item in GameManager.Instance.points)
-            {
-                if (result < item) result = item;
-            }
+            return result_Min;
         }
-        return result;
+        
+    }
+    public float GetSumPoint()
+    {
+        float sum = 0;
+        foreach (var item in GameManager.Instance.points)
+        {
+            sum += item;
+        }
+        return sum;
     }
 }

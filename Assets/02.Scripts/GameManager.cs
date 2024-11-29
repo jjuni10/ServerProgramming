@@ -207,32 +207,32 @@ public class GameManager : MonoBehaviour
         if (_playTime >= InputPlayTime)
         {
             // 게임 종료 처리
-            if (Host != null)
-            {
-                PacketGameEnd packet = new PacketGameEnd();
+            // if (Host != null)
+            // {
+            //     PacketGameEnd packet = new PacketGameEnd();
 
-                foreach (var player in _playerDic)
-                {
-                    if (player.Value.Team == ETeam.Red)
-                        redPoint += player.Value._currentValue.point;
-                    else if (player.Value.Team == ETeam.Blue)
-                        bluePoint += player.Value._currentValue.point;
-                }
-                if (redPoint < bluePoint)
-                {
-                    packet.winTeam = ETeam.Blue;
-                }
-                else if (redPoint > bluePoint)
-                {
-                    packet.winTeam = ETeam.Red;
-                }
-                else
-                {
-                    packet.winTeam = ETeam.None;
-                }
-                Host.SendAll(packet);
+            //     foreach (var player in _playerDic)
+            //     {
+            //         if (player.Value.Team == ETeam.Red)
+            //             redPoint += player.Value._currentValue.point;
+            //         else if (player.Value.Team == ETeam.Blue)
+            //             bluePoint += player.Value._currentValue.point;
+            //     }
+            //     if (redPoint < bluePoint)
+            //     {
+            //         packet.winTeam = ETeam.Blue;
+            //     }
+            //     else if (redPoint > bluePoint)
+            //     {
+            //         packet.winTeam = ETeam.Red;
+            //     }
+            //     else
+            //     {
+            //         packet.winTeam = ETeam.None;
+            //     }
+            //     Host.SendAll(packet);
 
-            }
+            // }
             _startGame = false;
         }
         else
@@ -354,6 +354,7 @@ public class GameManager : MonoBehaviour
                 break;
             }
             points[packet.startInfos[i].uid] = resultPoint;
+            //Debug.Log($"[PointTest] resultPoint: {resultPoint}");
 
             player.Init(packet.startInfos[i].uid, packet.startInfos[i].id, packet.startInfos[i].team, position, packet.startInfos[i].role, points[packet.startInfos[i].uid]);
             _playerDic.Add(packet.startInfos[i].uid, player);
@@ -363,8 +364,9 @@ public class GameManager : MonoBehaviour
             {
                 _localPlayer = player;
             }
-        SetPlayersPoint();
+        //SetPlayersPoint();
         }
+        UIPlayers3.SetPointHeight();
     }
 
     public void OnPlayerListUpdated(PacketAnsUserList packet)
