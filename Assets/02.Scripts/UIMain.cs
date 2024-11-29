@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -8,8 +9,8 @@ public class UIMain : MonoBehaviour
     public GameObject startUI;
     public GameObject lobbyUI;
 
-    public InputField inputID;
-    public InputField inputIP;
+    public TMP_InputField inputID;
+    public TMP_InputField inputIP;
     public Button buttonHost;
     public Button buttonClient;
 
