@@ -207,15 +207,11 @@ public class UserToken
         _peer.OnReceive(packet);
     }
 
-    private void StartSend()
+    private void StartSend(ArraySegment<byte> segment)
     {
-        ArraySegment<byte> segment = _sendQueue.Peek();
-
         try
         {
             segment.CopyTo(_sendBuffer, 0);
-
-            ArrayPool<byte>.Shared.Return(segment.Array);
             _sendEventArgs.SetBuffer(_sendBuffer, 0, segment.Count);
 
             bool pending = _socket.SendAsync(_sendEventArgs);
@@ -234,6 +230,10 @@ public class UserToken
 
             Debug.LogErrorFormat("[UserToken] {0}: send error!! close socket. {1}", peerTag, ex.ToString());
         }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(segment.Array);
+        }
     }
 
     private void OnSendCompleted(object sender, SocketAsyncEventArgs e)
@@ -244,15 +244,17 @@ public class UserToken
             return;
         }
 
+
+        bool shouldStartSend = false;
         lock (_sendQueue)
         {
             _sendQueue.Dequeue();
+            shouldStartSend = (_sendQueue.Count > 0);
+        }
 
-            if (_sendQueue.Count > 0)
-            {
-                StartSend();
-                return;
-            }
+        if (shouldStartSend)
+        {
+            StartSend(_sendQueue.Peek());
         }
 
         if (_curState == State.ReserveClosing)
@@ -290,14 +292,16 @@ public class UserToken
         try
         {
             //Debug.LogFormat("[UserToken] {0} Send: {1}", peerTag, packet);
+            bool shouldStartSend = false;
             lock (_sendQueue)
             {
                 _sendQueue.Enqueue(AssemblePacket(packet));
-                if (_sendQueue.Count > 1)
-                {
-                    return;
-                }
-                StartSend();
+                shouldStartSend = (_sendQueue.Count == 1);
+            }
+
+            if (shouldStartSend)
+            {
+                StartSend(_sendQueue.Peek());
             }
         }
         catch (Exception ex)
