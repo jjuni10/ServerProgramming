@@ -160,8 +160,7 @@ public class Player : MonoBehaviour
             bullet = GameManager.Instance.pool.Get(3, position).GetComponent<Bullet>();
         }
 
-        bullet.Init(ownerUID, bulletUID);
-        bullet.spawnPoint = position;
+        bullet.Init(ownerUID, bulletUID, position);
         bullet.transform.forward = direction.normalized;
         bullet.gameObject.SetActive(true);
         //Debug.Log("[bullet] CreateBullet()");

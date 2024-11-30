@@ -4,7 +4,6 @@ public class Bullet : MonoBehaviour
 {
     private int _bulletUID;
     private int _ownerUID;
-    public Vector3 spawnPoint;
     private Rigidbody _rigidbody;
     public int BulletUID => _bulletUID;
 
@@ -58,15 +57,12 @@ public class Bullet : MonoBehaviour
         GameManager.Instance.RemoveBullet(_bulletUID);
     }
 
-    public void Init(int ownerUID, int bulletUID)
+    public void Init(int ownerUID, int bulletUID, Vector3 spawnPoint)
     {
         _bulletUID = bulletUID;
         _ownerUID = ownerUID;
+        transform.position = spawnPoint;
 
         GameManager.Instance.AddBullet(this);
-    }
-    void OnEnable() 
-    {
-        this.transform.position = spawnPoint;
     }
 }
