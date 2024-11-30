@@ -113,7 +113,7 @@ public class PlayerCharacter : MonoBehaviour
         GameObject bullet = Instantiate(bulletResource);
         bullet.transform.position = position;
         bullet.transform.forward = direction.normalized;
-        bullet.GetComponent<Bullet>().Init(ownerUID, bulletUID);
+        bullet.GetComponent<Bullet>().Init(ownerUID, bulletUID, position);
     }
     
 
