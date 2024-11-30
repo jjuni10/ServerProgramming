@@ -54,11 +54,11 @@ public class UserToken
     {
         _socket = socket;
 
-        _sendStream = new MemoryStream(NetDefine.BUFFER_SIZE);
+        _sendStream = new MemoryStream(NetDefine.SOCKET_BUFFER_SIZE);
 
-        _sendBuffer = new byte[NetDefine.BUFFER_SIZE];
-        _recvBuffer = new byte[NetDefine.BUFFER_SIZE];
-        _dataBuffer = new byte[NetDefine.BUFFER_SIZE];
+        _sendBuffer = new byte[NetDefine.SOCKET_BUFFER_SIZE];
+        _recvBuffer = new byte[NetDefine.SOCKET_BUFFER_SIZE];
+        _dataBuffer = new byte[NetDefine.DATA_BUFFER_SIZE];
 
         _receiveEventArgs = new SocketAsyncEventArgs();
         _receiveEventArgs.UserToken = this;
@@ -113,8 +113,15 @@ public class UserToken
             return;
         }
 
-        ResolveMessage(e.Buffer, e.Offset, e.BytesTransferred);
-        StartReceive();
+        try
+        {
+            ResolveMessage(e.Buffer, e.Offset, e.BytesTransferred);
+            StartReceive();
+        }
+        catch (Exception ex)
+        {
+            Debug.LogErrorFormat("Error on OnReceiveCompleted!\n{0}", ex.ToString());
+        }
     }
 
 
