@@ -31,6 +31,7 @@ public class Bullet : MonoBehaviour
         // 플레이어가 아닌 다른 객체에 충돌하면 총알을 제거함
         if (player == null)
         {
+            Debug.Log("부딪힌 놈: " + other.name);
             RemoveBullet();
             return;
         }
