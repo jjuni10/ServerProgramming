@@ -140,6 +140,8 @@ public class Player : MonoBehaviour
         packet.ownerUID = UID;
         packet.position = transform.position + new Vector3(0f, 1.5f, 0f);
         packet.direction = transform.forward;
+
+        Debug.LogFormat("[보냄] 총알 위치: {0}, 방향: {1}, 소유자: {2}, 총알ID: {3}", packet.position, packet.direction, packet.ownerUID, packet.bulletUID);
         GameManager.Instance.Client.Send(packet);
         _curFireCoolTime = 0;
     }
