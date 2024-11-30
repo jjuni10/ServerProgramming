@@ -13,10 +13,10 @@ public class Bullet : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         // 총알을 일정 속도로 전방으로 이동시킴
-        _rigidbody.MovePosition(transform.position + transform.forward * Time.deltaTime * 100f);
+        _rigidbody.MovePosition(transform.position + transform.forward * Time.fixedDeltaTime * 100f);
     }
 
     public void OnTriggerEnter(Collider other)
