@@ -200,7 +200,10 @@ public class UserToken
         try
         {
             Packet packet = MessagePackSerializer.Deserialize<Packet>(segment, out _);
-            //Debug.LogFormat("[UserToken] {0} received: {1}", peerTag, packet);
+            if (packet is not PacketPlayerPosition)
+            {
+                Debug.LogFormat("[UserToken] {0} received: {1}", peerTag, packet);
+            }
             PacketMessageDispatcher.Instance.OnMessage(this, packet);
         }
         catch (Exception ex)
