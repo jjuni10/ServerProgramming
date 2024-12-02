@@ -80,6 +80,10 @@ public class ThirdSceneUIController : MonoBehaviour
         yield return new WaitUntil(() => co_Done);  // co_Done이 true가 될때까지
 
         SetWinTeamUI();
+        for (int p = 0; p < GameManager.Instance.PlayerCount; p++)
+        {
+            player[p].SetAnimVicDef(winTeam);
+        }
 
         yield return null;
     }
@@ -91,10 +95,10 @@ public class ThirdSceneUIController : MonoBehaviour
         pointHeight = player[playerIndex]._currentValue.point * rateValue;
         Vector3 playerPos = player[playerIndex].transform.position;
         Vector3 formSca = platform[playerIndex].transform.localScale;
-        Vector3 formPos = platform[playerIndex].transform.position;
+        //Vector3 formPos = platform[playerIndex].transform.position;
         Vector3 playerPos_ = playerPos + new Vector3(0, pointHeight, 0);
         Vector3 formSca_ = formSca + new Vector3(0, pointHeight, 0);
-        Vector3 formPos_ = formPos + new Vector3(0, pointHeight/2, 0);
+        //Vector3 formPos_ = formPos + new Vector3(0, pointHeight/2, 0);
 
         do
         {
@@ -106,20 +110,20 @@ public class ThirdSceneUIController : MonoBehaviour
 
             Vector3 pP = playerPos_ * lerpSpeed;
             Vector3 fS = formSca_ * lerpSpeed;
-            Vector3 fP = formPos_ * lerpSpeed;
-            pP.x = 0; fS.x = 0; fP.x = 0;
-            pP.z = 0; fS.z = 0; fP.z = 0;
+            //Vector3 fP = formPos_ * lerpSpeed;
+            pP.x = 0; fS.x = 0; //fP.x = 0;
+            pP.z = 0; fS.z = 0; //fP.z = 0;
             
             player[playerIndex].transform.position += pP;
             platform[playerIndex].transform.localScale += fS;
-            platform[playerIndex].transform.position += fP;
+            //platform[playerIndex].transform.position += fP;
 
             yield return null; 
         }while (Vector3.Distance(player[playerIndex].transform.position, playerPos_) > 0.1f);
         
         player[playerIndex].transform.position = playerPos_;
         platform[playerIndex].transform.localScale = formSca_;
-        platform[playerIndex].transform.position = formPos_;
+        //platform[playerIndex].transform.position = formPos_;
         player[playerIndex].SetPlayerPoint();
 
         co_Done = true;

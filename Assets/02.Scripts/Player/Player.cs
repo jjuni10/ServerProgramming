@@ -124,6 +124,23 @@ public class Player : MonoBehaviour
         P_Com.animator.SetTrigger("isDodge");
     }
 
+    public void SetAnimVicDef(ETeam winTeam)
+    {
+        P_Com.animator.SetBool("GameEnd", true);
+        if (winTeam == Team)
+        {
+            P_Com.animator.SetBool("isWin", true);
+        }
+        else if (winTeam == ETeam.None)
+        {
+            return;
+        }
+        else 
+        {
+            P_Com.animator.SetBool("isWin", false);
+        }
+    }
+
     public void SetReady(bool isReady)
     {
         //if (!P_Info._localPlayer) return;
@@ -269,7 +286,7 @@ public class Player : MonoBehaviour
 
     public void SetPlayerPoint()
     {
-        nickname.text = "<" + ID + ">\n" + P_Value.point + "Point";
+        nickname.text = "<" + ID + ">\n" + P_Value.point + " Point";
     }
     public Vector3 SetNicknamePos()
     {
