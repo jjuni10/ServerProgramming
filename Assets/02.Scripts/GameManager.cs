@@ -121,6 +121,8 @@ public class GameManager : MonoBehaviour
     {
         if (_localPlayer == null || UIPlayers3 != null)
             return;
+        if (UIPlayers2 != null && !IsGamePlayOn)
+            return;
 
         if (Input.GetKey(KeyCode.W))
         {
@@ -184,7 +186,7 @@ public class GameManager : MonoBehaviour
         
         //*============================ GamePlay Scene===================
 
-        if (UIPlayers2 == null)
+        if (UIPlayers2 == null && !IsGamePlayOn)
         {
             return;
         }

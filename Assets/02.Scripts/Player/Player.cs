@@ -164,7 +164,7 @@ public class Player : MonoBehaviour
     }
     public void FireBullet()
     {
-        if (_curFireCoolTime < GameManager.Instance.playerSheetData.GunnerFireCoolTime)
+        if (_curFireCoolTime < GameManager.Instance.playerSheetData.GunnerFireCoolTime || !GameManager.Instance.IsGamePlayOn)
         {
             return;
         }

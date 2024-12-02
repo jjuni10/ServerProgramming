@@ -67,9 +67,9 @@ public class SecondSceneUIController : MonoBehaviour
             else    //3~
             {
                 CountNum.text = "게임 시작!!";
+                GameManager.Instance.IsGamePlayOn = true;
                 if (count_Co == null)
                     count_Co = StartCoroutine(PlayTimeCalculate());
-                GameManager.Instance.IsGamePlayOn = true;
             }
             time += Time.deltaTime;
             yield return null;

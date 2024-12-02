@@ -130,6 +130,7 @@ public class PlayerRunner : MonoBehaviour
     private void Dodge()
     {
         if (_player.Role == ERole.Gunner) return;
+        if (GameManager.Instance.UIPlayers2 != null && !GameManager.Instance.IsGamePlayOn) return;
         
         _player._currentState.currentDodgeKeyPress = (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
 
