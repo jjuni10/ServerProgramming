@@ -177,6 +177,7 @@ public class Player : MonoBehaviour
         bullet.spawnPoint = position;
         bullet.transform.forward = direction.normalized;
         bullet.gameObject.SetActive(true);
+        P_Com.animator.SetTrigger("isShoot");
         //Debug.Log("[bullet] CreateBullet()");
     }
     public void RecivePoint(int point)

@@ -6987,16 +6987,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ReadyGroups:
   - ProgressImage: {fileID: 1195614669}
-    RoleText: {fileID: 0}
+    RoleText: {fileID: 1487160769}
     StateText: {fileID: 5391635593796900250}
   - ProgressImage: {fileID: 1967348453}
-    RoleText: {fileID: 0}
+    RoleText: {fileID: 210306587}
     StateText: {fileID: 1794224774}
   - ProgressImage: {fileID: 493000153}
-    RoleText: {fileID: 0}
+    RoleText: {fileID: 2002396024}
     StateText: {fileID: 131003682}
   - ProgressImage: {fileID: 1959178637}
-    RoleText: {fileID: 0}
+    RoleText: {fileID: 89661950}
     StateText: {fileID: 261409425}
   LobbySpawnPoints: {fileID: 1384218948}
 --- !u!114 &6853417984465281428
@@ -7501,8 +7501,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startUI: {fileID: 2886645008936612379}
   lobbyUI: {fileID: 8951109665095076438}
-  inputID: {fileID: 0}
-  inputIP: {fileID: 0}
+  inputID: {fileID: 1403552311}
+  inputIP: {fileID: 1085958235}
   buttonHost: {fileID: 9152834189680093131}
   buttonClient: {fileID: 7371192074033724319}
   textRed: {fileID: 4831833027309973700}
