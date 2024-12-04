@@ -12,9 +12,11 @@ GameObject:
   - component: {fileID: 7302762981254527826}
   - component: {fileID: 708844353457557682}
   - component: {fileID: 3465524155402528865}
+  - component: {fileID: 5903196510702972998}
   - component: {fileID: 626513876251129385}
   - component: {fileID: 4090621536367659986}
   - component: {fileID: 6970421243848379366}
+  - component: {fileID: 6648572154283797833}
   m_Layer: 0
   m_Name: GameCore_DontDestroyOnLoad
   m_TagString: Untagged
@@ -73,6 +75,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f82ef61b131925b40b9f058170f72131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5903196510702972998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3691222799338641090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c816f7bb6e3063c4bbc381f539368286, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Red1BasicStartPos: {x: 0, y: 0, z: 0}
+  Red2BasicStartPos: {x: 0, y: 0, z: 0}
+  Blue1BasicStartPos: {x: 0, y: 0, z: 0}
+  Blue2BasicStartPos: {x: 0, y: 0, z: 0}
+  RedGunnerStartPos: {x: 0, y: 0, z: 0}
+  BlueGunnerStartPos: {x: 0, y: 0, z: 0}
+  RedRunnerStartPos: {x: 0, y: 0, z: 0}
+  BlueRunnerStartPos: {x: 0, y: 0, z: 0}
+  Red1WinCheckStartPos: {x: 0, y: 0, z: 0}
+  Red2WinCheckStartPos: {x: 0, y: 0, z: 0}
+  Blue1WinCheckStartPos: {x: 0, y: 0, z: 0}
+  Blue2WinCheckStartPos: {x: 0, y: 0, z: 0}
+  BasicMoveSpeed: 0
+  BasicReadyPressTime: 0
+  GunnerMoveSpeed: 0
+  GunnerDashSpeed: 0
+  GunnerFireCoolTime: 0
+  RunnerMoveSpeed: 0
+  RunnerDashForce: 0
+  RunnerDashCoolTime: 0
+  BulletScale: {x: 0, y: 0, z: 0}
+  BulletSpeed: 0
+  BulletGetPoint: 0
 --- !u!114 &626513876251129385
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88,6 +125,8 @@ MonoBehaviour:
   LobbyController: {fileID: 0}
   UIPlayers2: {fileID: 0}
   UIPlayers3: {fileID: 0}
+  pool: {fileID: 0}
+  sheetData: {fileID: 5903196510702972998}
   _localPlayer: {fileID: 0}
   InputPlayTime: 270
   redPoint: 0
@@ -114,5 +153,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 074031b319873af44bf636ca94f50f4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6648572154283797833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3691222799338641090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35890d4a049220b4b892f493d5f15bd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

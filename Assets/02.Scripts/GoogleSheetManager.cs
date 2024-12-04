@@ -83,7 +83,6 @@ public class GoogleSheetsManager : MonoBehaviour
                     Define.READY_TIME = float.Parse(originData["READY_TIME"]);
 
                     Debug.Log("Origin data applied to Define constants:");
-                    Debug.Log($"START_POSITION_OFFSET: {Define.START_POSITION_OFFSET}");
                     break;
 
                 case "Gunner":
@@ -197,8 +196,20 @@ public class GoogleSheetsManager : MonoBehaviour
         Debug.Log("All data applied from multiple sheets.");
     }
 
-    private async void Start()
+    private async void Awake()
     {
-        await ApplyData(); // 시작 시 데이터 적용
+        await ApplyData();
+        Debug.Log($"Player1 exists after ApplyData: {Define.Players.ContainsKey("Player1")}");
+        
+        var playerSheetData = FindObjectOfType<PlayerSheetData>();
+        if (playerSheetData != null)
+        {
+            playerSheetData.Init();
+            Debug.Log($"Red1BasicStartPos: {playerSheetData.Red1BasicStartPos}");
+        }
+
+        Debug.Log("All data has been applied and initialized.");
     }
+
+
 }

@@ -80,13 +80,13 @@ public class PlayerRunner : MonoBehaviour
 
             _player._currentValue.moveDirection.y = 0f;
 
-            _player._playerComponents.rigidbody.AddForce(_player._currentValue.moveDirection * _player._checkOption.dodgingForce, ForceMode.VelocityChange);
+            _player._playerComponents.rigidbody.AddForce(_player._currentValue.moveDirection * GameManager.Instance.playerSheetData.RunnerDashForce, ForceMode.VelocityChange);
 
             Invoke("dodgeOut", 0.14f); 
         }
         else if (_player._currentState.isRunning)
         {
-            _player._currentValue.finalSpeed = _player._checkOption.runningSpeed;
+            _player._currentValue.finalSpeed = GameManager.Instance.playerSheetData.RunnerMoveSpeed;//_player._checkOption.runningSpeed;
             _player._currentValue.moveDirection = _player._currentValue.moveDirection * _player._currentValue.finalSpeed;
 
             p_velocity = _player._currentValue.moveDirection;
@@ -129,14 +129,17 @@ public class PlayerRunner : MonoBehaviour
 
     private void Dodge()
     {
+        if (_player.Role == ERole.Gunner) return;
+        if (GameManager.Instance.UIPlayers2 != null && !GameManager.Instance.IsGamePlayOn) return;
+        
         _player._currentState.currentDodgeKeyPress = (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
 
-        if (//_dodgeCool < 3f &&
+        if (_dodgeCool < GameManager.Instance.playerSheetData.RunnerDashCoolTime &&
              _player._currentState.previousDodgeKeyPress && _player._currentState.currentDodgeKeyPress)
         {
             return;
         }
-        else if (//_dodgeCool >= 3f &&
+        else if (_dodgeCool >= GameManager.Instance.playerSheetData.RunnerDashCoolTime &&
             !_player._currentState.previousDodgeKeyPress && _player._currentState.currentDodgeKeyPress
             && _player._currentState._curState != EState.Dash)
         {

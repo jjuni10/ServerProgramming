@@ -9,12 +9,13 @@ public class SecondSceneUIController : MonoBehaviour
     public TMP_Text CountNum;
     private Coroutine count_Co = null;
 
-    public float PlayTime = 180f;  // 게임 플레이 시간 (유저 기준)
-    public float SettingPlayTime = 180f;   // 셋팅된 플레이 시간 (현재 3분)
+    public float PlayTime;   // 게임 플레이 시간 (유저 기준)
+    //public float SettingPlayTime = 18f;   // 셋팅된 플레이 시간 (현재 3분)
     public Image GaugePlayTime; // 플레이 시간 소비 게이지
 
     public TMP_Text PlayerRed1ID;
     public TMP_Text PlayerRed1Point;
+    public int[] points = new int[4];
 
     public TMP_Text PlayerRed2ID;
     public TMP_Text PlayerRed2Point;
@@ -28,6 +29,7 @@ public class SecondSceneUIController : MonoBehaviour
     void Start()
     {
         StartCoroutine(StartCount());
+        PlayTime = GameManager.Instance.PlayTime;
     }
 
     void Update()
@@ -39,7 +41,8 @@ public class SecondSceneUIController : MonoBehaviour
     {
         //if (GameManager.Instance.IsGameEnd || !GameManager.Instance.IsGameStarted) return;
         //todo: "PlayTime" set scroll value
-        GaugePlayTime.fillAmount = PlayTime / SettingPlayTime;
+        //GaugePlayTime.fillAmount = PlayTime / SettingPlayTime;
+        GaugePlayTime.fillAmount = PlayTime / GameManager.Instance.PlayTime;
     }
 
     IEnumerator StartCount()
@@ -64,9 +67,9 @@ public class SecondSceneUIController : MonoBehaviour
             else    //3~
             {
                 CountNum.text = "게임 시작!!";
+                GameManager.Instance.IsGamePlayOn = true;
                 if (count_Co == null)
                     count_Co = StartCoroutine(PlayTimeCalculate());
-                GameManager.Instance.IsGamePlayOn = true;
             }
             time += Time.deltaTime;
             yield return null;
@@ -81,7 +84,28 @@ public class SecondSceneUIController : MonoBehaviour
             {
                 CountNum.gameObject.SetActive(true);
                 CountNum.text = "종료~~";
-                GameManager.Instance.IsGameEnd = false;
+                if (GameManager.Instance.IsGameEnd)
+                {
+                    yield return null;
+                }
+                yield return new WaitForSeconds(3f);
+                //Debug.Log("[GameEnd] UI end");
+
+                PacketGameEnd packet = new PacketGameEnd();
+                packet.redTeamScores[0] = points[0];
+                packet.redTeamScores[1] = points[2];
+                packet.blueTeamScores[0] = points[1];
+                packet.blueTeamScores[1] = points[3];
+
+                if (points[0] + points[2] > points[1] + points[3]) // red > blue
+                    packet.winTeam = ETeam.Red;
+                else if (points[0] + points[2] < points[1] + points[3]) // red < blue
+                    packet.winTeam = ETeam.Blue;
+                else 
+                    packet.winTeam = ETeam.None;
+
+                GameManager.Instance.Client.Send(packet);
+
             }
             PlayTime -= Time.deltaTime;
             yield return null;
@@ -151,6 +175,7 @@ public class SecondSceneUIController : MonoBehaviour
             default:
                 break;
         }
+        points[uid] = point;
 
     }
 }

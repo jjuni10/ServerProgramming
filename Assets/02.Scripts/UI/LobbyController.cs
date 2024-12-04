@@ -11,7 +11,7 @@ public class LobbyController : MonoBehaviour
     public class PlayerReadyUIGroup
     {
         public Image ProgressImage;
-        public Text RoleText;
+        public TMP_Text RoleText;
         public TMP_Text StateText;
     }
 
@@ -76,6 +76,27 @@ public class LobbyController : MonoBehaviour
 
     public Vector3 GetSpawnPoint(int uid)
     {
+        if (GameManager.Instance.sheetData == null) GameManager.Instance.sheetData.Init();
+        switch (uid + 1)
+        {
+            case 1:
+            {
+                return GameManager.Instance.sheetData.Red1BasicStartPos;
+            }
+            case 3:
+            {
+                return GameManager.Instance.sheetData.Red2BasicStartPos;
+            }
+            case 2:
+            {
+                return GameManager.Instance.sheetData.Blue1BasicStartPos;
+            }
+            case 4:
+            {
+                return GameManager.Instance.sheetData.Blue2BasicStartPos;
+            }
+            default: break;
+        }
         return LobbySpawnPoints.GetChild(uid).position;
     }
 }

@@ -128,12 +128,12 @@ public class PlayerGunner : MonoBehaviour
         {
             if (_player._currentState.isDashing)
             {
-                _player._currentValue.finalSpeed = _player._checkOption.dashingSpeed;
+                _player._currentValue.finalSpeed = GameManager.Instance.playerSheetData.GunnerDashSpeed;//_player._checkOption.dashingSpeed;
                 _player._currentState._curState = EState.Dash;
             }
             else if (_player._currentState.isRunning)
             {
-                _player._currentValue.finalSpeed = _player._checkOption.runningSpeed;
+                _player._currentValue.finalSpeed = GameManager.Instance.playerSheetData.GunnerMoveSpeed;//_player._checkOption.runningSpeed;
                 _player._currentState._curState = EState.Run;
             }
             _player._currentValue.moveDirection = _player._currentValue.moveDirection * _player._currentValue.finalSpeed;

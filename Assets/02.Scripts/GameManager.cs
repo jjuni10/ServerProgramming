@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     public ThirdSceneUIController UIPlayers3;
 
     public PoolManager pool;
+    public PlayerSheetData sheetData;
 
     private Client _client;
 
@@ -34,9 +35,10 @@ public class GameManager : MonoBehaviour
     private bool _startGame;                                // 게임이 시작되었는지 여부
     private float _playTime = 0f;
     private PacketGameStart _gameStartPacket;
+    private PacketGameEnd _scorePacket;
 
     //! 나중에 입력 받아서 플레이타임 결정하기
-    public float InputPlayTime = 270f;
+    private float InputPlayTime = 180f;
 
     private float readyTime;
 
@@ -52,8 +54,12 @@ public class GameManager : MonoBehaviour
     public bool IsGameEnd { get; set; }
 
     public int PlayerCount => _playerDic.Count;
+    public float PlayTime => InputPlayTime;
 
+    public Canvas canvas;
 
+    public PlayerSheetData playerSheetData;
+    public int[] points = new int[4];
 
     private void Awake()
     {
@@ -71,6 +77,10 @@ public class GameManager : MonoBehaviour
     {
         Client = GetComponent<Client>();
         Host = GetComponent<Host>();
+        sheetData.GetComponent<PlayerSheetData>();
+
+        canvas = FindObjectOfType<Canvas>();
+        playerSheetData = FindObjectOfType<PlayerSheetData>();
 
         SceneSetting();
         SceneManager.sceneLoaded += GameSceneLoaded;
@@ -103,11 +113,15 @@ public class GameManager : MonoBehaviour
             UIPlayers3 = FindObjectOfType<ThirdSceneUIController>(true);
             //if (UIPlayers3 != null) UIPlayers3.gameObject.SetActive(false);
         }
+        
+        canvas = FindObjectOfType<Canvas>();
     }
 
     private void UpdateInput()
     {
-        if (_localPlayer == null)
+        if (_localPlayer == null || UIPlayers3 != null)
+            return;
+        if (UIPlayers2 != null && !IsGamePlayOn)
             return;
 
         if (Input.GetKey(KeyCode.W))
@@ -172,7 +186,7 @@ public class GameManager : MonoBehaviour
         
         //*============================ GamePlay Scene===================
 
-        if (UIPlayers2 == null)
+        if (UIPlayers2 == null && !IsGamePlayOn)
         {
             return;
         }
@@ -195,32 +209,32 @@ public class GameManager : MonoBehaviour
         if (_playTime >= InputPlayTime)
         {
             // 게임 종료 처리
-            if (Host != null)
-            {
-                PacketGameEnd packet = new PacketGameEnd();
+            // if (Host != null)
+            // {
+            //     PacketGameEnd packet = new PacketGameEnd();
 
-                foreach (var player in _playerDic)
-                {
-                    if (player.Value.Team == ETeam.Red)
-                        redPoint += player.Value._currentValue.point;
-                    else if (player.Value.Team == ETeam.Blue)
-                        bluePoint += player.Value._currentValue.point;
-                }
-                if (redPoint < bluePoint)
-                {
-                    packet.winTeam = ETeam.Blue;
-                }
-                else if (redPoint > bluePoint)
-                {
-                    packet.winTeam = ETeam.Red;
-                }
-                else
-                {
-                    packet.winTeam = ETeam.None;
-                }
-                Host.SendAll(packet);
+            //     foreach (var player in _playerDic)
+            //     {
+            //         if (player.Value.Team == ETeam.Red)
+            //             redPoint += player.Value._currentValue.point;
+            //         else if (player.Value.Team == ETeam.Blue)
+            //             bluePoint += player.Value._currentValue.point;
+            //     }
+            //     if (redPoint < bluePoint)
+            //     {
+            //         packet.winTeam = ETeam.Blue;
+            //     }
+            //     else if (redPoint > bluePoint)
+            //     {
+            //         packet.winTeam = ETeam.Red;
+            //     }
+            //     else
+            //     {
+            //         packet.winTeam = ETeam.None;
+            //     }
+            //     Host.SendAll(packet);
 
-            }
+            // }
             _startGame = false;
         }
         else
@@ -233,6 +247,13 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("GamePlay");
 
         _gameStartPacket = packet;
+    }
+    public void GameEnd(PacketGameEnd packet)
+    {
+        //Debug.Log("[GameEnd] GameEnd()");
+        SceneManager.LoadScene("GameResult");
+
+        _scorePacket = packet;
     }
 
     private void OnGamePlaySceneLoaded(PacketGameStart packet)
@@ -282,6 +303,72 @@ public class GameManager : MonoBehaviour
             }
         }
         StartCoroutine(SendPlayerPosition());
+    }
+
+    private void OnGameResultSceneLoaded(PacketGameStart packet, PacketGameEnd scorePacket)
+    {
+        _playerDic.Clear();
+        Vector3 position;
+        int resultPoint = 0;
+        for (int i = 0; i < packet.userNum; i++)
+        {
+            // Resources 폴더에서 캐릭터를 불러온다.
+            var resource = Resources.Load("Player");
+            // 캐릭터를 인스턴스화 한다.
+            var inst = Instantiate(resource) as GameObject;
+            // GameObject에 있는 Player 컴포넌트를 가져온다.
+            var player = inst.GetComponent<Player>();
+            player.name = $"Player {packet.startInfos[i].uid}";
+
+            switch (packet.startInfos[i].uid + 1)
+            {
+                case 1:
+                {
+                    position = sheetData.Red1WinCheckStartPos;
+                    resultPoint = scorePacket.redTeamScores[0];
+                    //Debug.Log($"[GameEnd] case 1 position: {position}");
+                }
+                break;
+                case 3:
+                {
+                    position = sheetData.Red2WinCheckStartPos;
+                    resultPoint = scorePacket.redTeamScores[1];
+                    //Debug.Log($"[GameEnd] case 2 position: {position}");
+                }
+                break;
+                case 2:
+                {
+                    position = sheetData.Blue1WinCheckStartPos;
+                    resultPoint = scorePacket.blueTeamScores[0];
+                    //Debug.Log($"[GameEnd] case 3 position: {position}");
+                }
+                break;
+                case 4:
+                {
+                    position = sheetData.Blue2WinCheckStartPos;
+                    resultPoint = scorePacket.blueTeamScores[1];
+                    //Debug.Log($"[GameEnd] case 4 position: {position}");
+                }
+                break;
+                default:
+                    position = packet.startInfos[i].position;
+                    //Debug.Log($"[GameEnd] position: {position}");
+                break;
+            }
+            points[packet.startInfos[i].uid] = resultPoint;
+            //Debug.Log($"[PointTest] resultPoint: {resultPoint}");
+
+            player.Init(packet.startInfos[i].uid, packet.startInfos[i].id, packet.startInfos[i].team, position, packet.startInfos[i].role, points[packet.startInfos[i].uid]);
+            _playerDic.Add(packet.startInfos[i].uid, player);
+            //Debug.Log("GameStart() _playerDic.Add()");
+
+            if (UserUID == packet.startInfos[i].uid)
+            {
+                _localPlayer = player;
+            }
+        //SetPlayersPoint();
+        }
+        UIPlayers3.SetPointHeight();
     }
 
     public void OnPlayerListUpdated(PacketAnsUserList packet)
@@ -403,6 +490,19 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
+    public int GetEntityCount(EEntity entity)
+    {
+        switch (entity)
+        {
+            case EEntity.Point:
+                return _coins.Count;
+            case EEntity.Bomb:
+                return _bombs.Count;
+            default:
+                return 0;
+        }
+    }
+
     public void AddEntity(PacketEntitySpawn packet)
     {
         switch (packet.type)
@@ -441,15 +541,28 @@ public class GameManager : MonoBehaviour
     private void GameSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         SceneSetting();
+        //Debug.Log($"[GameEnd] scene.name: {scene.name}");
 
         if (scene.name == "GamePlay")
         {
             OnGamePlaySceneLoaded(_gameStartPacket);
+        }
+        if (scene.name == "GameResult")
+        {
+            OnGameResultSceneLoaded(_gameStartPacket,_scorePacket);
         }
     }
     public void GameSceneNext()
     {
         //if (SceneManager.GetActiveScene().name == "Game")
         SceneManager.LoadScene("GamePlay");
+    }
+
+    public void SetPlayersPoint()
+    {
+        foreach (KeyValuePair<int,Player> p in _playerDic)
+        {
+            p.Value.SetPlayerPoint();
+        }
     }
 }

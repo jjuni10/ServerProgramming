@@ -139,6 +139,11 @@ public class UserPeer : IPeer
                     _host.SendAll(packet);
                 }
                 break;
+            case PacketGameEnd packet : 
+                {
+                    _host.SendAll(packet);
+                }
+                break;
         }
     }
 
