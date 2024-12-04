@@ -144,20 +144,6 @@ public class UIMain : MonoBehaviour
         }
     }
 
-
-    public void StartGame()
-    {
-        //todo: 모두 준비완료일 때 씬 전환(GamePlay) 패킷 만들어서 보내기
-        if (!GameManager.Instance.IsHost) return;
-        if (GameManager.Instance.PlayerCount >= 2)
-        {
-            //host.GameOn();
-            //GameManager.Instance.GameSceneNext();
-
-            _host.ReadyCheckGameStart();
-        }
-    }
-
     // 로비 화면에 팀별 유저 리스트를 표시한다
     public void SetLobbyText(string red, string blue)
     {

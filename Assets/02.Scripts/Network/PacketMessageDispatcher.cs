@@ -1,7 +1,8 @@
+using System;
 using System.Collections.Concurrent;
 using UnityEngine;
 
-public class PacketMessageDispatcher : MonoBehaviour, IMessage
+public class PacketMessageDispatcher : MonoBehaviour
 {
     public static PacketMessageDispatcher Instance => _instance;
     private static PacketMessageDispatcher _instance;
@@ -9,12 +10,12 @@ public class PacketMessageDispatcher : MonoBehaviour, IMessage
     public struct PacketMessage
     {
         public UserToken token;
-        public byte[] buffer;
+        public Packet packet;
 
-        public PacketMessage(UserToken token, byte[] buffer)
+        public PacketMessage(UserToken token, Packet packet)
         {
             this.token = token;
-            this.buffer = buffer;
+            this.packet = packet;
         }
     }
 
@@ -45,12 +46,12 @@ public class PacketMessageDispatcher : MonoBehaviour, IMessage
             if (!msg.token.IsConnected)
                 continue;
 
-            msg.token.OnMessage(msg.buffer);
+            msg.token.OnMessage(msg.packet);
         }
     }
 
-    public void OnMessage(UserToken token, byte[] buffer)
+    public void OnMessage(UserToken token, Packet packet)
     {
-        _messageQueue.Enqueue(new PacketMessage(token, buffer));
+        _messageQueue.Enqueue(new PacketMessage(token, packet));
     }
 }

@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using System.Text;
+using System.Threading;
 
 public class Host : MonoBehaviour
 {
@@ -12,19 +14,42 @@ public class Host : MonoBehaviour
 
     public void StartHost()
     {
-        MainThread.Instance.Init();
-        PacketMessageDispatcher.Instance.Init();
         _server.onClientConnected += OnClientConnected;
         _server.Start(10);
-        StartCoroutine(Entity_Co());
+        //StartCoroutine(Entity_Co());
 
         GameManager.Instance.IsHost = true;
         GameManager.Instance.Client.StartClient("127.0.0.1");
     }
 
+#if UNITY_EDITOR
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.End))
+        {
+            foreach (var userPeer in _userList)
+            {
+                userPeer.Close();
+            }
+            _server.End();
+        }
+    }
+#endif
+
+    private void OnDestroy()
+    {
+        foreach (var userPeer in _userList)
+        {
+            userPeer.Close();
+        }
+        _server.End();
+
+        Thread.Sleep(200);
+    }
+
     private void OnClientConnected(UserToken token)
     {
-        Debug.Log("클라이언트 접속");
+        Debug.Log("[Host] 클라이언트 접속");
 
         // 게임이 시작되었거나 유저가 4명 이상이라면 접속을 거부한다.
         if (GameManager.Instance.IsGameStarted || _userList.Count >= 4)
@@ -49,7 +74,7 @@ public class Host : MonoBehaviour
         }
 
         _userList.Add(user);
-        token.onSessionClosed += OnClosed;
+        token.SessionClosed += OnClosed;
 
         PacketReqUserInfo packet = new PacketReqUserInfo();
         packet.uid = _curUID;
@@ -108,14 +133,15 @@ public class Host : MonoBehaviour
         }
         GameManager.Instance.IsGameStarted = true;
 
-        //Vector3 gunnerPosition = new Vector3(Define.GAME_GUNNER_POSITION_OFFSET, 3, 0);
-        //Vector3 runnerPosition = new Vector3(Define.GAME_RUNNER_POSITION_OFFSET, 3, 0);
+        Vector3 gunnerPosition = new Vector3(Define.GAME_GUNNER_POSITION_OFFSET, 3, 0);
+        Vector3 runnerPosition = new Vector3(Define.GAME_RUNNER_POSITION_OFFSET, 3, 0);
 
         // 게임 시작 정보를 전송한다.
         PacketGameStart packet = new PacketGameStart();
         packet.userNum = _userList.Count;
         for (int i = 0; i < _userList.Count; i++)
         {
+            Debug.Log("Ready한 유저: " + _userList[i]);
             packet.startInfos[i] = new GameStartInfo();
             packet.startInfos[i].uid = _userList[i].UID;
             packet.startInfos[i].id = _userList[i].ID;
@@ -125,11 +151,11 @@ public class Host : MonoBehaviour
             {
                 if (_userList[i].Team == ETeam.Red)
                 {
-                    packet.startInfos[i].position = GameManager.Instance.sheetData.RedGunnerStartPos;//new Vector3(gunnerPosition.x * -1, gunnerPosition.y, gunnerPosition.z);
+                    packet.startInfos[i].position = new Vector3(gunnerPosition.x * -1, gunnerPosition.y, gunnerPosition.z);
                 }
                 else
                 {
-                    packet.startInfos[i].position = GameManager.Instance.sheetData.BlueGunnerStartPos;//new Vector3(gunnerPosition.x, gunnerPosition.y, gunnerPosition.z);
+                    packet.startInfos[i].position = new Vector3(gunnerPosition.x, gunnerPosition.y, gunnerPosition.z);
                 }
                 //packet.startInfos[i].position = gunnerPosition;
             }
@@ -137,11 +163,11 @@ public class Host : MonoBehaviour
             {
                 if (_userList[i].Team == ETeam.Red)
                 {
-                    packet.startInfos[i].position = GameManager.Instance.sheetData.RedRunnerStartPos;//new Vector3(runnerPosition.x * -1, runnerPosition.y, runnerPosition.z);
+                    packet.startInfos[i].position = new Vector3(runnerPosition.x * -1, runnerPosition.y, runnerPosition.z);
                 }
                 else
                 {
-                    packet.startInfos[i].position = GameManager.Instance.sheetData.BlueRunnerStartPos;//new Vector3(runnerPosition.x, runnerPosition.y, runnerPosition.z);
+                    packet.startInfos[i].position = new Vector3(runnerPosition.x, runnerPosition.y, runnerPosition.z);
                 }
                 //packet.startInfos[i].position = runnerPosition;
             }
@@ -152,40 +178,29 @@ public class Host : MonoBehaviour
 
     IEnumerator Entity_Co()
     {
-        float spawnTime_coin = 0f;
-        float spawnTime_boom = 0f;
+        float spawnTime = 0f;
+        float createTime = 5f;
         while (true)
         {
             if (GameManager.Instance.IsGamePlayOn)
             {
-                if (spawnTime_coin >= GameManager.Instance.playerSheetData.Coin.createCoolTime)
+                if (spawnTime >= createTime)
                 {
-                    if(GameManager.Instance.GetEntityCount(EEntity.Point) < GameManager.Instance.playerSheetData.Coin.maxVal)
-                    {
-                        PacketEntitySpawn packetPoint = new PacketEntitySpawn();
-                        packetPoint.type = EEntity.Point;
-                        packetPoint.entityUID = _curCoinUID++;
-                        packetPoint.position = SpreadEntity();
-                        SendAll(packetPoint);
-                        spawnTime_coin = 0f;
-                    }
-                }
+                    PacketEntitySpawn packetPoint = new PacketEntitySpawn();
+                    packetPoint.type = EEntity.Point;
+                    packetPoint.entityUID = _curCoinUID++;
+                    packetPoint.position = SpreadEntity();
+                    SendAll(packetPoint);
 
-                if (spawnTime_boom >= GameManager.Instance.playerSheetData.Boom.createCoolTime)
-                {
-                    if(GameManager.Instance.GetEntityCount(EEntity.Bomb) < GameManager.Instance.playerSheetData.Boom.maxVal)
-                    {
-                        PacketEntitySpawn packetBomb = new PacketEntitySpawn();
-                        packetBomb.type = EEntity.Bomb;
-                        packetBomb.entityUID = _curBombUID++;
-                        packetBomb.position = SpreadEntity();
-                        SendAll(packetBomb);
-                        spawnTime_boom = 0f;
-                    }
-                }
+                    PacketEntitySpawn packetBomb = new PacketEntitySpawn();
+                    packetBomb.type = EEntity.Bomb;
+                    packetBomb.entityUID = _curBombUID++;
+                    packetBomb.position = SpreadEntity();
+                    SendAll(packetBomb);
 
-                spawnTime_coin += Time.deltaTime;
-                spawnTime_boom += Time.deltaTime;
+                    spawnTime = 0f;
+                }
+                spawnTime += Time.deltaTime;
             }
 
             if (GameManager.Instance.IsGameEnd) break;

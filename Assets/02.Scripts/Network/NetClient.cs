@@ -1,27 +1,29 @@
+using System;
 using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
 
 public class NetClient
 {
-    public enum EConnectionState
+    public enum SocketConnectionState
     {
-        DisConnected,
+        Disconnected,
         Connecting,
         Connected,
     }
 
+    public SocketConnectionState ConnectionState => _connectionState;
+
+    public event Action<bool, UserToken> Connected;
+
     private Socket _socket;
     private UserToken _userToken;
-    private EConnectionState _connectionState;
+    private SocketConnectionState _connectionState;
 
-    public EConnectionState ConnectionState => _connectionState;
-
-    public event System.Action<bool, UserToken> onConnected;
-
-    public void Start(string ip)
+    public void Connect(string ip)
     {
-        _connectionState = EConnectionState.Connecting;
+        _connectionState = SocketConnectionState.Connecting;
+
         IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(ip), NetDefine.PORT);
         _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
@@ -33,46 +35,48 @@ public class NetClient
         {
             OnConnected(null, args);
         }
-        Debug.Log("클라이언트 연결 시도");
+
+        Debug.Log("[NetClient]클라이언트 연결 시도");
     }
 
-    public void End()
+
+    public void Close()
     {
-        _connectionState = EConnectionState.DisConnected;
+        _connectionState = SocketConnectionState.Disconnected;
         if (_userToken != null)
         {
+            _userToken.SessionClosed -= OnSessionClosed;
             _userToken.Close();
-        }
-    }
-
-    private void OnConnected(object sender, SocketAsyncEventArgs e)
-    {
-        if (e.SocketError == SocketError.Success)
-        {
-            _connectionState = EConnectionState.Connected;
-            _userToken = new UserToken(_socket, PacketMessageDispatcher.Instance);
-            _userToken.OnConnected();
-            _userToken.onSessionClosed += OnSessionClosed;
-            _userToken.StartReceive();
-
-            MainThread.Instance.Add(() =>
-            {
-                onConnected?.Invoke(true, _userToken);
-            });
-        }
-        else
-        {
-            _connectionState = EConnectionState.DisConnected;
-
-            MainThread.Instance.Add(() =>
-            {
-                onConnected?.Invoke(false, null);
-            });
         }
     }
 
     private void OnSessionClosed(UserToken token)
     {
-        _connectionState = EConnectionState.DisConnected;
+        _connectionState = SocketConnectionState.Disconnected;
+    }
+
+    private void OnConnected(object sender, SocketAsyncEventArgs e)
+    {
+        bool success = false;
+        _userToken = null;
+
+        if (e.SocketError == SocketError.Success)
+        {
+            success = true;
+            _connectionState = SocketConnectionState.Connected;
+            _userToken = new UserToken(_socket);
+            _userToken.OnConnected();
+            _userToken.SessionClosed += OnSessionClosed;
+            _userToken.StartReceive();
+        }
+        else
+        {
+            _connectionState = SocketConnectionState.Disconnected;
+        }
+
+        MainThread.Instance.Add(() =>
+        {
+            Connected?.Invoke(success, _userToken);
+        });
     }
 }

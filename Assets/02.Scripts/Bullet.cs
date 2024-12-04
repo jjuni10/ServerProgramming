@@ -4,7 +4,6 @@ public class Bullet : MonoBehaviour
 {
     private int _bulletUID;
     private int _ownerUID;
-    public Vector3 spawnPoint;
     private Rigidbody _rigidbody;
     public int BulletUID => _bulletUID;
 
@@ -13,10 +12,10 @@ public class Bullet : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         // 총알을 일정 속도로 전방으로 이동시킴
-        _rigidbody.MovePosition(transform.position + transform.forward * Time.deltaTime * GameManager.Instance.playerSheetData.BulletSpeed);
+        _rigidbody.MovePosition(transform.position + transform.forward * Time.fixedDeltaTime * 100f);
     }
 
     public void OnTriggerEnter(Collider other)
@@ -31,6 +30,7 @@ public class Bullet : MonoBehaviour
         // 플레이어가 아닌 다른 객체에 충돌하면 총알을 제거함
         if (player == null)
         {
+            Debug.Log("부딪힌 놈: " + other.name);
             RemoveBullet();
             return;
         }
@@ -57,15 +57,12 @@ public class Bullet : MonoBehaviour
         GameManager.Instance.RemoveBullet(_bulletUID);
     }
 
-    public void Init(int ownerUID, int bulletUID)
+    public void Init(int ownerUID, int bulletUID, Vector3 spawnPoint)
     {
         _bulletUID = bulletUID;
         _ownerUID = ownerUID;
+        transform.position = spawnPoint;
 
         GameManager.Instance.AddBullet(this);
-    }
-    void OnEnable() 
-    {
-        this.transform.position = spawnPoint;
     }
 }

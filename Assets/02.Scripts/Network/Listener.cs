@@ -3,30 +3,38 @@ using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
 
-class Listener
+public class Listener
 {
-    private SocketAsyncEventArgs _acceptArgs;
+    private SocketAsyncEventArgs _eventArgs;
     private Socket _listenSocket;
 
-    public event Action<Socket> onClientConnected;
+    public event Action<Socket> ClientConnected;
+
+    private bool _isListening = false;
+    private object lockObj = new object();
 
     public bool Start(int port, int backlog)
     {
         _listenSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        IPEndPoint endpoint = new IPEndPoint(IPAddress.Any, port);
+
+        IPEndPoint endPoint = new IPEndPoint(IPAddress.Any, port);
 
         try
         {
-            _listenSocket.Bind(endpoint);
+            _listenSocket.Bind(endPoint);
             _listenSocket.Listen(backlog);
+            _isListening = true;
 
-            _acceptArgs = new SocketAsyncEventArgs();
-            _acceptArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnAcceptCompleted);
+            _eventArgs = new SocketAsyncEventArgs();
+            _eventArgs.Completed += OnAcceptCompleted;
             StartAccept();
+
+            Debug.Log("[Listener] Start");
         }
         catch (Exception e)
         {
-            Debug.LogError($"Start Error {e.Message}");
+            Debug.LogErrorFormat("[Listener] Start Error: {0}", e.Message);
+            _listenSocket.Close();
             return false;
         }
 
@@ -36,38 +44,48 @@ class Listener
     public void Stop()
     {
         _listenSocket.Close();
+
+        lock (lockObj)
+        {
+            _isListening = false;
+        }
     }
 
     private void StartAccept()
     {
-        _acceptArgs.AcceptSocket = null;
+        _eventArgs.AcceptSocket = null;
         bool pending = false;
         try
         {
-            pending = _listenSocket.AcceptAsync(_acceptArgs);
+            pending = _listenSocket.AcceptAsync(_eventArgs);
         }
-        catch
-        {
-        }
+        catch { }
 
         if (!pending)
         {
-            OnAcceptCompleted(null, _acceptArgs);
+            OnAcceptCompleted(null, _eventArgs);
         }
     }
-    
-    void OnAcceptCompleted(object sender, SocketAsyncEventArgs e)
+
+    private void OnAcceptCompleted(object sender, SocketAsyncEventArgs e)
     {
         if (e.SocketError == SocketError.Success)
         {
-            Debug.Log("Accept Success");
-            onClientConnected?.Invoke(e.AcceptSocket);
+            Debug.Log("[Listener] Accept Success");
+            ClientConnected?.Invoke(e.AcceptSocket);
         }
         else
         {
-            Debug.Log("Accept Fail");
+            Debug.Log("[Listener] Accept Fail");
         }
 
+        lock (lockObj)
+        {
+            if (!_isListening)
+            {
+                return;
+            }
+        }
         StartAccept();
     }
 }

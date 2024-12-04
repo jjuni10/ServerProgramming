@@ -172,6 +172,8 @@ public class Player : MonoBehaviour
         packet.ownerUID = UID;
         packet.position = transform.position + new Vector3(0f, 1.5f, 0f);
         packet.direction = transform.forward;
+
+        Debug.LogFormat("[보냄] 총알 위치: {0}, 방향: {1}, 소유자: {2}, 총알ID: {3}", packet.position, packet.direction, packet.ownerUID, packet.bulletUID);
         GameManager.Instance.Client.Send(packet);
         _curFireCoolTime = 0;
     }
@@ -190,8 +192,7 @@ public class Player : MonoBehaviour
             bullet = GameManager.Instance.pool.Get(3, position).GetComponent<Bullet>();
         }
 
-        bullet.Init(ownerUID, bulletUID);
-        bullet.spawnPoint = position;
+        bullet.Init(ownerUID, bulletUID, position);
         bullet.transform.forward = direction.normalized;
         bullet.gameObject.SetActive(true);
         P_Com.animator.SetTrigger("isShoot");
@@ -204,7 +205,7 @@ public class Player : MonoBehaviour
         PacketTeamScoreUpdate packet = new PacketTeamScoreUpdate();
         packet.uid = UID;
         packet.score = P_Value.point;
-        //Debug.Log($"player {packet.uid}, {packet.score}");
+        Debug.Log($"player {packet.uid}, {packet.score}");
 
         GameManager.Instance.Client.Send(packet);
     }

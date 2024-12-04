@@ -1,3 +1,5 @@
+using MessagePack;
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -46,9 +48,14 @@ public class UserPeer : IPeer
         _userToken.SetPeer(this);
     }
 
-    public void ProcessMessage(short protocolID, byte[] buffer)
+    public void Close()
     {
-        switch ((EProtocolID)protocolID)
+        _userToken.Close();
+    }
+
+    public void OnReceive(Packet receivedPacket)
+    {
+        switch (receivedPacket)
         {
             case EProtocolID.PacketAnsUserInfo:
                 {
@@ -152,6 +159,12 @@ public class UserPeer : IPeer
             case PacketGameEnd packet : 
                 {
                     _host.SendAll(packet);
+                }
+                break;
+            case PacketLatencyTest packet:
+                {
+                    TimeSpan diff = (DateTime.Now - new DateTime(packet.DateTimeTicks));
+                    Debug.LogFormat("Latency: {0}ms", diff.TotalMilliseconds);
                 }
                 break;
         }

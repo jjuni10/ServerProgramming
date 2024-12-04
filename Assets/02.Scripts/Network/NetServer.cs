@@ -8,7 +8,7 @@ public class NetServer
 
     public event System.Action<UserToken> onClientConnected;
 
-    public bool GetRun(){ return _run; }
+    public bool GetRun() { return _run; }
     public void Start(int backlog)
     {
         if (_run)
@@ -16,10 +16,10 @@ public class NetServer
             return;
         }
 
-        _listener.onClientConnected += OnClientConnected;
+        _listener.ClientConnected += OnClientConnected;
         _listener.Start(NetDefine.PORT, backlog);
 
-        Debug.Log("서버 시작");
+        Debug.Log("[NetServer] 서버 시작");
         _run = true;
     }
 
@@ -31,16 +31,16 @@ public class NetServer
         }
 
         _listener.Stop();
-        _listener.onClientConnected -= OnClientConnected;
+        _listener.ClientConnected -= OnClientConnected;
 
-        Debug.Log("서버 종료");
+        Debug.Log("[NetServer] 서버 종료");
         _run = false;
     }
 
     private void OnClientConnected(Socket socket)
     {
-        UserToken userToken = new UserToken(socket, PacketMessageDispatcher.Instance);
-        userToken.onSessionClosed += OnSessionClosed;
+        UserToken userToken = new UserToken(socket);
+        userToken.SessionClosed += OnSessionClosed;
         userToken.OnConnected();
         userToken.StartReceive();
 
@@ -49,7 +49,7 @@ public class NetServer
             onClientConnected?.Invoke(userToken);
         });
 
-        Debug.Log("클라이언트 접속");
+        Debug.Log("[NetServer] 클라이언트 접속");
     }
 
     private void OnSessionClosed(UserToken token)

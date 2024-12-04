@@ -1,3 +1,8 @@
+using MessagePack;
+using System;
+using System.Collections;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Client : MonoBehaviour, IPeer
@@ -8,27 +13,43 @@ public class Client : MonoBehaviour, IPeer
 
     public void StartClient(string ip)
     {
-        MainThread.Instance.Init();
-        PacketMessageDispatcher.Instance.Init();
-        _client.onConnected += OnConnected;
-        _client.Start(ip);
+        _client.Connected += OnConnected;
+        _client.Connect(ip);
 
         _ui = FindObjectOfType<UIMain>();
     }
+
+    void OnDestroy()
+    {
+        _client.Close();
+    }
+
+#if UNITY_EDITOR
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            PacketLatencyTest packet = new PacketLatencyTest();
+            packet.DateTimeTicks = DateTime.Now.Ticks;
+
+            Send(packet);
+        }
+    }
+#endif
 
     private void OnConnected(bool connected, UserToken token)
     {
         if (connected)
         {
-            Debug.Log("서버에 연결 완료");
+            Debug.Log("[Ciient] 서버에 연결 완료");
             _userToken = token;
             _userToken.SetPeer(this);
         }
     }
 
-    public void ProcessMessage(short protocolID, byte[] buffer)
+    public void OnReceive(Packet receivedPacket)
     {
-        switch ((EProtocolID)protocolID)
+        switch (receivedPacket)
         {
             case EProtocolID.PacketReqUserInfo:
                 {
@@ -81,15 +102,13 @@ public class Client : MonoBehaviour, IPeer
                     if (player == null)
                         return;
 
+                    player.IsReady = packet.IsReady;
                     player.ReadyUISetting(packet.uid, packet.IsReady);
                 }
                 break;
             case EProtocolID.PacketGameStart:
                 {
-                    PacketGameStart packet = new PacketGameStart();
-                    packet.ToPacket(buffer);
-                    GameManager.Instance.IsGameStarted = true;
-                    GameManager.Instance.GameStart(packet);
+                    StartCoroutine(WaitAndStartGame(packet));
                 }
                 break;
             case EProtocolID.PacketPlayerPosition:
@@ -129,6 +148,7 @@ public class Client : MonoBehaviour, IPeer
                     if (player == null)
                         return;
 
+                    Debug.LogFormat("[받음] 총알 위치: {0}, 방향: {1}, 소유자: {2}, 총알ID: {3}", packet.position, packet.direction, packet.ownerUID, packet.bulletUID);
                     player.CreateBullet(packet.position, packet.direction, packet.ownerUID, packet.bulletUID);
                 }
                 break;
@@ -195,7 +215,21 @@ public class Client : MonoBehaviour, IPeer
                 }
                 break;
         }
+
+        //if (receivedPacket is not PacketPlayerPosition)
+        //{
+        //    Debug.LogFormat("[Client] 패킷 받음! Type:{0}", receivedPacket.GetType().Name);
+        //}
     }
+
+    private IEnumerator WaitAndStartGame(PacketGameStart packet)
+    {
+        yield return new WaitForSeconds(1.0f);
+
+        GameManager.Instance.IsGameStarted = true;
+        GameManager.Instance.GameStart(packet);
+    }
+
     public void Remove()
     {
     }

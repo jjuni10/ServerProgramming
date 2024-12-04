@@ -83,11 +83,9 @@ public class PacketAnsUserInfo : Packet
 public class PacketAnsUserList : Packet
 {
     public int userNum;
-    
-    [MarshalAs(UnmanagedType.ByValArray, SizeConst = 20)]
-    public UserInfo[] userInfos = new UserInfo[20];
-    
-    public PacketAnsUserList():base((short)EProtocolID.PacketAnsUserList){}
+
+    [Key(11)]
+    public UserInfo[] userInfos = new UserInfo[4];
 }
 
 
@@ -149,10 +147,9 @@ public struct GameStartInfo
 public class PacketGameStart : Packet
 {
     public int userNum;
-    [MarshalAs(UnmanagedType.ByValArray, SizeConst = 20)]
-    public GameStartInfo[] startInfos = new GameStartInfo[20];
-    
-    public PacketGameStart():base((short)EProtocolID.PacketGameStart){}
+
+    [Key(11)]
+    public GameStartInfo[] startInfos = new GameStartInfo[4];
 }
 
 
@@ -275,6 +272,13 @@ public class PacketDashStart : Packet
     public int uid;
     
     public PacketDashStart():base((short)EProtocolID.PacketDashStart){}
+}
+
+[MessagePackObject]
+public class PacketLatencyTest : Packet
+{
+    [Key(10)]
+    public long DateTimeTicks;
 }
 #endregion
 

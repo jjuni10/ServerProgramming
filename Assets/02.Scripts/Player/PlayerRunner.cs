@@ -23,10 +23,6 @@ public class PlayerRunner : MonoBehaviour
         Rotate();
         Dodge();
     }
-    // void FixedUpdate() 
-    // {
-    //     if (!_player.IsLocalPlayer) return;
-    // }
 
     public void MoveInput(KeyCode keyCode)
     {
