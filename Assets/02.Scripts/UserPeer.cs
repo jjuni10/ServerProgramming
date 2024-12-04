@@ -57,10 +57,8 @@ public class UserPeer : IPeer
     {
         switch (receivedPacket)
         {
-            case EProtocolID.PacketAnsUserInfo:
+            case PacketAnsUserInfo packet:
                 {
-                    PacketAnsUserInfo packet = new PacketAnsUserInfo();
-                    packet.ToPacket(buffer);
                     _id = packet.id;
                     _isHost = packet.host;
                     Debug.Log("CS_ANS_USERINFO " + packet.id + " " + _isHost);
@@ -68,95 +66,80 @@ public class UserPeer : IPeer
                     _host.SendUserList();
                 }
                 break;
-            case EProtocolID.PacketReqChangeTeam:
+            case PacketReqChangeTeam packet:
                 {
-                    PacketReqChangeTeam packet= new PacketReqChangeTeam();
-                    packet.ToPacket(buffer);
                     _team = packet.team;
                     _host.SendUserList();
                 }
                 break;
-            case EProtocolID.PacketReqChangeRole:
+            case PacketReqChangeRole packet:
                 {
-                    PacketReqChangeRole packet = new PacketReqChangeRole();
-                    packet.ToPacket(buffer);
                     _role = packet.role;
                     _host.SendUserList();
                 }
                 break;
-            case EProtocolID.PacketGameReady:
+            case PacketGameReady packet:
                 {
-                    PacketGameReady packet = new PacketGameReady();
-                    packet.ToPacket(buffer);
                     _gameReady = packet.IsReady;
+                    //packet.uid = _uid;
+                    //packet.IsReady = true;
+                    //GameManager.Instance.GameReady(packet);
+                    //GameManager.Instance.UIPlayers.SetReadyUI(packet.uid, packet.IsReady);
+                    //Debug.Log("UserPeer PacketGameReady packet UID: " + packet.uid);
+                    //GameManager.Instance.client.Send(packet);
                     _host.SendAll(packet);
                 }
                 break;
-            case EProtocolID.PacketPlayerPosition:
+            //case PacketGameReadyOk packet:
+            //    {
+            //        _host.CheckGameReady();
+            //    }
+            //    break;
+            case PacketPlayerPosition packet:
                 {
-                    PacketPlayerPosition packet = new PacketPlayerPosition();
-                    packet.ToPacket(buffer);
                     packet.uid = _uid;
                     _host.SendAll(packet, this);
                 }
                 break;
-            case EProtocolID.PacketDashStart:
+            case PacketDashStart packet:
                 {
-                    PacketDashStart packet = new PacketDashStart();
-                    packet.ToPacket(buffer);
                     _host.SendAll(packet);
                 }
                 break;
-            case EProtocolID.PacketEntitySpawn:
+            case PacketEntitySpawn packet:
                 {
+                    //_host.SendAll(packet);
                 }
                 break;
-            case EProtocolID.PacketEntityPlayerCollision:
+            case PacketEntityPlayerCollision packet:
                 {
-                    PacketEntityPlayerCollision packet = new PacketEntityPlayerCollision();
-                    packet.ToPacket(buffer);
                     _host.SendAll(packet);
                 }
                 break;
-            case EProtocolID.PacketTeamScoreUpdate:
+            case PacketTeamScoreUpdate packet:
                 {
-                    PacketTeamScoreUpdate packet = new PacketTeamScoreUpdate();
-                    packet.ToPacket(buffer);
                     _host.SendAll(packet);
                 }
                 break;
-            case EProtocolID.PacketPlayerFire:
+            case PacketPlayerFire packet:
                 {
-                    PacketPlayerFire packet = new PacketPlayerFire();
-                    packet.ToPacket(buffer);
                     packet.ownerUID = _uid;
                     packet.bulletUID = _bulletUID;
                     _host.SendAll(packet);
                     _bulletUID++;
                 }
                 break;
-            case EProtocolID.PacketPlayerDamage:
+            case PacketPlayerDamage packet:
                 {
-                    PacketPlayerDamage packet = new PacketPlayerDamage();
-                    packet.ToPacket(buffer);
                     _host.SendAll(packet);
                 }
                 break;
-            case EProtocolID.PacketBulletDestroy:
+            case PacketBulletDestroy packet:
                 {
-                    PacketBulletDestroy packet = new PacketBulletDestroy();
-                    packet.ToPacket(buffer);
                     _host.SendAll(packet, this);
                 }
                 break;
-            case EProtocolID.PacketEntityDestroy:
-                {
-                    PacketEntityDestroy packet = new PacketEntityDestroy();
-                    packet.ToPacket(buffer);
-                    _host.SendAll(packet);
-                }
-                break;
-            case PacketGameEnd packet : 
+            case PacketEntityDestroy packet:
                 {
                     _host.SendAll(packet);
                 }
@@ -165,6 +148,11 @@ public class UserPeer : IPeer
                 {
                     TimeSpan diff = (DateTime.Now - new DateTime(packet.DateTimeTicks));
                     Debug.LogFormat("Latency: {0}ms", diff.TotalMilliseconds);
+                }
+                break;
+            case PacketGameEnd packet:
+                {
+                    _host.SendAll(packet);
                 }
                 break;
         }

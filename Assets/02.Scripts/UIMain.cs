@@ -1,4 +1,3 @@
-using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -9,8 +8,8 @@ public class UIMain : MonoBehaviour
     public GameObject startUI;
     public GameObject lobbyUI;
 
-    public TMP_InputField inputID;
-    public TMP_InputField inputIP;
+    public InputField inputID;
+    public InputField inputIP;
     public Button buttonHost;
     public Button buttonClient;
 
@@ -115,12 +114,12 @@ public class UIMain : MonoBehaviour
     public void ExitGame()
     {
         Debug.Log("게임 종료");
-        
-        #if UNITY_EDITOR
+
+#if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
-        #else
+#else
         Application.Quit();
-        #endif
+#endif
     }
 
     // UI 상태를 변경한다 (시작 화면, 로비, 게임)
@@ -136,11 +135,25 @@ public class UIMain : MonoBehaviour
                 startUI.SetActive(false);
                 lobbyUI.SetActive(true);
                 break;
-            //case EUIState.Game:
-            //    startUI.SetActive(false);
-            //    lobbyUI.SetActive(false);
-            //    GameManager.Instance.UIPlayers.gameObject.SetActive(true);
-            //    break;
+                //case EUIState.Game:
+                //    startUI.SetActive(false);
+                //    lobbyUI.SetActive(false);
+                //    GameManager.Instance.UIPlayers.gameObject.SetActive(true);
+                //    break;
+        }
+    }
+
+
+    public void StartGame()
+    {
+        //todo: 모두 준비완료일 때 씬 전환(GamePlay) 패킷 만들어서 보내기
+        if (!GameManager.Instance.IsHost) return;
+        if (GameManager.Instance.PlayerCount >= 2)
+        {
+            //host.GameOn();
+            //GameManager.Instance.GameSceneNext();
+
+            _host.ReadyCheckGameStart();
         }
     }
 

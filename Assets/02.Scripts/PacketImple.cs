@@ -1,277 +1,278 @@
+// SC : 서버->클라, CS : 클라->서버, REL : 중계형
 using UnityEngine;
-using System.Runtime.InteropServices;
-public enum EProtocolID
-{
-    PacketUserJoin,
-    PacketUserLeave,
-    PacketReqUserInfo,
-    PacketAnsUserInfo,
-    PacketAnsUserList,
-    PacketReqChangeTeam,
-    PacketReqChangeRole,
-    PacketGameReady,
-    PacketGameReadyOk,
-    GameStartInfo,
-    PacketGameStart,
-    PacketGameOn,
-    PacketFeverStart,
-    PacketTimerUpdate,
-    PacketTeamScoreUpdate,
-    PacketPlayerPosition,
-    PacketPlayerFire,
-    PacketEntitySpawn,
-    PacketEntityDestroy,
-    PacketEntityPlayerCollision,
-    PacketPlayerDamage,
-    PacketBulletDestroy,
-    PacketDashStart,
-    PacketGameEnd
-}
+using MessagePack;
 
+/*public enum EProtocolID
+{
+    SC_REQ_USERINFO,
+    CS_ANS_USERINFO,
+    SC_ANS_USERLIST,
+    CS_REQ_CHANGE_TEAM,
+    REL_GAME_READY,
+    CS_GAME_READY_OK,
+    SC_GAME_START,
+    REL_PLAYER_POSITION,
+    REL_PLAYER_FIRE,
+    REL_PLAYER_DAMAG,
+    REL_BULLET_DISTROY,
+    SC_GAME_END,
+}*/
 
 #region 게임 시작 전
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public struct UserInfo
 {
+    [Key(0)]
     public int uid;
-    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 10)]
+
+    [Key(1)]
     public string id;
+
+    [Key(2)]
     public ETeam team;
+
+    [Key(3)]
     public bool host;
+
+    [Key(4)]
     public ERole role;
 }
 
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketUserJoin : Packet
 {
+    [Key(10)]
     public int uid;
-    public PacketUserJoin():base((short)EProtocolID.PacketUserJoin){}
 }
 
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketUserLeave : Packet
 {
+    [Key(10)]
     public int uid;
-    
-    public PacketUserLeave():base((short)EProtocolID.PacketUserLeave){}
 }
 
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketReqUserInfo : Packet
 {
+    [Key(10)]
     public int uid;
+
+    [Key(11)]
     public ETeam team;
+
+    [Key(12)]
     public ERole role;
-    
-    public PacketReqUserInfo():base((short)EProtocolID.PacketReqUserInfo){}
 }
 
-
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketAnsUserInfo : Packet
 {
-    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 10)]
+    [Key(10)]
     public string id;
+
+    [Key(11)]
     public bool host;
-    
-    public PacketAnsUserInfo():base((short)EProtocolID.PacketAnsUserInfo){}
 }
 
 
-
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketAnsUserList : Packet
 {
+    [Key(10)]
     public int userNum;
 
     [Key(11)]
     public UserInfo[] userInfos = new UserInfo[4];
 }
 
-
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketReqChangeTeam : Packet
 {
+    [Key(10)]
     public ETeam team;
-    
-    public PacketReqChangeTeam():base((short)EProtocolID.PacketReqChangeTeam){}
 }
 
-
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketReqChangeRole : Packet
 {
+    [Key(10)]
     public ERole role;
-    
-    public PacketReqChangeRole():base((short)EProtocolID.PacketReqChangeRole){}
 }
 
-
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketGameReady : Packet
 {
+    [Key(10)]
     public int uid;
+    [Key(11)]
     public bool IsReady;
-    
-    public PacketGameReady():base((short)EProtocolID.PacketGameReady){}
 }
 
-
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketGameReadyOk : Packet
 {
-    public PacketGameReadyOk():base((short)EProtocolID.PacketGameReadyOk){}
 }
 
 
 #endregion
 
 #region 게임 시작
-
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public struct GameStartInfo
 {
+    [Key(0)]
     public int uid;
-    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 10)]
+
+    [Key(1)]
     public string id;
 
+    [Key(2)]
     public ETeam team;
 
+    [Key(3)]
     public Vector3 position;
 
+    [Key(4)]
     public ERole role;
 }
 
-
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketGameStart : Packet
 {
+    [Key(10)]
     public int userNum;
 
     [Key(11)]
     public GameStartInfo[] startInfos = new GameStartInfo[4];
 }
 
-
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketGameOn : Packet
 {
-    public PacketGameOn():base((short)EProtocolID.PacketGameOn){}
 }
 #endregion
 
 #region 게임 플레이 중
-
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketFeverStart : Packet
 {
-    public PacketFeverStart():base((short)EProtocolID.PacketFeverStart){}
 }
 
-
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketTimerUpdate : Packet
 {
+    [Key(10)]
     public int timeSeconds;
-    
-    public PacketTimerUpdate():base((short)EProtocolID.PacketTimerUpdate){}
 }
 
-
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketTeamScoreUpdate : Packet
 {
+    [Key(10)]
     public int uid;
+
+    [Key(11)]
     public int score;
-    
-    public PacketTeamScoreUpdate():base((short)EProtocolID.PacketTeamScoreUpdate){}
 }
 
 
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketPlayerPosition : Packet
 {
+    [Key(10)]
     public int uid;         // 유저의 uid를 확인하고 처리한다.
+
+    [Key(11)]
     public Vector3 position;
+
+    [Key(12)]
     public float rotation;
-    
-    public PacketPlayerPosition():base((short)EProtocolID.PacketPlayerPosition){}
 }
 
-
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketPlayerFire : Packet
 {
+    [Key(10)]
     public int ownerUID;
+
+    [Key(11)]
     public int bulletUID;
+
+    [Key(12)]
     public Vector3 position;
+
+    [Key(13)]
     public Vector3 direction;
-    
-    public PacketPlayerFire():base((short)EProtocolID.PacketPlayerFire){}
 }
 
-
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketEntitySpawn : Packet
 {
+    [Key(10)]
     public EEntity type;
+
+    [Key(11)]
     public int ownerUID;
+
+    [Key(12)]
     public int entityUID;
+
+    [Key(13)]
     public Vector3 position;
+
+    [Key(14)]
     public Vector3 velocity;
+
+    [Key(15)]
     public float rotation;
-    
-    public PacketEntitySpawn():base((short)EProtocolID.PacketEntitySpawn){}
 }
 
-
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketEntityDestroy : Packet
 {
+    [Key(10)]
     public EEntity type;
+
+    [Key(11)]
     public int entityUID;
-    
-    public PacketEntityDestroy():base((short)EProtocolID.PacketEntityDestroy){}
 }
 
-
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketEntityPlayerCollision : Packet
 {
+    [Key(10)]
     public int playerUID;
-
-    public EEntity type;
-    public int entityUID;
     
-    public PacketEntityPlayerCollision():base((short)EProtocolID.PacketEntityPlayerCollision){}
+    [Key(11)]
+    public EEntity type;
+
+    [Key(12)]
+    public int entityUID;
 }
 
-
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketPlayerDamage : Packet
 {
+    [Key(10)]
     public int attackUID; // 공격한 플레이어
+
+    [Key(11)]
     public int targetUID; // 공격받은 플레이어
-    
-    public PacketPlayerDamage():base((short)EProtocolID.PacketPlayerDamage){}
 }
 
-
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketBulletDestroy : Packet
 {
+    [Key(10)]
     public int bulletUID;
-    
-    public PacketBulletDestroy():base((short)EProtocolID.PacketBulletDestroy){}
 }
 
-
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketDashStart : Packet
 {
+    [Key(10)]
     public int uid;
-    
-    public PacketDashStart():base((short)EProtocolID.PacketDashStart){}
 }
 
 [MessagePackObject]
@@ -283,14 +284,16 @@ public class PacketLatencyTest : Packet
 #endregion
 
 #region 게임 끝
-
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[MessagePackObject]
 public class PacketGameEnd : Packet
 {
+    [Key(10)]
     public ETeam winTeam;
+
+    [Key(11)]
     public int[] redTeamScores = new int[2];
+
+    [Key(12)]
     public int[] blueTeamScores = new int[2];
-    
-    public PacketGameEnd():base((short)EProtocolID.PacketGameEnd){}
 }
 #endregion
