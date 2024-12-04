@@ -22,6 +22,7 @@ public class UIMain : MonoBehaviour
     public Button buttonRunner;
     public Button buttonReady;
     public Button buttonStart;
+    public Button buttonExit;
     //
 
     private Client _client;
@@ -103,7 +104,23 @@ public class UIMain : MonoBehaviour
             StartGame();
         });
 
+        buttonExit.onClick.AddListener(() =>
+        {
+            ExitGame();
+        });
+
         SetUIState(EUIState.Start);
+    }
+
+    public void ExitGame()
+    {
+        Debug.Log("게임 종료");
+        
+        #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+        #else
+        Application.Quit();
+        #endif
     }
 
     // UI 상태를 변경한다 (시작 화면, 로비, 게임)
