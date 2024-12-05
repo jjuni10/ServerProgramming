@@ -16,7 +16,7 @@ public class Host : MonoBehaviour
     {
         _server.onClientConnected += OnClientConnected;
         _server.Start(10);
-        //StartCoroutine(Entity_Co());
+        StartCoroutine(Entity_Co());
 
         GameManager.Instance.IsHost = true;
         GameManager.Instance.Client.StartClient("127.0.0.1");
