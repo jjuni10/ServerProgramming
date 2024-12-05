@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour
     private PacketGameEnd _scorePacket;
 
     //! 나중에 입력 받아서 플레이타임 결정하기
-    private float InputPlayTime = 45f;
+    private float InputPlayTime = 60f;
 
     private float readyTime;
 
