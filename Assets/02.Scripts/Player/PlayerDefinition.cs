@@ -37,8 +37,6 @@ public class PlayerInput
 {
     public float verticalMovement;   //상하
     public float horizontalMovement; //좌우
-    public float mouseY;             //마우스 상하
-    public float mouseX;             //마우스 좌우
 }
 
 [Serializable]
@@ -52,12 +50,6 @@ public class CheckOption
 
     [Range(1f, 30f), Tooltip("달리는 속도")]
     public float runningSpeed = 15f;
-
-    [Range(1f, 30f), Tooltip("대쉬 속도")]
-    public float dashingSpeed = 25f;
-
-    [Range(1f, 30f), Tooltip("닷지 힘")]
-    public float dodgingForce = 4f;
 }
 
 [Serializable]

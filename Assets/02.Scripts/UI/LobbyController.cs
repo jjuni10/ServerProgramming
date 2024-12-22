@@ -82,7 +82,6 @@ public class LobbyController : MonoBehaviour
 
     public void SetReadyState(int uid, bool isReady)
     {
-        //Debug.Log($"SetReadyUI({uid})");
         Player player = GameManager.Instance.GetPlayer(uid);
 
         PlayerReadyUIGroup uiGroup = ReadyGroups[uid];

@@ -178,29 +178,40 @@ public class Host : MonoBehaviour
 
     IEnumerator Entity_Co()
     {
-        float spawnTime = 0f;
-        float createTime = 5f;
+        float spawnTime_coin = 0f;
+        float spawnTime_boom = 0f;
         while (true)
         {
             if (GameManager.Instance.IsGamePlayOn)
             {
-                if (spawnTime >= createTime)
+                if (spawnTime_coin >= GameManager.Instance.playerSheetData.Coin.createCoolTime)
                 {
-                    PacketEntitySpawn packetPoint = new PacketEntitySpawn();
-                    packetPoint.type = EEntity.Point;
-                    packetPoint.entityUID = _curCoinUID++;
-                    packetPoint.position = SpreadEntity();
-                    SendAll(packetPoint);
-
-                    PacketEntitySpawn packetBomb = new PacketEntitySpawn();
-                    packetBomb.type = EEntity.Bomb;
-                    packetBomb.entityUID = _curBombUID++;
-                    packetBomb.position = SpreadEntity();
-                    SendAll(packetBomb);
-
-                    spawnTime = 0f;
+                    if(GameManager.Instance.GetEntityCount(EEntity.Point) < GameManager.Instance.playerSheetData.Coin.maxVal)
+                    {
+                        PacketEntitySpawn packetPoint = new PacketEntitySpawn();
+                        packetPoint.type = EEntity.Point;
+                        packetPoint.entityUID = _curCoinUID++;
+                        packetPoint.position = SpreadEntity();
+                        SendAll(packetPoint);
+                        spawnTime_coin = 0f;
+                    }
                 }
-                spawnTime += Time.deltaTime;
+
+                if (spawnTime_boom >= GameManager.Instance.playerSheetData.Boom.createCoolTime)
+                {
+                    if(GameManager.Instance.GetEntityCount(EEntity.Bomb) < GameManager.Instance.playerSheetData.Boom.maxVal)
+                    {
+                        PacketEntitySpawn packetBomb = new PacketEntitySpawn();
+                        packetBomb.type = EEntity.Bomb;
+                        packetBomb.entityUID = _curBombUID++;
+                        packetBomb.position = SpreadEntity();
+                        SendAll(packetBomb);
+                        spawnTime_boom = 0f;
+                    }
+                }
+
+                spawnTime_coin += Time.deltaTime;
+                spawnTime_boom += Time.deltaTime;
             }
 
             if (GameManager.Instance.IsGameEnd) break;

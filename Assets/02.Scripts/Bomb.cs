@@ -60,8 +60,4 @@ public class Bomb : MonoBehaviour
 
         GameManager.Instance.AddBomb(this);
     }
-    void OnEnable() 
-    {
-        this.transform.position = spawnPoint;
-    }
 }

@@ -60,8 +60,4 @@ public class Coin : MonoBehaviour
 
         GameManager.Instance.AddCoin(this);
     }
-    void OnEnable() 
-    {
-        this.transform.position = spawnPoint;
-    }
 }

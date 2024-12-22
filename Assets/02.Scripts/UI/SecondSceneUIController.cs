@@ -9,8 +9,7 @@ public class SecondSceneUIController : MonoBehaviour
     public TMP_Text CountNum;
     private Coroutine count_Co = null;
 
-    public float PlayTime;   // 게임 플레이 시간 (유저 기준)
-    //public float SettingPlayTime = 18f;   // 셋팅된 플레이 시간 (현재 3분)
+    public float PlayTime;   // 게임 플레이 시간 
     public Image GaugePlayTime; // 플레이 시간 소비 게이지
 
     public TMP_Text PlayerRed1ID;
@@ -39,9 +38,6 @@ public class SecondSceneUIController : MonoBehaviour
 
     void FixedUpdate()
     {
-        //if (GameManager.Instance.IsGameEnd || !GameManager.Instance.IsGameStarted) return;
-        //todo: "PlayTime" set scroll value
-        //GaugePlayTime.fillAmount = PlayTime / SettingPlayTime;
         GaugePlayTime.fillAmount = PlayTime / GameManager.Instance.PlayTime;
     }
 
@@ -89,7 +85,6 @@ public class SecondSceneUIController : MonoBehaviour
                     yield return null;
                 }
                 yield return new WaitForSeconds(3f);
-                //Debug.Log("[GameEnd] UI end");
 
                 PacketGameEnd packet = new PacketGameEnd();
                 packet.redTeamScores[0] = points[0];
@@ -114,7 +109,6 @@ public class SecondSceneUIController : MonoBehaviour
 
     public void SetIDUI(int uid)
     {
-        //Debug.Log($"SetReadyUI({uid})");
         Player player = GameManager.Instance.GetPlayer(uid);
         switch (uid + 1)
         {
@@ -146,10 +140,6 @@ public class SecondSceneUIController : MonoBehaviour
 
     public void SetPointUI(int uid, int point = 0)
     {
-        //Debug.Log($"SetReadyUI({uid})");
-        Player player = GameManager.Instance.GetPlayer(uid);
-        //player._currentValue.point = player._currentValue.point + point;
-        //if (isReset) player._currentValue.point = 0;
         switch (uid + 1)
         {
             case 1:

@@ -81,7 +81,6 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        //Vector3.Distance(transform.position,_destPosition);
         if (!IsLocalPlayer)
         {
             // 위치 보정
@@ -104,7 +103,6 @@ public class Player : MonoBehaviour
         }
         else
         {
-            //Debug.Log($"In {keyCode}");
             _gunner.Move(keyCode);
         }
     }
@@ -143,13 +141,11 @@ public class Player : MonoBehaviour
 
     public void SetReady(bool isReady)
     {
-        //if (!P_Info._localPlayer) return;
         PacketGameReady packet = new PacketGameReady();
         packet.uid = UID;
         packet.IsReady = isReady;
         GameManager.Instance.Client.Send(packet);
         IsReady = isReady;
-        //GameManager.Instance.UIPlayers.SetReadyUI(packet.uid, packet.IsReady);
     }
     public void ReadyUISetting(int uid, bool ready)
     {
@@ -173,7 +169,6 @@ public class Player : MonoBehaviour
         packet.position = transform.position + new Vector3(0f, 1.5f, 0f);
         packet.direction = transform.forward;
 
-        //Debug.LogFormat("[보냄] 총알 위치: {0}, 방향: {1}, 소유자: {2}, 총알ID: {3}", packet.position, packet.direction, packet.ownerUID, packet.bulletUID);
         GameManager.Instance.Client.Send(packet);
         _curFireCoolTime = 0;
     }
@@ -196,11 +191,9 @@ public class Player : MonoBehaviour
         bullet.transform.forward = direction.normalized;
         bullet.gameObject.SetActive(true);
         P_Com.animator.SetTrigger("isShoot");
-        //Debug.Log("[bullet] CreateBullet()");
     }
     public void RecivePoint(int point)
     {
-        //if (!IsLocalPlayer) return;
         P_Value.point += point;
         PacketTeamScoreUpdate packet = new PacketTeamScoreUpdate();
         packet.uid = UID;
@@ -213,7 +206,6 @@ public class Player : MonoBehaviour
     // 역할 바꾸는 함수
     public void ChangeRole(ERole role)
     {
-        //Debug.Log($"ChangeRole {role}");
         P_Info.ROLE = role;
         if (P_Info.ROLE == ERole.Runner || GameManager.Instance.LobbyController != null)
         {
@@ -292,7 +284,6 @@ public class Player : MonoBehaviour
     public Vector3 SetNicknamePos()
     {
         Vector3 screenPoint = Camera.main.WorldToScreenPoint(name_.transform.position);
-        //nickname.transform.position = screenPoint + new Vector3(0, 2, 0);
-        return screenPoint;// + new Vector3(0, 270, 0);
+        return screenPoint;
     }
 }

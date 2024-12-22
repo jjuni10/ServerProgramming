@@ -15,7 +15,7 @@ public class Bullet : MonoBehaviour
     private void FixedUpdate()
     {
         // 총알을 일정 속도로 전방으로 이동시킴
-        _rigidbody.MovePosition(transform.position + transform.forward * Time.fixedDeltaTime * 100f);
+        _rigidbody.MovePosition(transform.position + transform.forward * Time.fixedDeltaTime * GameManager.Instance.playerSheetData.BulletSpeed);
     }
 
     public void OnTriggerEnter(Collider other)

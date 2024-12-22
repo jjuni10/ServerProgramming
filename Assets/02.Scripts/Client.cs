@@ -135,7 +135,6 @@ public class Client : MonoBehaviour, IPeer
                     if (player == null)
                         return;
 
-                    //Debug.LogFormat("[받음] 총알 위치: {0}, 방향: {1}, 소유자: {2}, 총알ID: {3}", packet.position, packet.direction, packet.ownerUID, packet.bulletUID);
                     player.CreateBullet(packet.position, packet.direction, packet.ownerUID, packet.bulletUID);
                 }
                 break;
@@ -193,11 +192,6 @@ public class Client : MonoBehaviour, IPeer
                 }
                 break;
         }
-
-        //if (receivedPacket is not PacketPlayerPosition)
-        //{
-        //    Debug.LogFormat("[Client] 패킷 받음! Type:{0}", receivedPacket.GetType().Name);
-        //}
     }
 
     private IEnumerator WaitAndStartGame(PacketGameStart packet)

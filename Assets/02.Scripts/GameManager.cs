@@ -23,8 +23,6 @@ public class GameManager : MonoBehaviour
     public PoolManager pool;
     public PlayerSheetData sheetData;
 
-    private Client _client;
-
     private Dictionary<int, Player> _playerDic =
         new Dictionary<int, Player>();             // UID, 플레이어 캐릭터
     [SerializeField]
@@ -43,8 +41,6 @@ public class GameManager : MonoBehaviour
 
     private float readyTime;
 
-    public int redPoint;
-    public int bluePoint;
     public ETeam WinTeam { get; set; }
 
     public int UserUID { get; set; }    // 클라이언트 자신의 UID
@@ -91,8 +87,6 @@ public class GameManager : MonoBehaviour
     {
         UpdateInput();
         UpdateCheckGameEnd();
-
-        //if (UIPlayers2 != null) UIPlayers2.SetPointUI(UserUID);
     }
 
     private void SceneSetting()
@@ -112,7 +106,6 @@ public class GameManager : MonoBehaviour
         else if (SceneManager.GetActiveScene().name == "GameResult")
         {
             UIPlayers3 = FindObjectOfType<ThirdSceneUIController>(true);
-            //if (UIPlayers3 != null) UIPlayers3.gameObject.SetActive(false);
         }
         
         canvas = FindObjectOfType<Canvas>();
@@ -195,7 +188,6 @@ public class GameManager : MonoBehaviour
         // 총알 발사
         if (Input.GetMouseButtonDown(0) && _localPlayer.Role == ERole.Gunner)
         {
-            //Debug.Log("[bullet] Input Mouse");
             _localPlayer.FireBullet();
         }
     }
@@ -209,33 +201,6 @@ public class GameManager : MonoBehaviour
 
         if (_playTime >= InputPlayTime)
         {
-            // 게임 종료 처리
-            // if (Host != null)
-            // {
-            //     PacketGameEnd packet = new PacketGameEnd();
-
-            //     foreach (var player in _playerDic)
-            //     {
-            //         if (player.Value.Team == ETeam.Red)
-            //             redPoint += player.Value._currentValue.point;
-            //         else if (player.Value.Team == ETeam.Blue)
-            //             bluePoint += player.Value._currentValue.point;
-            //     }
-            //     if (redPoint < bluePoint)
-            //     {
-            //         packet.winTeam = ETeam.Blue;
-            //     }
-            //     else if (redPoint > bluePoint)
-            //     {
-            //         packet.winTeam = ETeam.Red;
-            //     }
-            //     else
-            //     {
-            //         packet.winTeam = ETeam.None;
-            //     }
-            //     Host.SendAll(packet);
-
-            // }
             _startGame = false;
         }
         else
@@ -260,9 +225,7 @@ public class GameManager : MonoBehaviour
     private void OnGamePlaySceneLoaded(PacketGameStart packet)
     {
         _playerDic.Clear();
-        Debug.Log(SceneManager.GetActiveScene().name);
         Debug.Log("게임 시작! 유저 수: " + packet.userNum);
-        //_ui.SetUIState(UIMain.EUIState.Game);
         for (int i = 0; i < packet.userNum; i++)
         {
             // Resources 폴더에서 캐릭터를 불러온다.
@@ -276,7 +239,6 @@ public class GameManager : MonoBehaviour
             Debug.Log(player);
             player.Init(packet.startInfos[i].uid, packet.startInfos[i].id, packet.startInfos[i].team, packet.startInfos[i].position, packet.startInfos[i].role);
             _playerDic.Add(packet.startInfos[i].uid, player);
-            //Debug.Log("GameStart() _playerDic.Add()");
 
             if (UserUID == packet.startInfos[i].uid)
             {
@@ -327,47 +289,39 @@ public class GameManager : MonoBehaviour
                 {
                     position = sheetData.Red1WinCheckStartPos;
                     resultPoint = scorePacket.redTeamScores[0];
-                    //Debug.Log($"[GameEnd] case 1 position: {position}");
                 }
                 break;
                 case 3:
                 {
                     position = sheetData.Red2WinCheckStartPos;
                     resultPoint = scorePacket.redTeamScores[1];
-                    //Debug.Log($"[GameEnd] case 2 position: {position}");
                 }
                 break;
                 case 2:
                 {
                     position = sheetData.Blue1WinCheckStartPos;
                     resultPoint = scorePacket.blueTeamScores[0];
-                    //Debug.Log($"[GameEnd] case 3 position: {position}");
                 }
                 break;
                 case 4:
                 {
                     position = sheetData.Blue2WinCheckStartPos;
                     resultPoint = scorePacket.blueTeamScores[1];
-                    //Debug.Log($"[GameEnd] case 4 position: {position}");
                 }
                 break;
                 default:
                     position = packet.startInfos[i].position;
-                    //Debug.Log($"[GameEnd] position: {position}");
                 break;
             }
             points[packet.startInfos[i].uid] = resultPoint;
-            //Debug.Log($"[PointTest] resultPoint: {resultPoint}");
 
             player.Init(packet.startInfos[i].uid, packet.startInfos[i].id, packet.startInfos[i].team, position, packet.startInfos[i].role, points[packet.startInfos[i].uid]);
             _playerDic.Add(packet.startInfos[i].uid, player);
-            //Debug.Log("GameStart() _playerDic.Add()");
 
             if (UserUID == packet.startInfos[i].uid)
             {
                 _localPlayer = player;
             }
-        //SetPlayersPoint();
         }
         UIPlayers3.SetPointHeight();
     }
@@ -418,18 +372,13 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public void UpdatePoint(int uid, int point)// EEntity type)
+    public void UpdatePoint(int uid, int point)
     {
-        // if (type == EEntity.Point)
-        //     UIPlayers2.SetPointUI(uid, false, 1);
-        // else
-        //     UIPlayers2.SetPointUI(uid, false, -1);
         UIPlayers2.SetPointUI(uid, point);
     }
 
     private IEnumerator SendPlayerPosition()
     {
-        float interval = 1f / 20f;
         while (_localPlayer != null)
         {
             PacketPlayerPosition packet = new PacketPlayerPosition();
@@ -438,8 +387,6 @@ public class GameManager : MonoBehaviour
             packet.rotation = _localPlayer.transform.eulerAngles.y;
             Client.Send(packet);
 
-            //Debug.Log("Position 패킷 보냄!");
-            //yield return new WaitForSeconds(interval);
             yield return null;
         }
     }
@@ -472,30 +419,21 @@ public class GameManager : MonoBehaviour
         if (!_bulletDic.ContainsKey(uid))
             return;
 
-       //Destroy(_bulletDic[uid].gameObject);
         _bulletDic[uid].gameObject.SetActive(false);
-
-        //_bulletDic.Remove(uid);
     }
     public void RemoveBomb(int uid)
     {
         if (!_bombs.ContainsKey(uid))
             return;
 
-        //Destroy(_bombs[uid].gameObject);
         _bombs[uid].gameObject.SetActive(false);
-
-        //_bombs.Remove(uid);
     }
     public void RemoveCoin(int uid)
     {
         if (!_coins.ContainsKey(uid))
             return;
 
-        //Destroy(_coins[uid].gameObject);
         _coins[uid].gameObject.SetActive(false);
-
-        //_coins.Remove(uid);
     }
     #endregion
 
@@ -518,8 +456,6 @@ public class GameManager : MonoBehaviour
         {
             case EEntity.Point:
                 {
-                    //GameObject Coin = Instantiate(Resources.Load("Coin"), packet.position, Quaternion.identity) as GameObject;
-                    //Coin.GetComponent<Coin>().Init(packet.entityUID);
                     Coin coin = pool.Get(0, packet.position).GetComponent<Coin>();
                     coin.Init(packet.entityUID);
                     coin.spawnPoint = packet.position;
@@ -528,8 +464,6 @@ public class GameManager : MonoBehaviour
                 break;
             case EEntity.Bomb:
                 {
-                    //GameObject Bomb = Instantiate(Resources.Load("Bomb"), packet.position, Quaternion.identity) as GameObject;
-                    //Bomb.GetComponent<Bomb>().Init(packet.entityUID);
                     Bomb bomb = pool.Get(1, packet.position).GetComponent<Bomb>();
                     bomb.Init(packet.entityUID);
                     bomb.spawnPoint = packet.position;

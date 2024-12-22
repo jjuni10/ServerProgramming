@@ -19,18 +19,17 @@ public class PlayerRunner : MonoBehaviour
     void Update()
     {   
         if (!_player.IsLocalPlayer) return;
-        //Move();
         Rotate();
         Dodge();
     }
 
     public void MoveInput(KeyCode keyCode)
     {
-        if (keyCode == KeyCode.W)//Input.GetKey(KeyCode.W))
+        if (keyCode == KeyCode.W)
         {
             _player._input.verticalMovement = 1;
         }
-        else if (keyCode == KeyCode.S)//Input.GetKey(KeyCode.S))
+        else if (keyCode == KeyCode.S)
         {
             _player._input.verticalMovement = -1;
         }
@@ -38,11 +37,11 @@ public class PlayerRunner : MonoBehaviour
         {
             _player._input.verticalMovement = 0;
         }
-        if (keyCode == KeyCode.A)//Input.GetKey(KeyCode.A))
+        if (keyCode == KeyCode.A)
         {
             _player._input.horizontalMovement = -1;
         }
-        else if (keyCode == KeyCode.D)//Input.GetKey(KeyCode.D))
+        else if (keyCode == KeyCode.D)
         {
             _player._input.horizontalMovement = 1;
         }
@@ -72,8 +71,6 @@ public class PlayerRunner : MonoBehaviour
 
         if (_player._currentState.isDodgeing)
         {
-            //_player._playerComponents.animator.Play("Dodge");
-
             _player._currentValue.moveDirection.y = 0f;
 
             _player._playerComponents.rigidbody.AddForce(_player._currentValue.moveDirection * GameManager.Instance.playerSheetData.RunnerDashForce, ForceMode.VelocityChange);
@@ -145,7 +142,6 @@ public class PlayerRunner : MonoBehaviour
             _player._currentState._curState = EState.Dash;
             _player._playerComponents.animator.SetTrigger("isDodge");
 
-            //! packet 보내기
             PacketDashStart packet = new PacketDashStart();
             packet.uid = _player.UID;
             GameManager.Instance.Client.Send(packet);

@@ -50,7 +50,7 @@ public class PlayerGunner : MonoBehaviour
 
     public void MoveInput(KeyCode keyCode)
     {
-        if (keyCode == KeyCode.A)//Input.GetKey(KeyCode.A) && !RightSite)
+        if (keyCode == KeyCode.A)
         {
             if (!RightSite)
                 LeftSite = true;
@@ -60,7 +60,7 @@ public class PlayerGunner : MonoBehaviour
                 _player._input.verticalMovement = -1;
             _player._currentState.isRunning = true;
         }
-        else if (keyCode == KeyCode.D)//Input.GetKey(KeyCode.D) && !LeftSite)
+        else if (keyCode == KeyCode.D)
         {
             if (!LeftSite)
                 RightSite = true;
@@ -128,12 +128,12 @@ public class PlayerGunner : MonoBehaviour
         {
             if (_player._currentState.isDashing)
             {
-                _player._currentValue.finalSpeed = GameManager.Instance.playerSheetData.GunnerDashSpeed;//_player._checkOption.dashingSpeed;
+                _player._currentValue.finalSpeed = GameManager.Instance.playerSheetData.GunnerDashSpeed;
                 _player._currentState._curState = EState.Dash;
             }
             else if (_player._currentState.isRunning)
             {
-                _player._currentValue.finalSpeed = GameManager.Instance.playerSheetData.GunnerMoveSpeed;//_player._checkOption.runningSpeed;
+                _player._currentValue.finalSpeed = GameManager.Instance.playerSheetData.GunnerMoveSpeed;
                 _player._currentState._curState = EState.Run;
             }
             _player._currentValue.moveDirection = _player._currentValue.moveDirection * _player._currentValue.finalSpeed;
